@@ -1,0 +1,118 @@
+<div>
+  <div class="surface-ground border-top-1 border-bottom-1 border-gray-300 px-4 py-3">
+    <div class="flex flex-column md:align-items-center md:justify-content-between md:flex-row">
+      <div class="font-medium text-xl text-900">Blog Menu</div>
+      <div class="mt-3 md:mt-0">
+        <button pTooltip="Add Blog" tooltipPosition="top" label="Add Blog" pButton pRipple style="margin-left: 4px;"
+          type="button" icon="pi pi-plus" class="p-button-primary" (click)="openAdd()"></button>
+      </div>
+    </div>
+  </div>
+</div>
+<p-toast></p-toast>
+
+<div class="card">
+  <div class="p-5">
+    <p-table #dt [value]="blogs" [rows]="4" [paginator]="true" [(selection)]="selected" [rowHover]="true"
+      [responsive]="true" styleClass="p-datatable-gridlines" [globalFilterFields]="['title','brief']">
+      <ng-template pTemplate="caption">
+        <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+          placeholder="Search" />
+      </ng-template>
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 20%">Title</th>
+          <th style="width: 70%">Brief</th>
+          <th>Actions</th>
+
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-blog>
+        <tr>
+          <td>{{blog.title}}</td>
+          <td [innerHTML]="blog.brief">{{blog.brief}}</td>
+          <td>
+            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2"
+              (click)="openEdit(blog.srno)"></button>&nbsp;&nbsp;
+            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning"
+              (click)="openDelete(blog.srno)"></button>
+          </td>
+        </tr>
+      </ng-template>
+
+    </p-table>
+  </div>
+</div>
+
+<p-dialog [(visible)]="AddDialog" [style]="{width: '1000px'}" header="Add Blog" [modal]="true" styleClass="p-fluid">
+  <ng-template pTemplate="content">
+    <div>
+      <h4 style="color: #607D8B;">Title<span style="color: red"> *</span>:</h4>
+      <input type="text" pInputText id="name" [(ngModel)]="title" placeholder="Enter Title" />
+    </div>
+    <div class="flex flex-column md:align-items-center md:justify-content-between md:flex-row">
+      <div class="font-medium ">
+        <h4 style="color: #607D8B;">Category<span style="color: red"> *</span>:</h4>
+      </div>
+      <div class="mt-3 md:mt-0">
+        <button *ngIf="!addcat" pTooltip="Add Category to the DropDown" label="Add Category" pButton pRipple
+          style="margin-left: 8px;" type="button" class="p-button-text" (click)="addcat=true"></button>
+      </div>
+      <div class="card" *ngIf="addcat">
+        <div class="inline-flex card-container">
+          <input *ngIf="addcat" type="text" pInputText id="name" [(ngModel)]="newcat" placeholder="Enter Category" />
+          <button *ngIf="addcat" label="Add" pButton pRipple style="margin-left: 2px;" type="button"
+            class="p-button-text" (click)="AddCat()"></button>
+        </div>
+      </div>
+    </div>
+    <p-multiSelect display="chip" [options]="tags" [(ngModel)]="tagged" defaultLabel="Select Category"
+      [selectionLimit]="2" selectedItemsLabel="{0} items selected" autoWidth="false" [style]="{'width':'100%'}">
+    </p-multiSelect>
+    <div>
+      <h4 style="color: #607D8B;">Brief<span style="color: red"> *</span>:</h4>
+      <p-editor [style]="{'height':'300px'}" [(ngModel)]="brief"></p-editor>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+    <button pButton pRipple label="Add" icon="pi pi-check" class="p-button-text" (click)="add()"></button>
+  </ng-template>
+</p-dialog>
+
+<p-dialog [(visible)]="EditDialog" [style]="{width: '1000px'}" header="Blog Details" [modal]="true"
+  styleClass="p-fluid">
+  <ng-template pTemplate="content">
+    <div>
+      <h4 style="color: #607D8B;">Title :</h4>
+      <input type="text" pInputText id="name" [(ngModel)]="data.title" />
+    </div>
+    <div>
+      <h4 style="color: #607D8B;">Category :</h4>
+      <p-multiSelect display="chip" [options]="tags" [(ngModel)]="category" [virtualScroll]="true"
+        [virtualScrollItemSize]="50" defaultLabel="Select Category" [selectionLimit]="2"
+        selectedItemsLabel="{0} items selected" [style]="{'width':'100%'}">
+      </p-multiSelect>
+    </div>
+    <div>
+      <h4 style="color: #607D8B;">Brief :</h4>
+      <p-editor [style]="{'height':'300px'}" [(ngModel)]="data.brief"></p-editor>
+    </div>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+    <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="update()"></button>
+  </ng-template>
+</p-dialog>
+<p-dialog [(visible)]="deleteDialog" [style]="{width: '500px'}" header="Blog Delete" [modal]="true"
+  styleClass="p-fluid">
+  <ng-template pTemplate="content">
+    Are you sure to delete <b> "{{data.title}}" </b>?
+  </ng-template>
+  <ng-template pTemplate="footer">
+    <button pButton pRipple label="No" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+    <button pButton pRipple label="Yes" icon="pi pi-check" class="p-button-text" (click)="delete(data.srno)"></button>
+  </ng-template>
+</p-dialog>

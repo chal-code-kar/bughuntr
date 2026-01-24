@@ -1,0 +1,109 @@
+package com.tcs.utx.digiframe.controller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.tcs.utx.digiframe.service.BrandingDetailsService;
+import com.tcs.utx.digiframe.service.PermissionHelperService;
+import com.tcs.utx.digiframe.service.WorkListService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+@RestController
+@RequestMapping("/BugHuntr/api/v1/")
+public class WorklistAPI {
+
+    private static final Logger LOG = LoggerFactory.getLogger(WorklistAPI.class);
+
+    public static final String ERROR = "Something Went Wrong.";
+    
+    public static final String  ACCESS_DENIED = "Access Denied";
+    
+    @Autowired
+    private WorkListService service;
+
+    @Autowired
+    private PermissionHelperService permissionService;
+
+    @Autowired
+	private BrandingDetailsService brandingService;
+
+    @RequestMapping(value = "worklists", method = RequestMethod.GET,produces = "application/json; charset=utf-8")
+    public ResponseEntity<Map<String, Object>> viewTodo(HttpServletRequest request, @RequestParam(required=false) Integer user_id) {
+        Map<String, Object> workList = new HashMap<>();
+        try {
+            LOG.info("WorkListController | getWorkList | invoked");
+            
+    		boolean isGuest = brandingService.isUserGuest();
+    		if (isGuest) {
+    			workList.put("text", ACCESS_DENIED);
+    			return new ResponseEntity<>(workList, HttpStatus.FORBIDDEN);
+    		}
+    		
+    		if(user_id==null){
+				user_id = BrandingDetailsController.getUser();
+			}
+
+            int emp_id = Integer.valueOf(user_id);
+            if (this.permissionService.isOperationPermissible("BB Program", "New Program", "Add", emp_id, 0, 0)) {
+            	workList = this.service.getWorklistForProgramAdmin(emp_id);
+            } else {
+            	workList = this.service.getWorklistForResearcher(emp_id);
+            }
+            
+            workList.put("emp_id", emp_id);
+
+            LOG.info("WorkListController | getWorkList | leaving");
+        } catch (DataAccessException e) {
+			e.printStackTrace();
+			LOG.error("WorkListController | DataAccessexception in getWorkList - ", e);
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (Exception e) {
+			LOG.error("WorkListController | Exception in getWorkList", e);
+			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+            return new ResponseEntity<Map<String, Object>>(workList, HttpStatus.OK);
+        
+    }
+
+    @RequestMapping(value = "reports", method = RequestMethod.GET,produces = "application/json; charset=utf-8")
+    public ResponseEntity<List<Map<String, Object>>> reports() {
+        List<Map<String, Object>> reportList = new ArrayList<>();
+            LOG.info("WorkListController | reports | invoked");
+            try {
+            int emp_id = BrandingDetailsController.getUser();
+            if (this.permissionService.isOperationPermissible("BugHuntr", "Admin", "View", emp_id, 0, 0)) {
+            	reportList = this.service.reportsForResearcher(emp_id, "Admin");
+            } else if (this.permissionService.isOperationPermissible("BB Program", "New Program", "Add", emp_id, 0,
+                    0)) {
+            	reportList = this.service.reportsForResearcher(emp_id, "Bounty Admin");
+            } else {
+            	reportList = this.service.reportsForResearcher(emp_id, "Researcher");
+            }
+            LOG.info("WorkListController | reports | leaving");
+            } catch (DataAccessException e) {
+    			e.printStackTrace();
+    			LOG.error("PermissionHelperController | DataAccessexception in getChild - ", e);
+    			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    		} catch (Exception e) {
+    			LOG.error("PermissionHelperController | Exception in getChild", e);
+    			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+    		}
+            return new ResponseEntity<>(reportList, HttpStatus.OK);
+    }
+
+}

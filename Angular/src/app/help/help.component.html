@@ -1,0 +1,174 @@
+
+     <div class="surface-ground border-top-1 border-bottom-1 border-gray-300 px-4 py-3">
+      <div class="flex flex-column md:align-items-center md:justify-content-between md:flex-row">
+        <div class="font-medium text-3xl text-900">BugHuntr Documentation</div>
+        <div class="mt-3 md:mt-0">
+          <!-- <span class="p-input-icon-left">
+            <i class="pi pi-search"></i>
+             <p-dropdown #op [options]="temp" (click)="op.show()"
+             placeholder="Search" (input)="SearchData($any($event.target).value)" (onClear)="clean()" (onChange)="change(($event))"
+             [editable]="true" dropdownIcon="pi pi-search"  ></p-dropdown>
+
+          </span> -->
+        </div>
+      </div>
+    </div>
+
+   <div class="grid p-5" style="width: 100%;">
+    <div class="col-12 md:col-3">
+        <div class="surface-card shadow-2 border-round select-none">
+            <ul class="list-none p-2 m-0">
+                <li>
+                    <div pRipple class="p-3 flex align-items-center">
+                        <i class="pi pi-book mr-2 text-blue-500"></i>
+                        <span class="font-medium text-blue-500">DOCUMENTATION</span>
+                    </div>
+                </li>
+            </ul>
+            <p-divider></p-divider>
+
+            <ul class="list-none p-0 m-0" *ngFor="let page of model">
+                <li>
+                    <div *ngIf="!page.items" (click)="setValue('','','',page)" pRipple
+                        class="p-3 flex align-items-center justify-content-between text-500 cursor-pointer"
+                        pStyleClass="@next" enterClass="hidden" enterActiveClass="slidedown" leaveToClass="hidden"
+                        leaveActiveClass="slideup">
+                        <span class="font-medium">{{page.label | uppercase}}</span>
+                    </div>
+                    <div *ngIf="page.items" pRipple
+                        class="p-3 flex align-items-center justify-content-between text-500 cursor-pointer"
+                        pStyleClass="@next" enterClass="hidden" enterActiveClass="slidedown" leaveToClass="hidden"
+                        leaveActiveClass="slideup">
+                        <span class="font-medium">{{page.label | uppercase}}</span>
+                        <i class="pi pi-chevron-down"></i>
+                    </div>
+
+
+                    <ul class="list-none p-0 m-0 overflow-hidden">
+                        <li *ngFor="let section of page.items">
+                            <a pRipple *ngIf="section.items" pStyleClass="@next" enterClass="hidden"
+                                enterActiveClass="slidedown" leaveToClass="hidden" leaveActiveClass="slideup"
+                                class="flex align-items-center cursor-pointer p-3 hover:surface-100 border-round transition-colors transition-duration-150">
+                                <i class="pi pi-book mr-2 text-500"></i>
+                                <span class="font-medium text-700">{{section.label}}</span>
+                                <i class="pi pi-chevron-down ml-auto text-500"></i>
+                            </a>
+                            <a pRipple *ngIf="!section.items" (click)="setValue('','',section,page)" pStyleClass="@next"
+                                enterClass="hidden" enterActiveClass="slidedown" leaveToClass="hidden"
+                                leaveActiveClass="slideup"
+                                class="flex align-items-center cursor-pointer p-3 hover:surface-100 border-round transition-colors transition-duration-150">
+                                <i class="pi pi-book mr-2 text-500"></i>
+                                <span class="font-medium text-700">{{section.label}}</span>
+                                <i *ngIf="section.items" class="pi pi-chevron-down ml-auto text-500"></i>
+                            </a>
+     
+
+                            <ul
+                                class="list-none py-0 pl-3 pr-0 m-0 hidden overflow-y-hidden transition-all transition-duration-400 transition-ease-in-out">
+                                <li *ngFor="let sample of section.items">
+                                    <a pRipple *ngIf="sample.items" pStyleClass="@next" enterClass="hidden"
+                                        enterActiveClass="slidedown" leaveToClass="hidden" leaveActiveClass="slideup"
+                                        class="flex align-items-center cursor-pointer p-3 hover:surface-100 border-round transition-colors transition-duration-150">
+                                        <i class="pi pi-book mr-2 text-500"></i>
+                                        <span class="font-medium text-700">{{sample.label}}</span>
+                                        <i class="pi pi-chevron-down ml-auto text-500"></i>
+                                    </a>
+                                    <a pRipple *ngIf="!sample.items" pStyleClass="@next" enterClass="hidden" (click)="setValue('',sample,section,page)"
+                                        enterActiveClass="slidedown" leaveToClass="hidden" leaveActiveClass="slideup"
+                                        class="flex align-items-center cursor-pointer p-3 hover:surface-100 border-round transition-colors transition-duration-150">
+                                        <i class="pi pi-book mr-2 text-500"></i>
+                                        <span class="font-medium text-700">{{sample.label}}</span>
+                                    </a>
+                                    <!-- <a (click)="setValue(sample,section,page)" pRipple
+                                        class="flex align-items-center cursor-pointer p-3 hover:surface-100 border-round transition-colors transition-duration-150">
+                                        <i class="pi pi-book mr-2 text-500"></i>
+                                        <span class="font-medium">{{sample.label}}</span>
+                                    </a> -->
+
+                                    <ul
+                                        class="list-none py-0 pl-3 pr-0 m-0 hidden overflow-y-hidden transition-all transition-duration-400 transition-ease-in-out">
+                                        <li>
+                                            <a *ngFor="let newsample of sample.items"
+                                                (click)="setValue(newsample,sample,section,page)" pRipple
+                                                class="flex align-items-center cursor-pointer p-3 hover:surface-100 border-round transition-colors transition-duration-150">
+                                                <i class="pi pi-book mr-2 text-500"></i>
+                                                <span class="font-medium">{{newsample.label}}</span>
+                                            </a>
+
+                                        </li>
+                                    </ul>
+
+                                </li>
+                            </ul>
+                        </li>
+
+
+                    </ul>
+
+                    <p-divider></p-divider>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+
+    <div class="col-12 md:col-9">
+        <div class="surface-card shadow-2 border-round select-none p-5">
+            <p-breadcrumb [model]="items" [home]="home" (onItemClick)="ItemClick($event)"></p-breadcrumb>
+            <br>
+            <div *ngIf="!SelectedSection">
+                <div *ngFor="let sample of help">
+                    <div *ngIf="sample.parentsrno==-1">
+                        <div class="border-blue-600 font-medium text-2xl p-3 mb-3 text-900"
+                            style="border-left: 8px solid">
+                            {{sample.name}}</div>
+                        <div class="line-height-3 text-lg text-700 mb-4">
+                            <div [innerHTML]="sample.description"></div>
+                        </div>
+                    </div>
+              </div>
+
+            </div>
+            <div *ngIf="SelectedSection">
+                <div class="border-blue-600 font-medium text-2xl p-3 mb-3 text-900" style="border-left: 8px solid">
+                    {{SelectedSection.label}}</div>
+                <div class="line-height-3 text-lg text-700 mb-4">
+                    <div [innerHTML]="SelectedSection.description"></div>
+                </div>
+            </div>
+        </div>
+        <p-divider></p-divider>
+        <div class="surface-card shadow-2 border-round select-none p-5">
+                <highcharts-chart
+              [Highcharts]="Highcharts"
+              [options]="chartOptions"
+              style="display: block; align-items: center;"
+            ></highcharts-chart>
+        </div>
+        <br>
+        <div class="border-1 border-round surface-border p-5 surface-50 flex flex-column align-items-center">
+
+          <div class="font-medium text-xl mt-5 mb-3">Still Have Questions?</div>
+          <p class="text-700 line-height-3 mt-0 mb-5">If you have any Query write to us. We will get back to you</p>
+          <button pButton pRipple label="Ask A Query" icon="pi pi-send" class="p-button-help" (click)="QueryPost()"></button>
+      </div>
+    </div>
+
+</div>
+
+<p-dialog [(visible)]="querydialog" [style]="{width: '800px'}" header="Ask a Query" [modal]="true" styleClass="p-fluid">
+  <ng-template pTemplate="content">
+  <div class="flex flex-column md:align-items-center md:justify-content-between md:flex-row">
+    <div>
+      <textarea rows="6" cols="100" pInputTextarea [(ngModel)]="query"></textarea>
+    </div>
+  </div>
+ </ng-template>
+  <ng-template pTemplate="footer">
+    <button pButton pRipple type="button" label="Save" class="p-button-success" (click)="Save()"></button>&nbsp;
+    <button pButton pRipple type="button" label="Cancel" class="p-button-danger" (click)="hideDialog()"></button>
+</ng-template>
+</p-dialog>
+
+
+

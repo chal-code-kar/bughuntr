@@ -1,0 +1,65 @@
+<div>
+  <div class="surface-ground border-top-1 border-bottom-1 border-gray-300 px-4 py-3">
+      <div class="flex flex-column md:align-items-center md:justify-content-between md:flex-row">
+          <div class="font-medium text-2xl text-900">User Roles</div>
+          <div class="mt-3 md:mt-0">
+
+          </div>
+      </div>
+  </div>
+</div>
+  <div class="p-5" *ngIf="UserRole.length != 0">
+    <p-table #dt [paginator]="true" [rows]="10" [showCurrentPageReport]="true"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      [rowsPerPageOptions]="[3,10,25,50]" styleClass="p-datatable-gridlines" [value]="UserRole"
+      [globalFilterFields]="['employeeName']"
+      responsiveLayout="scroll">
+      <ng-template pTemplate="caption">
+        <div class="grid">
+          <span class="col-12 md:col-4">
+          </span>
+          <span class="col-12 md:col-8 grid" style="text-align: right;">
+            <span class="col-12 md:col-8" style="text-align: right;">
+
+            </span>
+            <span class="col-12 md:col-2" style="text-align: right;">
+              <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                placeholder="Search keyword" />
+            </span>
+            <!-- <span class="col-12 md:col-2" style="text-align: right;">
+              <button type="button" pButton pRipple icon="pi pi-file" (click)="dt.exportCSV()" class="p-mr-2"
+                pTooltip="CSV" tooltipPosition="bottom"></button>
+            </span> -->
+          </span>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th>Employee Name</th>
+          <th>BugHuntr Admin</th>
+          <th>Program Admin</th>
+          <th>Researcher</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData>
+        <tr>
+          <td>{{rowData.employeeName}}</td>
+          <td>
+            <i *ngIf="rowData.admin" class="pi pi-check"></i>
+            <i *ngIf="!rowData.admin" class="pi pi-times"></i>
+          </td>
+          <td>
+            <i *ngIf="rowData.ProgramAdmin" class="pi pi-check"></i>
+            <i *ngIf="!rowData.ProgramAdmin" class="pi pi-times"></i>
+          </td>
+          <td>
+            <i *ngIf="rowData.Researcher" class="pi pi-check"></i>
+            <i *ngIf="!rowData.Researcher" class="pi pi-times"></i>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  <div *ngIf="UserRole.length == 0" style="text-align: center; margin-top: 10%;">
+    <p-progressSpinner></p-progressSpinner>
+  </div>

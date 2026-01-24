@@ -1,0 +1,39 @@
+<div class="p-5" style="padding-top: 0px !important;" *ngIf="option1">
+    <h2 style="color:#337AB7">Edit Option</h2>
+    <div class="grid">
+        <div class="col-12 md:col-6 grid">
+            <!-- <label class="col-12 md:col-4">Lookup Group:<span style="color: red;">*</span></label>
+            <span class="col-12 md:col-8"> -->
+                <!-- <p-dropdown [options]="lookupGroupList" [(ngModel)]="option1.lookupGroup" placeholder="Select Lookup Group" [style]="{'width':'100%'}"></p-dropdown>
+                 -->
+                 <label class="col-12 md:col-4">Lookup Group:<span style="color: red;">*</span></label>
+            <span class="col-12 md:col-8">
+                {{option1.lookupgroup}}
+            </span>
+           
+        </div>
+        <div class="col-12 md:col-6 grid">
+            <label class="col-12 md:col-4">Lookup Value:<span style="color: red;">*</span></label>
+            <span class="col-12 md:col-8">
+                <input type="text" pInputText [(ngModel)]="option1.lookupvalue" placeholder="Enter Lookup Value"
+                    maxlength="150" style="width:100% !important;" />
+            </span>
+        </div>
+    </div>
+    <div class="grid">
+        <label class="col-12 md:col-2">Lookup Description:<span style="color: red;">*</span></label>
+        <span class="col-12 md:col-10">
+            <textarea [(ngModel)]="option1.lookupdescription" placeholder="Enter Lookup Description" maxlength="260"
+                rows="5" style="width: 100% !important;" pInputTextarea></textarea>
+        </span>
+    </div>
+</div>
+
+<div style="text-align: center;">
+    <button style="margin-right: 4px;" pButton pRipple type="button" label="Update" icon="pi pi-plus"
+        class="p-button-success" (click)="validateOption()"></button>
+    <!-- <button style="margin-right: 4px;" pButton pRipple type="button" label="Back" icon="pi pi-arrow-circle-left"
+        class="p-button-danger" onclick="window.history.back()"></button> -->
+        <button style="margin-right: 4px;" pButton pRipple type="button" label="Back"
+         icon="pi pi-arrow-circle-left" class="p-button-danger"  [routerLink]="['/manage-getall']"></button>
+</div>

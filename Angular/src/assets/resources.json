@@ -1,0 +1,53 @@
+[{
+    "pageTitle":"Standard Guidelines v1.0",
+    "pageDesc":"sample desc",
+    "data":[
+        {
+            "panelTitle":"Vulnerability Submission Guidelines",
+            "panelDescription":"",
+            "entries":[
+                "Each program has defined targets In-scope and rules to follow. Each vulnerability is reviewed against them.",
+                "If target is not listed In-scope then it must be considered out of scope irrespective of whether it is mentioned in program’s out-of-scope list.",
+                "includes any/all subdomains not listed above.",
+                "Program team reproduces submitted vulnerability through ‘Steps to Reproduce’ from vulnerability submission.",
+                "Quality of content submitted as part of vulnerability submission plays an important role during evaluation. Program team takes decision about acceptance / rejection / Differ based on that."
+            ]
+        },
+        {
+            "panelTitle":"Non-qualifying Vulnerability list",
+            "panelDescription":"Following low or informational vulnerabilities does not qualify for reward because they have little or no impact on program. Researchers shall refrain from submitting them because such act will reduce researcher rating. Following listing contains vulnerabilities that are reproducible however often ineligible.",
+            "entries":[
+                "Descriptive error messages (e.g. Stack Traces, application or server errors).",
+                "HTTP 404 codes/pages or other HTTP non-200 codes/pages.",
+                "Banner disclosure on common/public services.",
+                "Disclosure of known public files or directories, (e.g. robots.txt).",
+                "Clickjacking and issues only exploitable through clickjacking.",
+                "CSRF on forms that are available to anonymous users (e.g. the contact form).",
+                "Logout Cross-Site Request Forgery (logout CSRF).",
+                "Presence of application or web browser ‘autocomplete’ or ‘save password’ functionality.",
+                "Lack of Secure and HTTPOnly cookie flags.",
+                "Lack of Security Speedbump when leaving the site.",
+                "Weak Captcha / Captcha Bypass",
+                "Username enumeration via Login Page error message",
+                "Username enumeration via Forgot Password error message",
+                "Login or Forgot Password page brute force and account lockout not enforced.",
+                "OPTIONS / TRACE HTTP method enabled",
+                "SSL Attacks such as BEAST, BREACH, Renegotiation attack",
+                "SSL Forward secrecy not enabled",
+                "SSL Insecure cipher suites",
+                "The Anti-MIME-Sniffing header X-Content-Type-Options",
+                "Missing HTTP security headers"
+            ]
+        },
+        {
+            "panelTitle":"Reward Guidelines",
+            "panelDescription":"",
+            "entries":[
+                "Each program has separate Reward value. Reward for functionality mentioned in Scope are Rewarded at higher levels.",
+                "Vulnerability linked with functionality mentioned In-Scope has higher chance of getting better rewards compared to technical submissions.",
+                "Researcher will qualify for a Reward if he/she is the first person to submit previously unknown vulnerability and vulnerability results in a major code or configuration change.",
+                "Reward amount is based on the business impact and CVSS Score."
+            ]
+        }
+    ]
+}]

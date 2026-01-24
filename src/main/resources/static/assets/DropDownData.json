@@ -1,0 +1,320 @@
+{
+  "severity" : [
+    {
+      "key": "Critical",
+      "value": "Critical"
+    },
+    {
+      "key": "High",
+      "value": "High"
+    },
+    {
+      "key": "Medium",
+      "value": "Medium"
+    },
+    {
+      "key": "Low",
+      "value": "Low"
+    }
+  ],
+  "assessmenttype" : [
+    {
+      "key": "A",
+      "value": "Automated"
+    },
+    {
+      "key": "S",
+      "value": "Semi-Automated"
+    },
+    {
+      "key": "M",
+      "value": "Manual"
+    }
+  ],
+  "asvs": [
+    {
+      "key": "1",
+      "value": "Architecture, Design and Threat Modeling"
+    },
+    {
+      "key": "2",
+      "value": "Authentication"
+    },
+    {
+      "key": "3",
+      "value": "Session Management"
+    },
+    {
+      "key": "4",
+      "value": "Access Control"
+    },
+    {
+      "key": "5",
+      "value": "Validation, Sanitization and Encoding"
+    },
+    {
+      "key": "6",
+      "value": "Stored Cryptography"
+    },
+    {
+      "key": "7",
+      "value": "Error Handling and Logging"
+    },
+    {
+      "key": "8",
+      "value": "Data Protection"
+    },
+    {
+      "key": "9",
+      "value": "Communications"
+    },
+    {
+      "key": "10",
+      "value": "Malicious Code"
+    },
+    {
+      "key": "11",
+      "value": "Business Logic"
+    },
+    {
+      "key": "12",
+      "value": "File and Resources"
+    },
+    {
+      "key": "13",
+      "value": "API and Web Service"
+    },
+    {
+      "key": "14",
+      "value": "Configuration"
+    }
+  ],
+  "currentstatus": [
+    {
+      "key": "181",
+      "value": "Open"
+    },
+    {
+      "key": "182",
+      "value": "Close"
+    },
+    {
+      "key": "183",
+      "value": "Risk-Accepted"
+    },
+    {
+      "key": "184",
+      "value": "Justified and Closed"
+    },
+    {
+      "key": "185",
+      "value": "Justified, Pending Review"
+    },
+    {
+      "key": "186",
+      "value": "False-Positive"
+    }
+  ],
+  "vulntype": [
+    {
+      "key": "170",
+      "value": "SQL Injection"
+    },
+    {
+      "key": "171",
+      "value": "Cross Site Scripting (XSS)"
+    },
+    {
+      "key": "172",
+      "value": "Cross Site Request Forgery (CSRF)\n"
+    },
+    {
+      "key": "173",
+      "value": "Broken Access Control (Horizontal)"
+    },
+    {
+      "key": "174",
+      "value": "Broken Access Control (Vertical)"
+    },
+    {
+      "key": "175",
+      "value": "Lack of Input Validation"
+    },
+    {
+      "key": "176",
+      "value": "Security Misconfigurations"
+    },
+    {
+      "key": "177",
+      "value": "Lack of Business or Process Validations"
+    },
+    {
+      "key": "178",
+      "value": "Missing Trust Boundary Validation"
+    },
+    {
+      "key": "179",
+      "value": "Absence of Standard Security Controls"
+    },
+    {
+      "key": "180",
+      "value": "Other"
+    },
+    {
+      "key": "181",
+      "value": "Absence of SAML/Domain Authentication"
+    },
+    {
+      "key": "182",
+      "value": "Administration is exposed on public internet"
+    },
+    {
+      "key": "183",
+      "value": "Application allows concurrent login"
+    },
+    {
+      "key": "184",
+      "value": "Broken/Insecure Authentication"
+    },
+    {
+      "key": "185",
+      "value": "Buffer Overflow"
+    },
+    {
+      "key": "186",
+      "value": "Clickjacking"
+    },
+    {
+      "key": "187",
+      "value": "Improper Application Performance/Behaviour"
+    },
+    {
+      "key": "188",
+      "value": "Improper Error Handling/Exception Handling"
+    },
+    {
+      "key": "189",
+      "value": "Improper Input Validation"
+    },
+    {
+      "key": "190",
+      "value": "Information Disclosure"
+    },
+    {
+      "key": "191",
+      "value": "Insecure Business Requirements/Functionalities"
+    },
+    {
+      "key": "192",
+      "value": "Insecure Data Privacy or Security Implementation"
+    },
+    {
+      "key": "193",
+      "value": "Insecure Deserialisation"
+    },
+    {
+      "key": "194",
+      "value": "Insecure Direct Object Reference (IDOR)"
+    },
+    {
+      "key": "195",
+      "value": "Insecure Encryption/Encoding"
+    },
+    {
+      "key": "196",
+      "value": "Insecure File upload"
+    },
+    {
+      "key": "197",
+      "value": "Insecure or Inadequate Logging"
+    },
+    {
+      "key": "198",
+      "value": "Insecure or Missing CAPTCHA / Anti Automation Controls"
+    },
+    {
+      "key": "199",
+      "value": "Insecure Password Management or Missing Password Policy"
+    },
+    {
+      "key": "200",
+      "value": "Insecure Redirection"
+    },
+    {
+      "key": "201",
+      "value": "Insecure Resource Handling or Release"
+    },
+    {
+      "key": "202",
+      "value": "Insecure Session Management"
+    },
+    {
+      "key": "203",
+      "value": "Insecure Storage of Secrets"
+    },
+    {
+      "key": "204",
+      "value": "Insecure/Unhardened Configurations"
+    },
+    {
+      "key": "205",
+      "value": "Missing controls to prevent Reverse Engineering"
+    },
+    {
+      "key": "206",
+      "value": "Production Data accessible in UAT"
+    },
+    {
+      "key": "207",
+      "value": "UAT/Non Prod hosted on public internet"
+    },
+    {
+      "key": "208",
+      "value": "Usage of Components with Known Vulnerabilities"
+    },
+    {
+      "key": "209",
+      "value": "Use of Hard-coded Credentials"
+    },
+    {
+      "key": "210",
+      "value": "User Enumeration"
+    },
+    {
+      "key": "223",
+      "value": "Functional Issue"
+    }
+  ],
+  "cia": [
+    {
+      "key": "C",
+      "value": "Confidentiality"
+    },
+    {
+      "key": "I",
+      "value": "Integrity"
+    },
+    {
+      "key": "A",
+      "value": "Availability"
+    }
+  ],
+  "type" : [
+    {
+      "key": "E",
+      "value": "Exposure"
+    },
+    {
+      "key": "V",
+      "value": "Vulnerability"
+    },
+    {
+      "key": "Ex",
+      "value": "Exploit"
+    },
+    {
+      "key": "222",
+      "value": "Functional"
+    }
+  ]
+}

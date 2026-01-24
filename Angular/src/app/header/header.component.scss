@@ -1,0 +1,68 @@
+@media screen and (max-width: 768px)
+{
+#webView
+ {
+ display:none;
+ }
+}
+
+
+
+
+
+@media screen and (min-width: 768px)
+{
+#mobileView
+{
+display:none;
+}
+}
+
+.font{
+  font-family:  Roboto;
+}
+
+a:link {
+
+    text-decoration: none;
+
+  }
+
+  
+
+  a:hover {
+
+    text-decoration: underline;
+
+  }
+
+
+
+a{
+
+    color: #ffffff;
+
+    font-variant: small-caps;
+
+    font-weight: 700;
+
+}
+
+:host ::ng-deep{
+  .pi-sitemap:before {
+    content: "\e96e";
+    font-size: 16px;
+  }
+  .pi-history:before {
+    font-size: 16px;
+  }
+  .pi-moon:before {
+    font-size: 16px;
+  }
+  .pi-sun:before {
+    font-size: 16px;
+  }
+  .pi-power-off:before {
+    font-size: 16px;
+  }
+}

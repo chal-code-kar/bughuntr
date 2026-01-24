@@ -1,0 +1,536 @@
+<div class="surface-ground border-top-1 border-bottom-1 border-gray-300 px-4 py-3">
+  <div class="flex flex-column md:align-items-center md:justify-content-between md:flex-row">
+    <div class="font-medium text-3xl text-900">BB{{project.srno}} - {{project.bprogramme_name}}</div>
+    <div class="mt-3 md:mt-0">
+      <p-button *ngIf="project.iseditable && project.status!='DEACTIVE'" class="px-2" label="Edit"
+        [routerLink]="['/EditProgramme/' + srno]" icon="pi pi-pencil"></p-button>
+      <p-button *ngIf="!project.iseditable && !project.bbAdmin && project.isprogramjoined" class="px-2"
+        label="Report Vulnerability" [routerLink]="['/ReportVulnerability/' + project.srno]" icon="pi pi-plus">
+      </p-button>
+      <p-button *ngIf="project.iseditable || project.bbAdmin || project.isprogramjoined" class="px-2"
+        label="View Vulnerabilities" [routerLink]="['/ViewVulnerabilities/' + project.srno]" icon="pi pi-eye"
+        styleClass="p-button-primary">
+      </p-button>
+    </div>
+  </div>
+</div>
+
+<div class="flex flex-column flex-auto">
+  <div class="p-5">
+    <div class="grid">
+      <div class="col-12 xl:col-12">
+        <div class="surface-card shadow-2 border-round p-4">
+          <div> {{project.bproject_description}}</div>
+          <br>
+          <div class="flex pb-3 surface-border">
+            <div class="line-height-3 text-600" style="max-width: 30rem">
+              <ul class="list-none p-0 m-0">
+                <li class="pb-3 pt-3 surface-border">
+                  <i class="pi pi-calendar mr-2"></i>{{project.bprojectstart_date | date:'dd-MMM-yyyy'}} -
+                  {{project.bprojectend_date | date:'dd-MMM-yyyy'}}
+                </li>
+              </ul>
+              <div *ngIf="!project.iseditable && !project.bbAdmin">
+                <div *ngIf="!project.isExpel && !project.isSuspend">
+                  <p-button *ngIf="project.isprogramjoined == false && project.isProgramJoinRequested == false"
+                    class="pb-3" label="Join" styleClass="p-button" (click)="joinProgramme()"></p-button>
+                  <p-button *ngIf="project.isprogramjoined == true && project.isProgramJoinRequested == false"
+                    class="pb-3" label="UnJoin" styleClass="p-button p-button-danger" (click)="unjoin()"></p-button>
+                  <p-button *ngIf="project.isprogramjoined == false && project.isProgramJoinRequested == true"
+                    class="pb-3" label="Join Requested" styleClass="p-button" [disabled]="true"></p-button>
+                </div>
+                <div *ngIf="project.isExpel">
+                  <p-button *ngIf="project.isprogramjoined == false && project.isProgramJoinRequested == false"
+                    class="pb-3" label="You are Expeled from this Program" styleClass="p-button"
+                    (click)="joinProgramme()" [disabled]="true"></p-button>
+                </div>
+                <div *ngIf="project.isSuspend">
+                  <p-button *ngIf="project.isprogramjoined == false && project.isProgramJoinRequested == false"
+                    class="pb-3" label="You are Suspended from this Program" styleClass="p-button"
+                    (click)="joinProgramme()" [disabled]="true"></p-button>
+                </div>
+              </div>
+            </div>
+
+            <div class="w-1">
+              <div class="flex relative align-items-center justify-content-center mx-3 py-3 min-h-full">
+                <div class="border-left-1 border-300 top-0 left-50 absolute h-full"></div>
+                <div class="py-2 z-1 surface-0">
+                  <span class="text-900 font-medium"></span>
+                </div>
+              </div>
+            </div>
+            <div class="text-600">
+              <ul class="list-none p-0 m-0 ">
+                <li class="pb-3 surface-border">
+                  <i class="pi pi-money-bill mr-2"> </i><b>Rewards</b>
+                </li>
+                <div *ngFor="let item of project.jobdetialsdata">
+                  <li class="pb-1 surface-border">
+                    {{item.jobtype}} : {{item.pricing}} - {{item.maxpricing}}
+                  </li>
+                </div>
+              </ul>
+            </div>
+            <div class="w-1">
+              <div class="flex relative align-items-center justify-content-center mx-3 py-3 min-h-full">
+                <div class="border-left-1 border-300 top-0 left-50 absolute h-full"></div>
+                <div class="py-2 z-1 surface-0">
+                  <span class="text-900 font-medium"></span>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="text-600">
+                <ul class="list-none p-0 m-0">
+                  <li class="pb-3 surface-border">
+                    <i class="pi pi-desktop mr-2"> </i><b>Program Details</b>
+                  </li>
+
+                  <li class="pb-3 surface-border">
+                    API : {{project.bproject_api}}
+                  </li>
+                  <li class="pb-3 surface-border">
+                    No of Static Page : {{project.staticpage}}
+                  </li>
+                  <li class="pb-3 surface-border">
+                    No of Dynamic Page : {{project.dynamicpage}}
+                  </li>
+                  <li class="pb-3 surface-border">
+                     No of Roles : {{project.roles}}
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="w-1">
+              <div class="flex relative align-items-center justify-content-center mx-3 py-3 min-h-full">
+                <div class="border-left-1 border-300 top-0 left-50 absolute h-full"></div>
+                <div class="py-2 z-1 surface-0">
+                  <span class="text-900 font-medium"></span>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="isAdmin" class="text-600">
+              <ul class="list-none p-0 m-0">
+                <li class="pb-3 surface-border">
+                  <i class="pi pi-id-card mr-2"> </i><b>More Details</b>
+                </li>
+                <div >
+                  <ul class="list-none p-0 m-0">
+                    <li class="pb-3 surface-border">
+                      Program Owner : {{project.bugproject_ownemp_name}} ({{project.bproject_ownemp_id}})
+                    </li>
+                    <li *ngIf="project.apm_id.length > 0" class="pb-3 surface-border">
+                      APM ID : {{project.apm_id}}
+                    </li>
+                    <li class="pb-3 surface-border">
+                     Unit Name : {{project.unit}}
+                    </li>
+                    <li class="pb-3 surface-border">
+                      Program Creation Date : {{project.createddate | date:'dd-MMM-yyyy'}}
+                    </li>
+                  </ul>
+                </div>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="flex flex-wrap">
+  <div class="w-full lg:w-12 px-5">
+    <ul class="surface-card p-3 m-0 list-none flex overflow-x-auto select-none">
+      <li class="px-1">
+        <a pRipple
+          class="cursor-pointer px-4 py-3 flex align-items-center hover:surface-100 border-round transition-colors transition-duration-150"
+          [ngClass]="{'bg-primary hover:bg-primary': active4 === 0, 'text-700': active4 !== 0}" (click)="active4 = 0">
+          <i class="pi pi-home mr-2"></i>
+          <span class="font-medium">Overview</span>
+        </a>
+      </li>
+      <li class="flex align-items-center">
+        <div style="width:1px; height: 50%" class="border-right-1 surface-border"></div>
+      </li>
+      <li class="px-1">
+        <a pRipple
+          class="cursor-pointer px-4 py-3 flex align-items-center hover:surface-100 border-round transition-colors transition-duration-150"
+          [ngClass]="{'bg-primary hover:bg-primary': active4 === 1, 'text-700': active4 !== 1}" (click)="active4 = 1">
+          <i class="pi pi-cloud mr-2"></i>
+          <span class="font-medium">Tech Info</span>
+        </a>
+      </li>
+      <li class="flex align-items-center">
+        <div style="width:1px; height: 50%" class="border-right-1 surface-border"></div>
+      </li>
+      <li class="px-1">
+        <a pRipple
+          class="cursor-pointer px-4 py-3 flex align-items-center hover:surface-100 border-round transition-colors transition-duration-150"
+          [ngClass]="{'bg-primary hover:bg-primary': active4 === 2, 'text-700': active4 !== 2}" (click)="active4 = 2">
+          <i class="pi pi-list mr-2"></i>
+          <span class="font-medium">Scope</span>
+        </a>
+      </li>
+      <li class="flex align-items-center">
+        <div style="width:1px; height: 50%" class="border-right-1 surface-border"></div>
+      </li>
+      <li class="px-1">
+        <a pRipple
+          class="cursor-pointer px-4 py-3 flex align-items-center hover:surface-100 border-round transition-colors transition-duration-150"
+          [ngClass]="{'bg-primary hover:bg-primary': active4 === 3, 'text-700': active4 !== 3}" (click)="active4 = 3">
+          <i class="pi pi-check mr-2"></i>
+          <span class="font-medium">Rules</span>
+        </a>
+      </li>
+      <li class="flex align-items-center">
+        <div style="width:1px; height: 50%" class="border-right-1 surface-border"></div>
+      </li>
+      <li class="px-1" *ngIf="project.access">
+        <a pRipple
+          class="cursor-pointer px-4 py-3 flex align-items-center hover:surface-100 border-round transition-colors transition-duration-150"
+          [ngClass]="{'bg-primary hover:bg-primary': active4 === 4, 'text-700': active4 !== 4}" (click)="active4 = 4">
+          <i class="pi pi-cog mr-2"></i>
+          <span class="font-medium">Access</span>
+        </a>
+      </li>
+      <li class="flex align-items-center" *ngIf="project.access">
+        <div style="width:1px; height: 50%" class="border-right-1 surface-border"></div>
+      </li>
+      <li class="px-1" *ngIf="project.resources">
+        <a pRipple
+          class="cursor-pointer px-4 py-3 flex align-items-center hover:surface-100 border-round transition-colors transition-duration-150"
+          [ngClass]="{'bg-primary hover:bg-primary': active4 === 5, 'text-700': active4 !== 5}" (click)="active4 = 5">
+          <i class="pi pi-book mr-2"></i>
+          <span class="font-medium">Resources</span>
+        </a>
+      </li>
+      <li class="flex align-items-center" *ngIf="project.resources">
+        <div style="width:1px; height: 50%" class="border-right-1 surface-border"></div>
+      </li>
+      <li class="px-1" *ngIf="project.Announcement">
+        <a pRipple
+          class="cursor-pointer px-4 py-3 flex align-items-center hover:surface-100 border-round transition-colors transition-duration-150"
+          [ngClass]="{'bg-primary hover:bg-primary': active4 === 6, 'text-700': active4 !== 6}" (click)="active4 = 6">
+          <i class="pi pi-bell mr-2"></i>
+          <span class="font-medium">Announcements</span>
+        </a>
+      </li>
+      <li class="flex align-items-center" *ngIf="project.Announcement">
+        <div style="width:1px; height: 50%" class="border-right-1 surface-border"></div>
+      </li>
+
+      <li class="px-1" *ngIf="project.users.length != 0 && project.status!='DEACTIVE'">
+        <a pRipple
+          class="cursor-pointer px-4 py-3 flex align-items-center hover:surface-100 border-round transition-colors transition-duration-150"
+          [ngClass]="{'bg-primary hover:bg-primary': active4 === 7, 'text-700': active4 !== 7}" (click)="active4 = 7">
+          <i class="pi pi-users mr-2"></i>
+          <span class="font-medium">Users</span>
+        </a>
+      </li>
+      <li class="flex align-items-center" *ngIf="project.users.length != 0">
+        <div style="width:1px; height: 50%" class="border-right-1 surface-border"></div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+
+<div class="flex flex-wrap">
+  <div class="w-full lg:w-9 px-5 py-0 " *ngIf="active4 == 0">
+    <div class="pr-0 lg:pr-5 lg:pl-5 surface-section ">
+      <div class="font-normal text-2xl mt-3 mb-3 text-blue-600 pt-5"><b>Program Details</b></div>
+      <div class="pb-5">
+        <p-editor [style]="{'height':'400px'}" [(ngModel)]="project.overview">
+          <ng-template pTemplate="header" class="header">
+            <span class="ql-formats"></span>
+          </ng-template>
+        </p-editor>
+      </div>
+    </div>
+  </div>
+  <div class="w-full lg:w-9 px-5 py-0 " *ngIf="active4 == 1">
+    <div class="pr-0 lg:pr-5 lg:pl-5 surface-section">
+      <div class="font-normal text-2xl mt-3 mb-3 text-blue-600 pt-5"><b>Technology</b></div>
+      <div class="pb-5 line-height-3 mt-0 mb-2">
+        <div [innerHTML]="project.bproject_tech"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="w-full lg:w-9 px-5 py-0 " *ngIf="active4 == 2">
+    <div class="pr-0 lg:pr-5 lg:pl-5 surface-section">
+      <div class="font-normal text-2xl mt-3 mb-3 text-blue-600 pt-5"><b>In Scope</b></div>
+      <ul class="list-none p-0 m-0 pb-5">
+        <li class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap"
+          *ngFor="let item of inscope; let i = index">
+          <div class="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">{{item}}</div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="pr-0 lg:pr-5 lg:pl-5 surface-section">
+      <div class="font-normal text-2xl mt-3 mb-3 text-blue-600 pt-5"><b>Out Scope</b></div>
+      <ul class="list-none p-0 m-0 pb-5">
+        <li class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap"
+          *ngFor="let item of outscope; let i = index">
+          <div class="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">{{item}}</div>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="w-full lg:w-9 px-5 py-0" *ngIf="active4 == 3">
+    <div style="margin-top: 3%;" class="grid">
+      <label class="col-12 md:col-3">Select Category : </label>
+      <div class="col-12 md:col-9">
+        <p-dropdown [options]="ruleoptions" placeholder="Select Category" [(ngModel)]="rulecat" optionLabel="name"
+          optionValue="code" [style]="{'width':'30%'}"></p-dropdown>
+      </div>
+    </div>
+
+    <div *ngIf="rulecat">
+      <div class="pr-0 lg:pr-5 lg:pl-5 surface-section">
+        <div *ngIf="project.rules[rulecat].length != 0">
+          <div class="font-normal text-2xl mt-3 mb-3 text-blue-600 pt-5"><b>{{rulecat}}</b></div>
+          <ul class="list-none p-0 m-0 pb-5">
+            <li *ngFor="let item of project.rules[rulecat]; let i = index">
+              {{item.rules_details}}
+              <hr>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!rulecat">
+      <div class="pr-0 lg:pr-5 lg:pl-5 surface-section" *ngFor="let cat of rules_category">
+        <div *ngIf="project.rules[cat].length != 0">
+          <div class="font-normal text-2xl mt-3 mb-3 text-blue-600 pt-5"><b>{{cat}}</b></div>
+          <ul class="list-none p-0 m-0 pb-5">
+            <li *ngFor="let item of project.rules[cat]; let i = index">
+              {{item.rules_details}}
+              <hr>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="w-full lg:w-9 px-5 py-0" *ngIf="active4 == 4">
+    <div class="pr-0 lg:pr-5 lg:pl-5 surface-section">
+      <div class="font-normal text-2xl mt-3 mb-3 text-blue-600 pt-5"><b>Participant Access</b></div>
+      <div class="pb-5">
+        <p-editor [style]="{'height':'400px'}" [(ngModel)]="project.access">
+          <ng-template pTemplate="header" >
+            <span class="ql-formats"></span>
+          </ng-template>
+        </p-editor>
+      </div>
+    </div>
+  </div>
+
+  <div class="w-full lg:w-9 px-5 py-0" *ngIf="active4 == 5">
+    <div class="pr-0 lg:pr-5 lg:pl-5 surface-section">
+      <div class="font-normal text-2xl mt-3 mb-3 text-blue-600 pt-5"><b>Resources</b></div>
+      <div class="pb-5">
+        <p-editor [style]="{'height':'400px'}" [(ngModel)]="project.resources">
+          <ng-template pTemplate="header" >
+            <span class="ql-formats"></span>
+          </ng-template>
+        </p-editor>
+      </div>
+    </div>
+  </div>
+
+  <div class="w-full lg:w-9 px-5 py-0" *ngIf="active4 == 6">
+    <div class="pr-0 lg:pr-5 lg:pl-5 surface-section">
+      <div class="font-normal text-2xl mt-3 mb-3 text-blue-600 pt-5"><b>Announcements</b></div>
+      <div class="surface-section pb-5">
+        <div *ngFor="let date of announcementDates">
+          <h2 style="color: rgba(106, 106, 233, 0.877);">{{date}}</h2>
+          <div class="pr-0 lg:pr-5 lg:pl-5 surface-section grid" *ngFor="let item of announcement[date]">
+            <span class="col-4 grid text-xl font-bold">
+              <span class="col-10 text-xl font-bold">{{item.announcement_category}}</span>
+              <span class="col-2 text-xl font-bold">-</span>
+            </span>
+            <span class="col-8"> {{item.announcement_details}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="w-full lg:w-9 px-5 py-0" *ngIf="active4 == 7">
+    <div class="pr-0 lg:pr-5 lg:pl-5 surface-section">
+      <div class="font-normal text-2xl mt-3 mb-3 text-blue-600 pt-5"><b>Users</b></div>
+      <div class="surface-section pb-5">
+        <p-table #dt [value]="project.users" [rowHover]="true" [rows]="10" [showCurrentPageReport]="true"
+          [rowsPerPageOptions]="[10,25,50]" [paginator]="true"
+          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+          [globalFilterFields]="['reseacher_id', 'status', 'reseacher_name']">
+          <ng-template pTemplate="caption">
+            <div class="grid">
+              <div class="col-12 md:col-8"></div>
+              <div class="col-12 md:col-4" style="text-align: right;">
+                <span class="p-input-icon-left">
+                  <i class="pi pi-search"></i>
+                  <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                    placeholder="Search" />
+                </span>
+              </div>
+            </div>
+          </ng-template>
+          <ng-template pTemplate="header" let-columns>
+            <tr>
+              <th>Sr. No</th>
+              <th>Employee Name</th>
+              <th>Employee ID</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-rowData let-i="rowIndex">
+            <tr>
+              <td>
+                {{i+1}}
+              </td>
+              <td class="text-blue-600 cursor-pointer" routerLink="/etl-data">
+                {{rowData.reseacher_name}}
+              </td>
+              <td>
+                {{rowData.reseacher_id}}
+              </td>
+              <td>
+                {{rowData.status}}
+              </td>
+              <td>
+                <div *ngIf="rowData.status == 'Requested'">
+                  <button pButton pRipple type="button" icon="pi pi-check"
+                    (click)="changeStatus(rowData.reseacher_id, rowData.status, 'Accept')" pTooltip="Accept"
+                    tooltipPosition="top" class="p-button-rounded p-button-outlined mr-1"></button>
+                  <button pButton pRipple type="button" icon="pi pi-ban"
+                    (click)="changeStatus(rowData.reseacher_id, rowData.status, 'Decline')" pTooltip="Decline"
+                    tooltipPosition="top" class="p-button-rounded p-button-danger p-button-outlined mr-1"></button>
+                </div>
+                <div *ngIf="rowData.status == 'Joined'">
+                  <button pButton pRipple type="button" icon="pi pi-times"
+                    (click)="displaySuspend = true; assignValue(rowData.reseacher_id, rowData.status, 'Suspend')"
+                    pTooltip="Suspend" tooltipPosition="top"
+                    class="p-button-rounded p-button-danger p-button-outlined mr-1"></button>
+                  <button pButton pRipple type="button" icon="pi pi-prime"
+                    (click)="changeStatus(rowData.reseacher_id, rowData.status, 'Expel')" pTooltip="Expel"
+                    tooltipPosition="top" class="p-button-rounded p-button-danger p-button-outlined mr-1"></button>
+                </div>
+                <div *ngIf="rowData.status == 'Suspend'">
+                  <button pButton pRipple type="button" icon="pi pi-replay"
+                    (click)="changeStatus(rowData.reseacher_id, rowData.status, 'Revoke')" pTooltip="Revoke"
+                    tooltipPosition="top" class="p-button-rounded p-button-danger p-button-outlined mr-1"></button>
+                </div>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+        <br>
+      </div>
+    </div>
+  </div>
+
+  <div class="w-full lg:w-3 px-5 pt-3">
+    <div *ngIf="Statistics.isReported || project.iseditable || project.bbAdmin"
+      class="shadow-2 border-round surface-card mb-3 flex-column justify-content-between flex">
+      <div class="p-4">
+        <p class="mt-0 mb-3 text-blue-600 p-text-bold line-height-3">
+          <b>Program Statistics</b>
+        </p>
+        <p class="mt-0 mb-3 text-600 line-height-3">
+          <b>{{Statistics.vulnRewarded}}</b> vulnerabilities rewarded
+        </p>
+        <p class="mt-0 mb-1 text-700 line-height-3">
+          Validation within <b>1 week</b>
+        </p>
+        <p class="mt-0 mb-3 text-500 line-height-2">
+          {{Statistics.approvedPercentage}}% of submissions are accepted or rejected
+        </p>
+        <p class="mt-0 mb-3 text-700 line-height-3">
+          <b>{{Statistics.statistics2}}</b> average payout (last 3 months)
+        </p>
+      </div>
+    </div>
+
+    <div #dt2 *ngIf="!Statistics.isReported && !project.iseditable && !project.bbAdmin"
+      class="shadow-2 border-round surface-card mb-3 flex-column justify-content-between flex">
+      <div class="p-4" style="background: rgba(216, 216, 216, 0.5)">
+        <p style="opacity: 0.3;" class="mt-0 mb-3 text-blue-600 p-text-bold line-height-3">
+          <b>Program Statistics</b>
+        </p>
+        <div class="flex-column justify-content-between flex" style="text-align: center;">
+          <i class="pi pi-lock mb-2" style="font-size: 2rem;"></i>
+          <b>To Unlock Program Statistics, Please Report Vulnerability</b>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="showLeaderBoard"
+      class="shadow-2 border-round surface-card mb-3 flex-column justify-content-between flex">
+      <div class="p-4">
+        <p class="mt-0 mb-3 text-blue-600 p-text-bold line-height-3">
+          <b>Leader Board </b>
+        </p>
+        <ul class="list-none p-0 m-0" *ngFor="let sample2 of leaderboard">
+          <li class="flex flex-column md:flex-row md:align-items-center md:justify-content-between mb-4">
+            <div class="flex">
+              <img src="assets/image/{{sample2.profile_pic}}.png" class="mr-2 mb-3 lg:mb-0"
+                style="width:45px; height:45px; border-radius: 50%;" />
+              <div>
+                <span class="block text-900 font-medium mb-1">{{sample2.avatar}}</span>
+                <div class="text-600">{{sample2.teams}}</div>
+              </div>
+            </div>
+            <div class="mt-2 md:mt-0 flex flex-nowrap">
+
+              <button *ngIf="sample2.sum!=null" pButton pRipple
+                class="p-button-text p-button-plain p-button-rounded">{{sample2.sum}}(Overall Points:
+                {{sample2.points}})</button>
+            </div>
+
+
+          </li>
+
+        </ul>
+      </div>
+    </div>
+
+    <div class="shadow-2 border-round surface-card mb-3  flex-column justify-content-between flex">
+      <div class="p-4">
+        <p class="mt-0 mb-3 text-blue-600 p-text-bold line-height-3">
+          <b>Recently joined this program</b>
+        </p>
+        <img *ngFor="let i of Statistics.researcherjoined;" src="assets/image/{{i.profile_pic}}.png" class="mr-3"
+          routerLink="/Profile/{{i.researcher_profile_id}}" style="width:45px; height:45px; border-radius: 50%;"
+          pTooltip="{{i.avatar}}" tooltipPosition="top" />
+        <p>
+          Total {{Statistics.researcherjoined.length}} Researchers
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<p-dialog header="Header" [(visible)]="displaySuspend" [style]="{width: '30vw'}" [baseZIndex]="0">
+
+  <div class="grid">
+    <label class="col-12 md:col-4">Suspend Till :</label>
+    <div class="col-12 md:col-8">
+      <input pInputText type="date" id="birthday" [(ngModel)]="revokeTill" name="birthday" />
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <p-button icon="pi pi-times" (click)="displaySuspend=false" label="Cancel"
+      styleClass="p-button-danger p-button-text"></p-button>
+    <p-button icon="pi pi-check" (click)="suspend()" label="Ok" styleClass="p-button-text"></p-button>
+  </ng-template>
+</p-dialog><br>

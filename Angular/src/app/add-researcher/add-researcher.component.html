@@ -1,0 +1,96 @@
+<p-toast></p-toast>
+<div class="surface-ground border-top-1 border-bottom-1 border-gray-300 px-4 py-3">
+    <div class="flex flex-column md:align-items-center md:justify-content-between md:flex-row">
+      <div class="font-medium text-3xl text-900">Add Researcher</div>
+    </div>
+  </div>
+
+  <div *ngIf="Allowed" class="p-5">
+    <div class="grid p-5">
+      <div class="col-12 md:col-12 grid" style="display: inline; text-align: center;">
+        <div class="mb-2 ml-4">
+            <img id="M1" src="assets/image/M1.png" class="mr-5 mb-3 lg:mb-0"
+              style=" width:90px; height:90px; cursor: pointer;border:10px " (click)="image('M1')" />
+            <img id="M2" src="assets/image/M2.png" class="mr-5 mb-3 lg:mb-0"
+              style=" width:90px; height:90px;cursor: pointer;" (click)="image('M2')" />
+            <img id="M3" src="assets/image/M3.png" class="mr-5 mb-3 lg:mb-0"
+              style="width:90px; height:90px;cursor: pointer;" (click)="image('M3')" />
+            <img id="M4" src="assets/image/M4.png" class="mr-5 mb-3 lg:mb-0"
+              style="width:90px; height:90px;cursor: pointer;" (click)="image('M4')" />
+            <img id="M5" src="assets/image/M5.png" class="mr-5 mb-3 lg:mb-0"
+              style="width:90px; height:90px;cursor: pointer;" (click)="image('M5')" />
+            <br>
+            <img id="F1" src="assets/image/F1.png" class="mr-5 mb-3 lg:mb-0"
+              style="width:90px; height:90px;border-radius: 50%;cursor: pointer;" (click)="image('F1')" />
+            <img id="F2" src="assets/image/F2.png" class="mr-5 mb-3 lg:mb-0"
+              style="width:90px; height:90px;border-radius: 50%;cursor: pointer;" (click)="image('F2')" />
+            <img id="F3" src="assets/image/F3.png" class="mr-5 mb-3 lg:mb-0"
+              style="width:90px; height:90px;border-radius: 50%;cursor: pointer;" (click)="image('F3')" />
+            <img id="F4" src="assets/image/F4.png" class="mr-5 mb-3 lg:mb-0"
+              style="width:90px; height:90px;border-radius: 50%;cursor: pointer;" (click)="image('F4')" />
+            <img id="F5" src="assets/image/F5.png" class="mr-5 mb-3 lg:mb-0"
+              style="width:90px; height:90px;border-radius: 50%;cursor: pointer;" (click)="image('F5')" />
+        </div>
+        <span><b> Select an Avatar :<span class="colorRed">*</span></b></span>
+        <br><br>
+        <b>{{this.menuData.userInfo.firstName}} ({{this.menuData.userInfo.ID}})</b>
+      </div>
+
+      <br>
+      <br>
+
+      <div class="col-2 md:col-10 grid">
+        <label class="col-12 md:col-12">Avatar Name :<span class="colorRed">*</span></label>
+        <div class="col-12 md:col-11">
+          <input type="text" pInputText [(ngModel)]="avatar" style="width: 100%;" placeholder="Enter Avatar"
+            (input)="displayAvailableButton = true">
+        </div>
+        <div class="col-12 md:col-1">
+          <button pButton pRipple type="button" class="p-button-success" icon="pi pi-search"
+            pTooltip="Check Availablility" tooltipPosition="top" (click)="checkAvailability()"></button>
+        </div>
+        <div *ngIf="avatarAvailable && !displayAvailableButton" class="col-12 md:col-12">
+          <i class="pi pi-check-circle text-green-500 mr-2"></i>Available
+        </div>
+        <div *ngIf="!avatarAvailable && !displayAvailableButton" class="col-12 md:col-12 py-3 text-pink-500">
+          <i class="pi pi-times-circle mr-2"></i>Not Available
+        </div>
+      </div>
+      <div class="col-2 md:col-2 grid">
+        <div *ngIf="image_name" class="col-12 md:col-11">
+          <img src="assets/image/{{image_name}}.png" class="mr-5 mb-3 lg:mb-0" style="width:120px; height: 120px;border: 10px rgba(77, 77, 77, 0.377); border-radius: 50%;" />
+        </div>
+      </div>
+
+
+      <div class="col-2 md:col-12 grid">
+        <label class="col-12 md:col-12">BIO :<span class="colorRed">*</span></label>
+        <div class="col-12 md:col-12">
+          <textarea rows="5" pInputTextarea [(ngModel)]="Bio" style="width: 100%;" minlength="5" maxlength="500"
+            placeholder="Enter Bio"></textarea>
+        </div>
+      </div>
+
+      <div class="col-2 md:col-6 grid">
+        <label class="col-12 md:col-12">Skills :<span class="colorRed">*</span></label>
+        <div class="col-12 md:col-12">
+          <p-multiSelect display="chip" [options]="options.content" [(ngModel)]="Skills" optionLabel="lookupvalue" optionValue="lookupdescription"
+            placeholder="Select skills" [style]="{'width':'205%'}">
+          </p-multiSelect>
+        </div>
+      </div>
+
+      <div class="col-12 md:col-12 flex flex-wrap md:justify-content-between justify-content-center card-container">
+        <div class="w-12rem h-6rem align-items-center"></div>
+        <div class="w-12rem h-6rem flex align-items-center justify-content-center">
+          <button pButton pRipple type="button" class="p-button-success" label="Submit" icon="pi pi-save"
+            (click)="Submit()"></button>
+        </div>
+        <div class="w-12rem h-6rem align-items-center"></div>
+
+      </div>
+    </div>
+  </div>
+  <div class="surface-card shadow-2 border-round p-4" *ngIf="!Allowed" style="text-align: center;">
+    <h3>You are Not Authorized for this Action.</h3>
+  </div>

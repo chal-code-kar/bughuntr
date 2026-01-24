@@ -1,0 +1,82 @@
+<div class="p-5">
+<p-panel header="Add-Category" [toggleable]="true">
+    <ng-template pTemplate="icons">
+            <button pButton class="p-panel-header-icon p-link" (click)="menu.toggle($event)">
+               
+            </button>
+            <p-menu #menu id="config_menu" [model]="items" [popup]="true"></p-menu>
+    </ng-template>
+
+            
+    <div class="pr-0 lg:pr-5 lg:pl-5  ">
+        <div >
+            <h4 style="color: #607D8B; ">Standard Guidelines<span style="color: red"> *</span>:</h4>
+            <input  class="col-6 md:col-6" [(ngModel)]="guidelines" type="text" pInputText placeholder="add category">
+        </div>
+        
+        <div class="grid" style="margin-top: 3%;">
+            
+            <div class="col-6 md:col-4" style="text-align: left;">
+                <button pButton pRipple type="button" class="p-button-success" label="Submit" icon="pi pi-save"
+                    (click)="onSubmit()"></button>&nbsp;&nbsp;
+
+                   
+                        <button pTooltip="Cancel" [routerLink]="['/all-resources']" tooltipPosition="top" label="Cancel"
+                          pButton pRipple  type="button" icon="pi pi-times" class="p-button-primary"></button>
+                    
+            </div>
+            <div class="col-12 md:col-4" style="text-align: right;"></div>
+        </div>
+    </div>
+   
+</p-panel>
+<br><br>
+<p-panel header="Add-Category item" [toggleable]="true">
+    <ng-template pTemplate="icons">
+            <button pButton class="p-panel-header-icon p-link" (click)="menu.toggle($event)">
+               
+            </button>
+            <p-menu #menu id="config_menu" [model]="items" [popup]="true"></p-menu>
+    </ng-template>
+
+   
+            
+        
+    
+    <div class="pr-0 lg:pr-5 lg:pl-5  ">
+        <div >
+            <h4 style="color: #607D8B;">Add category<span style="color: red"> *</span>:</h4>
+            <p-dropdown [style]="{'width':'50%'}"[options]="items" [(ngModel)]="masterid" placeholder="Select category" optionLabel= "guidelines" optionValue= "srno" [showClear]="true"></p-dropdown>
+        </div>
+        <div>
+            <h4 style="color: #607D8B;">Panel Title<span style="color: red"> *</span>:</h4>
+            <input class="col-6 md:col-6" [(ngModel)]="paneltitle" type="text" pInputText placeholder="add panel title">
+        </div>
+        <div>
+            <h4 style="color: #607D8B;">Panel Description<span style="color: red"> *</span>:</h4>
+            <textarea rows="5" cols="75" pInputTextarea [(ngModel)]="paneldescription" ></textarea>
+        </div>
+        <div>
+            <h4 style="color: #607D8B;">Entries<span style="color: red"> *</span>:</h4>
+            <p-editor [style]="{'height':'320px'}" [(ngModel)]="entries"></p-editor>
+        </div>
+        <div class="grid" style="margin-top: 3%;">
+            <div class="col-12 md:col-4"></div>
+            <div class="col-12 md:col-4" style="text-align: center;">
+                <button pButton pRipple type="button" class="p-button-success" label="Submit" icon="pi pi-save"
+                    (click)="addResourcesitem()"></button>&nbsp;&nbsp;
+
+                   
+                        <button pTooltip="Cancel" [routerLink]="['/all-resources']" tooltipPosition="top" label="Cancel"
+                          pButton pRipple  type="button" icon="pi pi-times" class="p-button-primary"></button>
+                    
+            </div>
+            <div class="col-12 md:col-4" style="text-align: right;"></div>
+        </div>
+    </div>
+   
+</p-panel>
+</div>
+
+
+<p-toast></p-toast>

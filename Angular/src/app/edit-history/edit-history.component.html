@@ -1,0 +1,25 @@
+<div class="p-5">
+    <p-panel header="Add-History" [toggleable]="true">
+        <div>
+            <h4 style="color: #607D8B;">Fontname</h4>
+            <input class="col-5 md:col-5" type="text" [(ngModel)]="option1.fontname" pInputText placeholder="add fontname">
+        </div>
+
+        <h4 style="color: #607D8B;">Release version info</h4>
+        <span class="p-float-label">
+            <textarea id="float-input" rows="5" cols="65" [(ngModel)]="option1.releaseverinfo" pInputTextarea></textarea>
+            <label for="float-input">add version</label>
+        </span>
+        <h4 style="color: #607D8B;">Release item name</h4>
+        <span class="p-float-label">
+            <textarea id="float-input" rows="5" cols="65" [(ngModel)]="option1.releaseitemname" pInputTextarea></textarea>
+            <label for="float-input">add item name</label>
+        </span>
+        
+        <button pButton pRipple type="button" label="Update" class="p-button-success" style="margin-right:20px;margin-left:150px;margin-top:15px;text-align: center" (click)="edithistory()"></button>
+        
+        <button pButton pRipple type="button" label="Back" class="p-button-raised p-button-danger" [routerLink]="['/admin-history']"></button>
+    
+    </p-panel>
+
+</div>

@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="https://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="https://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="https://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.tcs.utx.digiframe</groupId>
+	<artifactId>Bughuntr</artifactId>
+	<version>5.1.2</version>
+	<packaging>jar</packaging>
+	<name>Bughuntr</name>
+
+	<profiles>
+		<profile>
+			<id>owasp-dependency-check</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.owasp</groupId>
+						<artifactId>dependency-check-maven</artifactId>
+						<version>${dependency-check-maven.version}</version>
+						<executions>
+							<execution>
+								<goals>
+									<goal>check</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
+
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8
+		</project.reporting.outputEncoding>
+		<java.version>17</java.version>
+		<log4j2-version>2.20.0</log4j2-version>
+		<dependency-check-maven.version>5.3.0</dependency-check-maven.version>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>2.7.17</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+
+
+
+
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>2021.0.3</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>javax.servlet-api</artifactId>
+				<version>4.0.1</version>
+				<scope>provided</scope>
+			</dependency>
+		</dependencies>
+
+
+	</dependencyManagement>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.36</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-archaius</artifactId>
+			<version>2.2.10.RELEASE</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jdbc</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.github.vladimir-bukhtoyarov</groupId>
+			<artifactId>bucket4j-core</artifactId>
+			<version>7.6.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-core</artifactId>
+			<version>9.0.110</version>
+		</dependency>
+		<dependency>
+			<groupId>org.owasp</groupId>
+			<artifactId>dependency-check-maven</artifactId>
+			<version>8.1.2</version>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
+
+
+		<dependency>
+			<groupId>org.json</groupId>
+			<artifactId>json</artifactId>
+			<version>20240303</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.15.0</version>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.13.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+			<version>3.5.8</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
+
+
+		<dependency>
+			<groupId>javax.cache</groupId>
+			<artifactId>cache-api</artifactId>
+		</dependency>
+
+
+
+
+
+
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-core</artifactId>
+			<version>6.5.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.14.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.tika</groupId>
+			<artifactId>tika-core</artifactId>
+			<version>2.4.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.maven</groupId>
+			<artifactId>maven-core</artifactId>
+			<version>3.9.10</version>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.4</version>
+		</dependency>
+
+
+
+
+
+
+
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.3.9</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version>1.6.0</version>
+		</dependency>
+		
+		<dependency>
+		    <groupId>com.h2database</groupId>
+		    <artifactId>h2</artifactId>
+		    <version>2.2.220</version>
+		</dependency>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	</dependencies>
+
+	<build>
+		<sourceDirectory>src/main</sourceDirectory>
+		<testSourceDirectory>src/test</testSourceDirectory>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.11.0</version>
+				<configuration>
+					<release>17</release>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.2.5</version>
+				<configuration>
+
+					<systemPropertyVariables>
+						<jacoco-agent.destfile>${project.build.directory}/coverage.exec
+						</jacoco-agent.destfile>
+					</systemPropertyVariables>
+				</configuration>
+				<executions>
+					<execution>
+						<id>test-custom-plugin</id>
+						<phase>test</phase>
+						<goals>
+							<goal>test</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<version>2.7.17</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.owasp</groupId>
+				<artifactId>dependency-check-maven</artifactId>
+				<version>12.1.8</version>
+				<configuration>
+					<autoUpdate>false</autoUpdate>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+		</plugins>
+	</build>
+
+</project>

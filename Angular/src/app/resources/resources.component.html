@@ -1,0 +1,54 @@
+<div  style="width: 100%; overflow-wrap: break-word;">
+<div *ngIf="srno != undefined">
+    <div>
+        <div class="surface-ground border-top-1 border-bottom-1 border-gray-300 px-4 py-3">
+            <div class="flex flex-column md:align-items-center md:justify-content-between md:flex-row">
+                <div class="font-medium text-3xl text-900"  style="width: 100%; overflow-wrap: break-word;">
+                   {{heading}}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="p-5" *ngIf="items.length==0" style="text-align: center; font-size: 30px;">
+        The content will get updated soon
+    </div>
+
+    <div class="p-3" *ngFor="let sample of items">
+        
+        <p-panel header="{{sample.paneltitle}}" [toggleable]="true" [collapsed]="true">
+            {{sample.paneldescription}}
+
+            <div *ngFor  = "let data of sample.entries.split('.,'); let i = index" >
+                <br>
+                <p-editor [(ngModel)]="sample.entries.split('.,')[i]">
+
+                </p-editor>
+            </div>
+            
+
+        </p-panel>
+    </div>
+</div>
+
+
+    <div *ngIf="srno == undefined">
+        <div class="surface-section p-5">
+            <div class="font-medium text-3xl text-900 mb-3">Available Resources</div>
+            <div class="text-500 mb-5">Following are the Resources :-</div>
+            <ul class="list-none p-0 m-0">
+                <li class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap" *ngFor = "let sample of resources">
+                    <div class="text-900 w-full md:w-8 md:flex-order-0 flex-order-1"  style="width: 100%; overflow-wrap: break-word;"> {{sample.guidelines}}</div>
+                    <div class="w-6 md:w-2 flex justify-content-end">
+                        <button pButton pRipple label="View More" (click)="getdata(sample.srno)" icon="pi pi-eye"
+                            class="p-button-text"></button>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="surface-card shadow-2 border-round p-4" *ngIf="resources.length == 0" style="text-align: center;">
+        <h3>No Resources Found</h3>
+      </div>
+</div>

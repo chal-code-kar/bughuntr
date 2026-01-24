@@ -1,0 +1,50 @@
+
+<!-- <div style="margin-bottom: 15px;">
+    <app-breadcrumb *ngIf="items.length !=0" [items]="items"></app-breadcrumb>
+</div> -->
+
+
+<div class="p-5" style="padding-top: 0px !important;">
+    <div>
+        <h2 style="color:#337AB7">Add New Option</h2>
+    </div>
+    <div class="grid">
+        <div class="col-6 grid">
+            <label class="col-12 md:col-4">Lookup Group:<span style="color: red;">*</span></label>
+            <div class="col-12 md:col-8">
+                <p-dropdown [options]="lookupGroupList" [(ngModel)]="lookupGroup" placeholder="Select Lookup Group" [style]="{'width':'100%'}"></p-dropdown>
+                
+            </div>
+        </div>
+        <div class="mt-3 md:mt-2">
+        <button *ngIf="!addcat" pTooltip="Add Category to the DropDown" label="Add Category" pButton pRipple style="margin-left: 8px;" type="button" class="p-button-text" (click)="addcat=true"></button>   
+        </div>
+        <div *ngIf="addcat">
+            <div class="inline-flex card-container p-2">
+                <input *ngIf="addcat" type="text" pInputText id="name" [(ngModel)]="newcat" placeholder="Enter Category" class="pr-2"/>
+              <button *ngIf="addcat" label="Add" pButton pRipple style="margin-left: 2px;" type="button" class="p-button-text" (click)="AddCat()"></button>
+            </div>
+        </div>
+    </div>
+    <div class="grid">
+        <div class="col-6 grid">
+            <label class="col-12 md:col-4">Lookup Value:<span style="color: red;">*</span></label>
+            <div class="col-12 md:col-8">
+                <input type="text" pInputText [(ngModel)]="lookupValue" maxlength="150" placeholder="Enter Lookup Value" style="width: 100% !important;" />
+            </div>
+        </div>
+    </div>
+    <div class=" grid">
+        <label class="col-12 md:col-2">Lookup Description:<span style="color: red;">*</span></label>
+        <div class="col-12 md:col-10">
+            <textarea [(ngModel)]="lookupDescription" placeholder="Enter Lookup Description" maxlength="260" rows="5" style="width: 100% !important;" pInputTextarea></textarea>
+        </div>
+    </div>
+    
+    <div style="text-align: center;">
+        <button style="margin-right: 4px;" pButton pRipple type="button" label="Create" icon="pi pi-plus"
+            class="p-button-success" (click)="validateOption()"></button>
+        <button style="margin-right: 4px;" pButton pRipple type="button" label="Back"
+         icon="pi pi-arrow-circle-left" class="p-button-danger"  [routerLink]="['/manage-getall']"></button>
+    </div>
+</div>

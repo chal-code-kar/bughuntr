@@ -1,0 +1,147 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "cli": {
+    "analytics": "aca41901-7481-4911-a831-5b7afe6b68ae"
+  },
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "login": {
+      "root": "",
+      "sourceRoot": "src",
+      "projectType": "application",
+      "architect": {
+        "build": {
+      "builder": "@angular-devkit/build-angular:browser",
+      "options": {
+        "outputPath": "../src/main/resources/static",
+        "index": "src/index.html",
+        "main": "src/main.ts",
+        "polyfills": "src/polyfills.ts",
+        "tsConfig": "tsconfig.app.json",
+        "assets": ["src/assets"],
+        "styles": [
+                "src/styles.scss",
+                "node_modules/primeicons/primeicons.css",
+                "node_modules/primeng/resources/primeng.min.css",
+                "node_modules/primeflex/primeflex.css",
+                "src/assets/css/app/layout.scss",
+                "node_modules/quill/dist/quill.core.css",
+                "node_modules/quill/dist/quill.snow.css",
+                "node_modules/font-awesome/css/font-awesome.css",
+                {
+                  "input": "src/theme-dark.scss",
+                  "bundleName": "darkTheme",
+                  "inject": false
+                },
+                {
+                  "input": "src/theme-light.scss",
+                  "bundleName": "lightTheme",
+                  "inject": false
+                }
+              ],
+        "scripts": [
+          "node_modules/jquery/dist/jquery.min.js",
+          "src/assets/js/markdown.js",
+          "src/assets/js/markdown-it.min.js",
+          "src/assets/js/markdown-it-multimd-table.min.js",
+          "src/assets/js/md2pdf.js",
+          "src/assets/js/util.js"
+        ]
+      },
+      "configurations": {
+        "production": {
+          
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "extractLicenses": true,
+          "vendorChunk": false,
+          "buildOptimizer": true
+        }
+      }
+    },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "buildTarget": "login:build"
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "login:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "buildTarget": "login:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "src/test.ts",
+            "karmaConfig": "./karma.conf.js",
+            "polyfills": "src/polyfills.ts",
+            "tsConfig": "src/tsconfig.spec.json",
+            "scripts": [],
+            "styles": [
+              "src/styles.css"
+            ],
+            "assets": [
+              "src/assets",
+              "src/favicon.ico"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "src/tsconfig.app.json",
+              "src/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "login-e2e": {
+      "root": "e2e",
+      "sourceRoot": "e2e",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "./protractor.conf.js",
+            "devServerTarget": "login:serve"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "e2e/tsconfig.e2e.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "schematics": {
+    "@schematics/angular:component": {
+      "prefix": "app",
+      "style": "css"
+    },
+    "@schematics/angular:directive": {
+      "prefix": "app"
+    }
+  }
+}

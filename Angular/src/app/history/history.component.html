@@ -1,0 +1,21 @@
+ <!-- <div>
+	<p-breadcrumb [model]="items"></p-breadcrumb>
+</div>   -->
+
+<div class="p-5" style="padding-top: 0px !important;">
+	<h1 style="color: #0d47a1;">History</h1>
+	<div *ngFor="let element of announcements">
+		<h2><b>{{element.fontname}} - {{element.releaseverinfo}}</b></h2>
+		<div>
+			 <!-- <div *ngFor  = "let data of announcements.split('.,')" >
+
+                <div [innerHTML]="data"></div>
+
+            </div> -->
+			<markdown>
+				* {{element.releaseitemname}}
+			</markdown>
+		</div>
+		<br>
+	</div>
+</div>

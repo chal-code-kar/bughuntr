@@ -1,0 +1,39 @@
+<div class="p-5">
+    <p-table #dt [columns]="selectedCols" [paginator]="true" [rows]="3" [showCurrentPageReport]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [rowsPerPageOptions]="[3,10,25,50]" styleClass="p-datatable-gridlines" [value]="reportData" 
+    [globalFilterFields]="globalFilter" responsiveLayout="scroll">
+        <ng-template pTemplate="caption">
+            <div class="grid">
+                <span class="col-12 md:col-4">
+                    <p-multiSelect (onChange)="onChange()" [options]="cols" [(ngModel)]="selectedCols" optionLabel="header"
+                        selectedItemsLabel="{0} columns selected" placeholder="Choose Columns"></p-multiSelect>
+                </span>
+                <span class="col-12 md:col-8 grid" style="text-align: right;">
+                    <span class="col-12 md:col-8" style="text-align: right;">
+                        
+                    </span>
+                    <span class="col-12 md:col-2" style="text-align: right;">
+                        <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="Search keyword" />
+                    </span>
+                    <span class="col-12 md:col-2" style="text-align: right;">
+                        <button type="button" pButton pRipple icon="pi pi-file" (click)="dt.exportCSV()" class="p-mr-2" pTooltip="CSV" tooltipPosition="bottom"></button>
+                    </span>
+                </span>
+            </div>
+        </ng-template>
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <th pSortableColumn="title" *ngFor="let col of columns">
+                    {{col.header}}
+                    <p-sortIcon field="col.header"></p-sortIcon>
+                </th>
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr>
+                <td *ngFor="let col of columns">
+                    {{rowData[col.field]}}
+                </td>
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

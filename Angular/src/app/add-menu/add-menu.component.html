@@ -1,0 +1,39 @@
+<p-toast></p-toast>
+
+<div class="surface-ground border-top-1 border-bottom-1 border-gray-300 px-4 py-3">
+  <div class="flex flex-column md:align-items-center md:justify-content-between md:flex-row">
+      <div class="font-medium text-3xl text-900">ADD MENU</div>
+      <div class="mt-3 md:mt-0">
+        <button pTooltip="Cancel" [routerLink]="['/menus']" tooltipPosition="top" label="Cancel"
+          pButton pRipple style="margin-left: 4px;" type="button" icon="pi pi-times" class="p-button-primary"></button>
+      </div>
+  </div>
+</div>
+<div class="pr-0 lg:pr-5 lg:pl-5  ">
+  <div >
+    <h4 style="color: #607D8B;">Menu Name<span style="color: red"> *</span>:</h4>
+      <input type="text" class="col-12 md:col-12" pInputText id="name" [(ngModel)]="name" placeholder="Enter Title"/>
+  </div>
+  <div >
+    <h4 style="color: #607D8B;">Link<span style="color: red"> *</span>:</h4>
+      <input type="text"  class="col-12 md:col-12" pInputText id="link" [(ngModel)]="link" placeholder="Enter Link"/>
+  </div>
+  <div >
+    <h4 style="color: #607D8B;">Roles<span style="color: red"> *</span>:</h4>
+    <p-multiSelect display="chip" [options]="roles" [(ngModel)]="tagged" optionLabel="role_name" optionValue="srno"
+    defaultLabel="Select Roles" selectedItemsLabel="{0} items selected" autoWidth="false" [style]="{'width':'100%'}">
+  </p-multiSelect>
+  </div>
+
+
+
+  <br>
+    <div class="grid" style="margin-top: 3%;">
+        <div class="col-12 md:col-4"></div>
+        <div class="col-12 md:col-4" style="text-align: center;">
+            <button id= "submithelp" pButton pRipple type="button" class="p-button-success" label="Submit" icon="pi pi-save" (click)="submit()"
+              ></button>
+        </div>
+        <div class="col-12 md:col-4" style="text-align: right;"></div>
+    </div>
+</div>

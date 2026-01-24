@@ -1,0 +1,65 @@
+  <div class="surface-overlay relative">
+    <div id="navbar-7"
+      class="px-2 shadow-2 hidden lg:block absolute lg:static lg:w-auto w-full surface-overlay left-0 top-100 z-1 shadow-2">
+      <ul class="list-none p-0 m-0 flex lg:align-items-center flex-column lg:flex-row select-none">
+        <li [routerLink]="['/']">
+          <a pRipple
+            class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 font-medium border-round cursor-pointer transition-colors transition-duration-150">
+            <i class="pi pi-home mr-2"></i>
+            <span>Home</span>
+          </a>
+        </li>
+        <li [routerLink]="['/ProgramDetails']">
+          <a pRipple
+            class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 font-medium border-round cursor-pointer transition-colors transition-duration-150">
+            <i class="pi pi-globe mr-2"></i>
+            <span>Programs</span>
+          </a>
+        </li>
+        <li [routerLink]="['/app-rprofile']">
+          <a pRipple
+            class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 font-medium border-round cursor-pointer transition-colors transition-duration-150">
+            <i class="pi pi-users mr-2"></i>
+            <span>Researchers</span>
+          </a>
+        </li>
+        <li [routerLink]="['/Resources']">
+          <a pRipple
+            class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 font-medium border-round cursor-pointer transition-colors transition-duration-150">
+            <i class="pi pi-file mr-2"></i>
+            <span>Resources</span>
+          </a>
+        </li>
+        <li [routerLink]="['/Help']">
+          <a pRipple
+            class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 font-medium border-round cursor-pointer transition-colors transition-duration-150">
+            <i class="pi pi-book mr-2"></i>
+            <span>Help</span>
+          </a>
+        </li>
+        <li [routerLink]="['/worklist']">
+          <a pRipple
+            class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 font-medium border-round cursor-pointer transition-colors transition-duration-150">
+            <i class="pi pi-check-square mr-2"></i>
+            <span>WorkList</span>
+          </a>
+        </li>
+        <li [routerLink]="['/admin']">
+          <a pRipple
+            class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 font-medium border-round cursor-pointer transition-colors transition-duration-150">
+            <i class="pi pi-user mr-2"></i>
+            <span>Admin</span>
+          </a>
+        </li>
+        <li [routerLink]="['/reports']">
+          <a pRipple
+            class="flex p-3 align-items-center text-600 hover:text-900 hover:surface-100 font-medium border-round cursor-pointer transition-colors transition-duration-150">
+            <i class="pi pi-file-excel mr-2"></i>
+            <span>Reports</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <router-outlet></router-outlet>
+  <p-toast></p-toast>

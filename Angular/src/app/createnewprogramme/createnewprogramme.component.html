@@ -1,0 +1,581 @@
+<div class="surface-ground border-top-1 border-bottom-1 border-gray-300 px-4 py-3">
+  <div class="flex flex-column md:align-items-center md:justify-content-between md:flex-row">
+    <div class="font-medium text-3xl text-900">Create Programme</div>
+
+    
+  </div>
+</div>
+
+<div class="flex flex-wrap">
+  <div class="w-full lg:w-12 px-3">
+    <ul class="surface-card p-3 m-0 list-none flex overflow-x-auto select-none">
+      <li class="pr-1">
+        <a pRipple
+          class="cursor-pointer px-4 py-3 flex align-items-center hover:surface-100 border-round transition-colors transition-duration-150"
+          [ngClass]="{'bg-primary hover:bg-primary': active4 === 0, 'text-700': active4 !== 0}" (click)="active4 = 0">
+          <span class="font-medium">Summary</span>
+        </a>
+      </li>
+      <li class="flex align-items-center">
+        <div style="width:1px; height: 50%" class="border-right-1 surface-border"></div>
+      </li>
+      <li *ngIf="privateProgram" class="px-1">
+        <a pRipple
+          class="cursor-pointer px-4 py-3 flex align-items-center hover:surface-100 border-round transition-colors transition-duration-150"
+          [ngClass]="{'bg-primary hover:bg-primary': active4 === 9, 'text-700': active4 !== 9}" (click)="active4 = 9">
+          <span class="font-medium">Invited</span>
+        </a>
+      </li>
+      <li *ngIf="privateProgram" class="flex align-items-center">
+        <div style="width:1px; height: 50%" class="border-right-1 surface-border"></div>
+      </li>
+      <li class="px-1">
+        <a pRipple
+          class="cursor-pointer px-4 py-3 flex align-items-center hover:surface-100 border-round transition-colors transition-duration-150"
+          [ngClass]="{'bg-primary hover:bg-primary': active4 === 1, 'text-700': active4 !== 2}" (click)="active4 = 1">
+          <span class="font-medium">Overview</span>
+        </a>
+      </li>
+      <li class="flex align-items-center">
+        <div style="width:1px; height: 50%" class="border-right-1 surface-border"></div>
+      </li>
+      <li class="px-1">
+        <a pRipple
+          class="cursor-pointer px-4 py-3 flex align-items-center hover:surface-100 border-round transition-colors transition-duration-150"
+          [ngClass]="{'bg-primary hover:bg-primary': active4 === 2, 'text-700': active4 !== 2}" (click)="active4 = 2">
+          <span class="font-medium">Tech Info</span>
+        </a>
+      </li>
+      <li class="flex align-items-center">
+        <div style="width:1px; height: 50%" class="border-right-1 surface-border"></div>
+      </li>
+      <li class="px-1">
+        <a pRipple
+          class="cursor-pointer px-4 py-3 flex align-items-center hover:surface-100 border-round transition-colors transition-duration-150"
+          [ngClass]="{'bg-primary hover:bg-primary': active4 === 3, 'text-700': active4 !== 3}" (click)="active4 = 3">
+          <span class="font-medium">Scope</span>
+        </a>
+      </li>
+      <li class="flex align-items-center">
+        <div style="width:1px; height: 50%" class="border-right-1 surface-border"></div>
+      </li>
+      <li class="px-1">
+        <a pRipple
+          class="cursor-pointer px-4 py-3 flex align-items-center hover:surface-100 border-round transition-colors transition-duration-150"
+          [ngClass]="{'bg-primary hover:bg-primary': active4 === 4, 'text-700': active4 !== 4}" (click)="active4 = 4">
+          <span class="font-medium">Rewards</span>
+        </a>
+      </li>
+      <li class="flex align-items-center">
+        <div style="width:1px; height: 50%" class="border-right-1 surface-border"></div>
+      </li>
+      <li class="px-1">
+        <a pRipple
+          class="cursor-pointer px-4 py-3 flex align-items-center hover:surface-100 border-round transition-colors transition-duration-150"
+          [ngClass]="{'bg-primary hover:bg-primary': active4 === 5, 'text-700': active4 !== 5}" (click)="active4 = 5">
+          <span class="font-medium">Rules</span>
+        </a>
+      </li>
+      <li class="flex align-items-center">
+        <div style="width:1px; height: 50%" class="border-right-1 surface-border"></div>
+      </li>
+      <li class="px-1">
+        <a pRipple
+          class="cursor-pointer px-4 py-3 flex align-items-center hover:surface-100 border-round transition-colors transition-duration-150"
+          [ngClass]="{'bg-primary hover:bg-primary': active4 ===  6, 'text-700': active4 !==  6}" (click)="active4 = 6">
+          <span class="font-medium">Access</span>
+        </a>
+      </li>
+      <li class="flex align-items-center">
+        <div style="width:1px; height: 50%" class="border-right-1 surface-border"></div>
+      </li>
+      <li class="px-1">
+        <a pRipple
+          class="cursor-pointer px-4 py-3 flex align-items-center hover:surface-100 border-round transition-colors transition-duration-150"
+          [ngClass]="{'bg-primary hover:bg-primary': active4 === 7, 'text-700': active4 !== 7}" (click)="active4 = 7">
+
+          <span class="font-medium">Announcement</span>
+        </a>
+      </li>
+      <li class="flex align-items-center">
+        <div style="width:1px; height: 50%" class="border-right-1 surface-border"></div>
+      </li>
+      <li class="px-1">
+        <a pRipple
+          class="cursor-pointer px-4 py-3 flex align-items-center hover:surface-100 border-round transition-colors transition-duration-150"
+          [ngClass]="{'bg-primary hover:bg-primary': active4 === 8, 'text-700': active4 !== 8}" (click)="active4 = 8">
+          <span class="font-medium">Resources</span>
+        </a>
+      </li>
+      <li class="flex align-items-center">
+        <div style="width:1px; height: 50%" class="border-right-1 surface-border"></div>
+      </li>
+      <li class="px-1">
+        <a pRipple
+          class="cursor-pointer px-4 py-3 flex align-items-center hover:surface-100 border-round transition-colors transition-duration-150"
+          [ngClass]="{'bg-primary hover:bg-primary': active4 === 10, 'text-700': active4 !== 10}"
+          (click)="active4 = 10; validate()">
+          <span class="font-medium">Preview</span>
+        </a>
+      </li>
+      <li class="flex align-items-center">
+        <div style="width:1px; height: 50%" class="border-right-1 surface-border"></div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div *ngIf="active4 == 0">
+  <div class="pr-0 lg:pr-5 lg:pl-5  ">
+    <div class="grid">
+      <div class="col-12 md:col-6">
+        <h4 style="color: #607D8B;">Programme Name<span style="color: red"> *</span>:</h4>
+        <input class="col-12 md:col-12" type="text" [(ngModel)]="program_name" pInputText maxlength="100"
+          placeholder="Programme Name">
+      </div>
+      <div class="col-12 md:col-6">
+        <h4 style="color: #607D8B;">APM ID:</h4>
+        <input class="col-12 md:col-12" type="text" [(ngModel)]="apm_id" pInputText
+          placeholder="Apm Id">
+      </div>
+    </div>
+    <div class="grid">
+      <div class="col-12 md:col-6 p-0">
+        <h4 style="color: #607D8B;">Start Date<span style="color: red"> *</span>:</h4>
+        <p-calendar class="col-12 md:col-8" inputId="basic" [disabled]="true" [minDate]="minDate"
+          [(ngModel)]="startdate" [showIcon]="true" [style]="{width: '100%'}"></p-calendar>
+      </div>
+      <div class="col-12 md:col-6 p-0 pl-1">
+        <h4 style="color: #607D8B;">End Date<span style="color: red"> *</span>:</h4>
+        <p-calendar class="col-12 md:col-8" inputId="basic" [minDate]="minDate" [(ngModel)]="enddate" [showIcon]="true"
+          [style]="{width: '100%'}"></p-calendar>
+      </div>
+
+
+    </div>
+    <div class="grid">
+      <div class="col-12 md:col-6">
+        <h4 style="color: #607D8B;">Programme Type<span style="color: red"> *</span>:</h4>
+        <p-dropdown class="col-12 md:col-8 p-0" [options]="invitedoptions" [(ngModel)]="ptype" [showClear]="true"
+          placeholder="select Programme Type" optionLabel="name" optionValue="code" [style]="{'width':'100%'}"
+          (onChange)="typeChange()"></p-dropdown>
+      </div>
+
+      <div class="col-12 md:col-6">
+        <h4 style="color: #607D8B;">Programme criticality<span style="color: red"> *</span>:</h4>
+        <p-dropdown class="col-12 md:col-8 p-0" [options]="options" [(ngModel)]="criticality"
+          placeholder="Select Programme Criticality" optionLabel="name" optionValue="code" [style]="{'width':'100%'}">
+        </p-dropdown>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div *ngIf="active4 == 9">
+  <div class="pr-0 lg:pr-5 lg:pl-5 p-3 ">
+
+    <p-table #dt [value]="researcherList" [(selection)]="list2" styleClass="p-datatable-customers" [rowHover]="true"
+      [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" [paginator]="true"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+      [globalFilterFields]="['avatar','emp_id','count', 'total_bounty_earned']">
+      <ng-template pTemplate="caption">
+        <div class="grid">
+          <div class="col-12 md:col-8">List of Researcher</div>
+          <div class="col-12 md:col-4" style="text-align: right;">
+            <span class="p-input-icon-left">
+              <i class="pi pi-search"></i>
+              <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                placeholder="Search" />
+            </span>
+          </div>
+        </div>
+      </ng-template>
+      <ng-template pTemplate="header" let-columns>
+        <tr>
+          <th>
+            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          </th>
+          <th>Avatar</th>
+          <th>Total Bounty Earned</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-rowData>
+        <tr>
+          <td>
+            <p-tableCheckbox [value]="rowData"></p-tableCheckbox>
+          </td>
+          <td class="text-blue-600">
+            <span routerLink="/Profile/{{rowData.srno}}">{{rowData.avatar}}</span>
+          </td>
+          <td>
+            <span *ngIf="rowData.total_bounty_earned">{{rowData.total_bounty_earned}}</span>
+            <span *ngIf="!rowData.total_bounty_earned">0</span>
+          </td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+
+
+
+<div *ngIf="active4 == 1">
+  <div class="pr-0 lg:pr-5 lg:pl-5  ">
+    <div>
+      <h4 style="color: #607D8B;">Programme Name<span style="color: red"> *</span>:</h4>
+      <input class="col-12 md:col-12" type="text" [(ngModel)]="program_name" disabled pInputText
+        placeholder="Programme Name">
+
+    </div>
+    <div>
+      <h4 style="color: #607D8B;">Brief<span style="color: red"> *</span>:</h4>
+      <textarea class="col-12 md:col-12" rows="5" pInputTextarea [(ngModel)]="description" maxlength="10000"
+        placeholder="Programme Description"></textarea>
+
+
+    </div>
+    <div>
+      <h4 style="color: #607D8B;">Functionality Description<span style="color: red"> *</span>:</h4>
+      <p-editor [style]="{'height':'320px'}" [(ngModel)]="overview"></p-editor>
+    </div>
+    <br>
+  </div>
+</div>
+
+
+<div *ngIf="active4 == 2">
+  <div class="pr-0 lg:pr-5 lg:pl-5  ">
+    <div>
+      <h4 style="color: #607D8B;">Technology used<span style="color: red"> *</span>:</h4>
+      <p-editor [style]="{'height':'100px'}" [(ngModel)]="technology">
+        <ng-template pTemplate="header">
+          <span class="ql-formats">
+              <button type="button" class="ql-bold" aria-label="Bold"></button>
+              <button type="button" class="ql-italic" aria-label="Italic"></button>
+              <button type="button" class="ql-underline" aria-label="Underline"></button>
+          </span>
+        </ng-template>
+      </p-editor>
+
+    </div>
+    <div class="grid">
+      <div class="col-12 md:col-3">
+        <h4 style="color: #607D8B;">Static Pages<span style="color: red"> *</span>:</h4>
+        <input [(ngModel)]="staticpage" type="text" placeholder="Number of Static Pages" pInputText>
+      </div>
+      <div class="col-12 md:col-3">
+        <h4 style="color: #607D8B;">Dynamic Pages<span style="color: red"> *</span>:</h4>
+        <input type="text" [(ngModel)]="dynamicpage" placeholder="Number of Dynamic Pages" pInputText>
+      </div>
+      <div class="col-12 md:col-3">
+        <h4 style="color: #607D8B;">API<span style="color: red"> *</span>:</h4>
+        <input type="text" [(ngModel)]="api" placeholder="Number of APIs" pInputText>
+      </div>
+      <div class="col-12 md:col-3">
+        <h4 style="color: #607D8B;">Roles<span style="color: red"> *</span>:</h4>
+        <input type="text" [(ngModel)]="roles" placeholder="Number of Roles" pInputText>
+      </div>
+    </div>
+
+  </div>
+  <br>
+</div>
+
+
+
+<div *ngIf="active4 == 3">
+  <div class="pr-0 lg:pr-5 lg:pl-5">
+    <h4 style="color: #607D8B;">In Scope<span style="color: red"> *</span>:</h4>
+    <div class="grid">
+      <input class="col-12 md:col-11 p-0" [(ngModel)]="newinScope" type="text" maxlength="10000" pInputText  >
+      <p-button class="col-12 md:col-1" icon="pi pi-plus" (click)="AddInScope()"></p-button>
+    </div>
+    <br>
+    <div class="surface-section">
+      <ul class="list-none p-0 m-0">
+        <li class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap"
+          *ngFor="let scope1 of inScope; let i = index">
+          <div class="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">{{scope1}}</div>
+          <div class="w-6 md:w-2 flex justify-content-end">
+            <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-text p-button-danger"
+              (click)="deleteInScope(i)"></button>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div>
+      <h4 style="color: #607D8B;">Out Scope<span style="color: red"> *</span>:</h4>
+    </div>
+    <div class="grid">
+      <input class="col-12 md:col-11" [(ngModel)]="newoutscope" type="text"  maxlength="10000" pInputText>
+      <div class="col-12 md:col-1">
+        <p-button icon="pi pi-plus" (click)="AddOutScope()"></p-button>
+      </div>
+    </div>
+    <br>
+    <div class="surface-section">
+      <ul class="list-none p-0 m-0">
+        <li class="flex align-items-center py-3 px-2 border-top-1 surface-border flex-wrap"
+          *ngFor="let scope2 of outScope; let i = index">
+          <div class="text-900 w-full md:w-8 md:flex-order-0 flex-order-1">{{scope2}}</div>
+          <div class="w-6 md:w-2 flex justify-content-end">
+            <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-text p-button-danger"
+              (click)="deleteOutScope(i)"></button>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+
+
+
+  </div>
+  <br>
+</div>
+
+<div *ngIf="active4 == 4">
+  <div class="pr-0 lg:pr-5 lg:pl-5  ">
+    <div class="grid">
+      <div class="col-12 md:col-3">
+        <h4 style="color: #607D8B;">Vulnerability Type<span style="color: red"> *</span>:</h4>
+        <p-dropdown class="col-12 md:col-12 p-0" [options]="vunloptions.content" placeholder="Select Vulnerability Type"
+          [(ngModel)]="newJob" optionLabel="lookupvalue" optionValue="lookupdescription" [style]="{'width':'100%'}">
+        </p-dropdown>
+
+      </div>
+      <div class="col-12 md:col-3">
+        <h4 style="color: #607D8B;">Reward Min value<span style="color: red"> *</span>:</h4>
+        <input class="col-12 md:col-12" maxlength="8" [(ngModel)]="newPricing" type="number" pInputText>
+      </div>
+      <div class="col-12 md:col-3">
+        <h4 style="color: #607D8B;">Reward Max value<span style="color: red"> *</span>:</h4>
+        <input class="col-12 md:col-12" maxlength="8"  [(ngModel)]="newMaxPricing" type="number" pInputText>
+      </div>
+      <div class="col-12 md:col-3">
+        <h4 style="color: #607D8B;">Reward Unit<span style="color: red"> *</span>:</h4>
+        <p-dropdown class="col-12 md:col-12 p-0" [options]="rewardUnit" placeholder="Select Reward Unit"
+          [(ngModel)]="reward_type" optionLabel="name" optionValue="code" [style]="{'width':'100%'}"></p-dropdown>
+
+      </div>
+      <div class="col-12 md:col-12" style="text-align: center;">
+        <p-button label="Add Job" icon="pi pi-plus" (click)="AddJob()"></p-button>
+      </div>
+      <div class="col-12 md:col-12" *ngIf="jobs.length">
+        <p-table [value]="jobs" responsiveLayout="scroll">
+          <ng-template pTemplate="header">
+            <tr>
+              <th>SrNo.</th>
+              <th>Vulnerability type</th>
+              <th>Min Reward Value</th>
+              <th>Max Reward Value</th>
+              <th>Reward Unit</th>
+              <th>Actions</th>
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-job let-i="rowIndex">
+            <tr>
+              <td>{{i+1}}</td>
+              <td>{{job.jobtype}}</td>
+              <td>{{job.pricing}}</td>
+              <td>{{job.maxpricing}}</td>
+              <td>{{job.reward_type}}</td>
+              <td>
+                <button pButton pRipple icon="pi pi-trash" class="p-button-danger" (click)="deleteJob(i)"></button>
+              </td>
+            </tr>
+          </ng-template>
+        </p-table>
+      </div>
+    </div>
+  </div>
+
+  <br>
+</div>
+
+
+<div *ngIf="active4 == 5">
+  <div class="pr-0 lg:pr-5 lg:pl-5 grid">
+    <div class="col-12 md:col-3 p-0">
+      <h4 style="color: #607D8B;">Category<span style="color: red"> *</span>:</h4>
+      <p-dropdown class="col-12 md:col-12 p-0" [options]="categoryrules.content" placeholder="Select Rules Category"
+        [(ngModel)]="newCatg" optionLabel="lookupvalue" optionValue="lookupdescription" [style]="{'width':'100%'}">
+      </p-dropdown>
+    </div>
+
+    <div class="col-12 md:col-9 p-0 pl-1">
+      <h4 style="color: #607D8B;">Rules<span style="color: red"> *</span>:</h4>
+      <div class="grid">
+        <div class="col-12 md:col-11">
+          <input class="col-12 md:col-12" [(ngModel)]="newrules" type="text" style="width: 100%;" maxlength="10000" pInputText>
+        </div>
+        <div class="col-12 md:col-1">
+          <p-button icon="pi pi-plus" (click)="Addrules()"></p-button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 md:col-12 p-0" *ngIf="rules.length">
+      <p-table [value]="rules" responsiveLayout="scroll">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>SrNo.</th>
+            <th>Rules Category</th>
+            <th>Rules Details</th>
+            <th>Actions</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-rule let-i="rowIndex">
+          <tr>
+            <td>{{i+1}}</td>
+            <td>{{rule.rules_category}}</td>
+            <td>{{rule.rules_details}}</td>
+            <td>
+              <button pButton pRipple icon="pi pi-trash" class="p-button-danger" (click)="deleteRules(i)"></button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>
+<br>
+
+
+
+<div *ngIf="active4 == 6">
+  <div class="pr-0 lg:pr-5 lg:pl-5  ">
+    <div>
+      <h4 style="color: #607D8B;">Access Information<span style="color: red"> *</span>:</h4>
+      <p-editor [style]="{'height':'320px'}" [(ngModel)]="access"></p-editor>
+    </div>
+  </div>
+  <br>
+</div>
+
+<div *ngIf="active4 == 7">
+  <div class="pr-0 lg:pr-5 lg:pl-5 grid">
+    <div class="col-12 md:col-3 p-0">
+      <h4 style="color: #607D8B;">Announcement Category<span style="color: red"> *</span>:</h4>
+      <p-dropdown class="col-12 md:col-12 p-0" [options]="Announcementption.content"
+        placeholder="Select Announcement Category" [(ngModel)]="newAnnoCat" optionLabel="lookupvalue"
+        optionValue="lookupdescription" [style]="{'width':'100%'}"></p-dropdown>
+    </div>
+    <div class="col-12 md:col-9 p-0 pl-1">
+      <h4 style="color: #607D8B;">Announcement<span style="color: red"> *</span>:</h4>
+      <div class="grid">
+        <div class="col-12 md:col-11">
+          <textarea rows="1" pInputTextarea [(ngModel)]="newAnnouncement" placeholder="Announcement" maxlength="10000"
+            style="width: 100%;"></textarea>
+        </div>
+        <div class="col-12 md:col-1">
+          <p-button icon="pi pi-plus" (click)="AddAnnouncement()"></p-button>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 md:col-12 p-0" *ngIf="announcements.length">
+      <p-table [value]="announcements" responsiveLayout="scroll">
+        <ng-template pTemplate="header">
+          <tr>
+            <th>SrNo.</th>
+            <th>Announcement Category</th>
+            <th>Announcement Details</th>
+            <th>Date</th>
+            <th>Actions</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-announcement let-i="rowIndex">
+          <tr>
+            <td>{{i+1}}</td>
+            <td>{{announcement.announcement_category}}</td>
+            <td>{{announcement.announcement_details}}</td>
+            <td>{{myDate | date:'dd-MMM-yyyy'}}</td>
+            <td>
+              <button pButton pRipple icon="pi pi-trash" class="p-button-danger"
+                (click)="deleteAnnouncement(i)"></button>
+            </td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+  <br>
+</div>
+<div *ngIf="active4 == 8">
+  <div class="pr-0 lg:pr-5 lg:pl-5  ">
+    <div>
+      <h4 style="color: #607D8B;">Resources<span style="color: red"> *</span>:</h4>
+      <p-editor [style]="{'height':'320px'}" [(ngModel)]="resources"></p-editor>
+
+    </div>
+    <div class="grid" style="margin-top: 3%;">
+      <div class="col-12 md:col-4"></div>
+      <div class="col-12 md:col-4" style="text-align: center;">
+      </div>
+      <div class="col-12 md:col-4" style="text-align: right;"></div>
+    </div>
+
+  </div>
+  <br>
+</div>
+
+
+<div *ngIf="active4 == 10">
+  <p-panel *ngIf="Verror" header="Warn" [toggleable]="true">
+    <p-messages [(value)]="Verror" [closable]="false"></p-messages>
+  </p-panel><br>
+  <div class="pr-0 lg:pr-5 lg:pl-5 p-3 ">
+    <p-panel header="Summary" [toggleable]="true">
+      <p-panel *ngIf="Vpname" header="Program Name" [toggleable]="true">
+        <p-messages [(value)]="Vpname" [closable]="false"></p-messages>
+      </p-panel><br>
+      <p-messages [(value)]="Vapm_id" [closable]="false"></p-messages>
+      <p-messages [(value)]="Vsdate" [closable]="false"></p-messages>
+      <p-messages [(value)]="Vptype" [closable]="false"></p-messages>
+      <p-messages [(value)]="Vcritical" [closable]="false"></p-messages>
+    </p-panel><br>
+    <p-panel header="Overview" [toggleable]="true">
+      <p-messages [(value)]="Vbrief" [closable]="false"></p-messages>
+      <p-messages [(value)]="Voverview" [closable]="false"></p-messages>
+    </p-panel><br>
+    <p-panel header="Tech Info" [toggleable]="true">
+      <p-messages [(value)]="Vtech" [closable]="false"></p-messages>
+      <p-messages [(value)]="Vstatic" [closable]="false"></p-messages>
+      <p-messages [(value)]="Vdynamic" [closable]="false"></p-messages>
+      <p-messages [(value)]="Vapi" [closable]="false"></p-messages>
+      <p-messages [(value)]="Vroles" [closable]="false"></p-messages>
+    </p-panel><br>
+    <p-panel *ngIf="Vinscope || Voutscope" header="Scope" [toggleable]="true">
+      <p-messages [(value)]="Vinscope" [closable]="false"></p-messages>
+      <p-messages [(value)]="Voutscope" [closable]="false"></p-messages>
+    </p-panel><br>
+    <p-panel *ngIf="Vreward" header="Rewards" [toggleable]="true">
+      <p-messages [(value)]="Vreward" [closable]="false"></p-messages>
+    </p-panel><br>
+    <p-panel *ngIf="Vrule" header="Rules" [toggleable]="true">
+      <p-messages [(value)]="Vrule" [closable]="false"></p-messages>
+    </p-panel><br>
+    <p-panel header="Access" [toggleable]="true">
+      <p-messages [(value)]="Vaccess" [closable]="false"></p-messages>
+    </p-panel><br>
+    <p-panel *ngIf="Vannounce" header="Announcements" [toggleable]="true">
+      <p-messages [(value)]="Vannounce" [closable]="false"></p-messages>
+    </p-panel><br>
+    <p-panel header="Resources" [toggleable]="true">
+      <p-messages [(value)]="Vresources" [closable]="false"></p-messages>
+    </p-panel><br>
+    <div class="grid" style="margin-top: 3%;">
+      <div class="col-12 md:col-4"></div>
+      <div class="col-12 md:col-4" style="text-align: center;">
+        <button pButton pRipple type="button" *ngIf="submit" pTooltip="Clear All Validations to Enable"
+          class="p-button-warning" label="Submit" icon="pi pi-save"></button>
+        <button pButton pRipple type="button" *ngIf="!submit" pTooltip="Click To Submit Program"
+          class="p-button-success" label="Submit" icon="pi pi-save" (click)="Submit()"></button>
+      </div>
+      <div class="col-12 md:col-4" style="text-align: right;"></div>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,87 @@
+<div class="surface-ground">
+    <div class="flex flex-column relative flex-auto">
+        <div class="surface-ground border-top-1 border-bottom-1 border-gray-300 px-4 py-3">
+            <div class="flex flex-column md:align-items-center md:justify-content-between md:flex-row">
+                <div class="font-medium text-3xl text-900">Edit Researcher
+                </div>
+                <div>
+                    <button pButton pRipple label="Update" style="margin-left: 4px;" pTooltip="Update" tooltipPosition="top"
+                        (click)="UpdateResearcher()" type="button" icon="pi pi-save"
+                        class="p-button-success"></button>
+
+                    <button pButton pRipple label="Cancel" style="margin-left: 4px;" pTooltip="Cancel" tooltipPosition="top"
+                        [routerLink]="['/Profile/' + srno]" type="button" icon="pi pi-times"
+                        class="p-button-danger"></button>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-5">
+            <div class="grid">
+          <div class="col-12 md:col-12 grid" style="display: inline; text-align: center;">
+            <div class="flex flex-column md:flex-row pt-5">
+              <div class="col-12 md:col-4 ">
+                <img src="assets/image/{{image_name}}.png" style="width:180px; height:180px; border-radius: 50%;" />
+              </div>
+
+              <div class="col-12 md:col-8">
+            <img id="M1" src="assets/image/M1.png" class="mr-5 mb-3 lg:mb-0"
+              style=" width:90px; height:90px; cursor: pointer;border:10px " (click)="image('M1')" />
+            <img id="M2" src="assets/image/M2.png" class="mr-5 mb-3 lg:mb-0"
+              style=" width:90px; height:90px;cursor: pointer;" (click)="image('M2')" />
+            <img id="M3" src="assets/image/M3.png" class="mr-5 mb-3 lg:mb-0"
+              style="width:90px; height:90px;cursor: pointer;" (click)="image('M3')" />
+            <img id="M4" src="assets/image/M4.png" class="mr-5 mb-3 lg:mb-0"
+              style="width:90px; height:90px;cursor: pointer;" (click)="image('M4')" />
+            <img id="M5" src="assets/image/M5.png" class="mr-5 mb-3 lg:mb-0"
+              style="width:90px; height:90px;cursor: pointer;" (click)="image('M5')" />
+            <br>
+            <img id="F1" src="assets/image/F1.png" class="mr-5 mb-3 lg:mb-0"
+              style="width:90px; height:90px;border-radius: 50%;cursor: pointer;" (click)="image('F1')" />
+            <img id="F2" src="assets/image/F2.png" class="mr-5 mb-3 lg:mb-0"
+              style="width:90px; height:90px;border-radius: 50%;cursor: pointer;" (click)="image('F2')" />
+            <img id="F3" src="assets/image/F3.png" class="mr-5 mb-3 lg:mb-0"
+              style="width:90px; height:90px;border-radius: 50%;cursor: pointer;" (click)="image('F3')" />
+            <img id="F4" src="assets/image/F4.png" class="mr-5 mb-3 lg:mb-0"
+              style="width:90px; height:90px;border-radius: 50%;cursor: pointer;" (click)="image('F4')" />
+            <img id="F5" src="assets/image/F5.png" class="mr-5 mb-3 lg:mb-0"
+              style="width:90px; height:90px;border-radius: 50%;cursor: pointer;" (click)="image('F5')" />
+            </div>
+            
+        </div>
+
+                    <br>
+                    <br>
+                    <b>{{Name}}({{emp_id}})</b>
+                </div>
+                <br>
+                <br>
+
+
+                <div class="col-2 md:col-12 grid">
+                    <label style="text-align: right;" class="col-12 md:col-1">Avatar :</label>
+                    <input class="col-12 md:col-11" type="text" [(ngModel)]="avatar"  [disabled]="true" pInputText>
+                </div>
+
+                <div class="col-2 md:col-12 grid">
+                    <label style="text-align: right;" class="col-12 md:col-1">BIO :<span
+                            class="colorRed">*</span></label>
+                    <div class="col-12 md:col-11">
+                        <textarea rows="5" pInputTextarea [(ngModel)]="Bio" style="width: 100%; overflow-wrap: break-word;"
+                            placeholder="Enter Bio"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-2 md:col-12 grid">
+                <label style="text-align: right;" class="col-12 md:col-1">Skills :<span
+                        class="colorRed">*</span></label>
+                <div class="col-12 md:col-11">
+                    <p-multiSelect display="chip" [options]="options.content" [(ngModel)]="Skills" optionLabel="lookupvalue"
+                        optionValue="lookupdescription" placeholder="Select skills" [style]="{'width':'100%'}">
+                    </p-multiSelect>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

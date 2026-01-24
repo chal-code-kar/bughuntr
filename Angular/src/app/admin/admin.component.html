@@ -1,0 +1,226 @@
+<div class="grid mr-2 mt-2">
+  <div class="col-12 md:col-3">
+    <div class="surface-card shadow-2 ml-3 mt-3" style="width:90%; border-radius: 30px">
+      <ul class="list-none p-2 m-0">
+        <li>
+          <div pRipple class="p-3 flex align-items-center justify-content-between text-blue-500 cursor-pointer"
+            style="border-radius: 30px" pStyleClass="@next" enterClass="hidden" enterActiveClass="slidedown"
+            leaveToClass="hidden" leaveActiveClass="slideup">
+            <span class="font-medium">HOME</span>
+            <i class="pi pi-chevron-down"></i>
+          </div>
+          <ul class="list-none p-0 m-0 overflow-hidden">
+            <li [routerLink]="['/app-rbac']">
+              <a pRipple
+                class="flex align-items-center cursor-pointer p-3 hover:text-blue-50 hover:bg-blue-600 transition-colors transition-duration-150"
+                style="border-radius: 30px">
+                <i class="pi pi pi-check mr-2"></i>
+                <span class="font-medium">Permissions</span>
+              </a>
+            </li>
+            <li [routerLink]="['/assign-roles']">
+              <a pRipple
+                class="flex align-items-center cursor-pointer p-3 hover:text-blue-50 hover:bg-blue-600 transition-colors transition-duration-150"
+                style="border-radius: 30px">
+                <i class="pi pi-user mr-2"></i>
+                <span class="font-medium">Assign Roles</span>
+              </a>
+            </li>
+            <li [routerLink]="['/admin-history']">
+              <a pRipple
+                class="flex align-items-center cursor-pointer p-3 hover:text-blue-50 hover:bg-blue-600 transition-colors transition-duration-150"
+                style="border-radius: 30px">
+                <i class="pi pi-history mr-2"></i>
+                <span class="font-medium">History</span>
+              </a>
+            </li>
+            <li [routerLink]="['/all-resources']">
+              <a pRipple
+                class="flex align-items-center cursor-pointer p-3 hover:text-blue-50 hover:bg-blue-600 transition-colors transition-duration-150"
+                style="border-radius: 30px">
+                <i class="pi pi-book mr-2"></i>
+                <span class="font-medium">Resources</span>
+              </a>
+            </li>
+            <li [routerLink]="['/addUser']">
+              <a pRipple
+                class="flex align-items-center cursor-pointer p-3 hover:text-blue-50 hover:bg-blue-600 transition-colors transition-duration-150"
+                style="border-radius: 30px">
+                <i class="pi pi-user-plus mr-2"></i>
+                <span class="font-medium">Add Users</span>
+              </a>
+            </li>
+            <li [routerLink]="['/menus']">
+              <a pRipple
+                class="flex align-items-center cursor-pointer p-3 hover:text-blue-50 hover:bg-blue-600 transition-colors transition-duration-150"
+                style="border-radius: 30px">
+                <i class="pi pi-users mr-2"></i>
+                <span class="font-medium">Menu</span>
+              </a>
+            </li>
+            <li [routerLink]="['/app-help']">
+              <a pRipple
+                class="flex align-items-center cursor-pointer p-3 hover:text-blue-50 hover:bg-blue-600 transition-colors transition-duration-150"
+                style="border-radius: 30px">
+                <i class="pi pi-list mr-2"></i>
+                <span class="font-medium">Manage Help</span>
+              </a>
+            </li>
+            <li [routerLink]="['/blogMenu']">
+              <a pRipple
+                class="flex align-items-center cursor-pointer p-3 hover:text-blue-50 hover:bg-blue-600 transition-colors transition-duration-150"
+                style="border-radius: 30px">
+                <i class="pi pi-globe mr-2"></i>
+                <span class="font-medium">Manage Gudiance </span>
+              </a>
+            </li>
+            <li [routerLink]="['/showquery']">
+              <a pRipple
+                class="flex align-items-center cursor-pointer p-3 hover:text-blue-50 hover:bg-blue-600 transition-colors transition-duration-150"
+                style="border-radius: 30px">
+                <i class="pi pi-comment mr-2"></i>
+                <span class="font-medium">Query</span>
+                <span *ngIf="query.length>0"
+                  class="inline-flex align-items-center justify-content-center ml-auto bg-blue-100 text-gray-700 border-circle"
+                  style="min-width: 2rem; height: 2rem">{{number}}</span>
+              </a>
+            </li>
+            <li [routerLink]="['/faq-insert']">
+              <a pRipple
+                class="flex align-items-center cursor-pointer p-3 hover:text-blue-50 hover:bg-blue-600 transition-colors transition-duration-150"
+                style="border-radius: 30px">
+                <i class="pi pi-question-circle mr-2"></i>
+                <span class="font-medium">FAQ</span>
+              </a>
+            </li>
+            <li [routerLink]="['/UserRole']">
+              <a pRipple
+                class="flex align-items-center cursor-pointer p-3 hover:text-blue-50 hover:bg-blue-600 transition-colors transition-duration-150"
+                style="border-radius: 30px">
+                <i class="pi pi-users mr-2"></i>
+                <span class="font-medium">User Roles</span>
+              </a>
+            </li>
+            <li [routerLink]="['/manage-getall']">
+              <a pRipple
+                class="flex align-items-center cursor-pointer p-3 hover:text-blue-50 hover:bg-blue-600 transition-colors transition-duration-150"
+                style="border-radius: 30px">
+                <i class="pi pi-users mr-2"></i>
+                <span class="font-medium">Manage Dropdown</span>
+              </a>
+            </li>
+            <li [routerLink]="['/etl-data']">
+
+              <a pRipple
+                class="flex align-items-center cursor-pointer p-3 hover:text-blue-50 hover:bg-blue-600 transition-colors transition-duration-150"
+                style="border-radius: 30px">
+
+                <i class="pi pi-history mr-2"></i>
+
+                <span class="font-medium">ETL Data</span>
+
+              </a>
+
+            </li>
+            <li [routerLink]="['/researcher-details']">
+              <a pRipple
+                class="flex align-items-center cursor-pointer p-3 hover:text-blue-50 hover:bg-blue-600 transition-colors transition-duration-150"
+                style="border-radius: 30px">
+                <i class="pi pi-users mr-2"></i>
+                <span class="font-medium">Researcher Details</span>
+              </a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="col-12 md:col-9">
+    <div class="pt-3 mt-3 mr-2" style="text-align: center;">
+      <div class="surface-card shadow-2 border-round flex p-3 flex-column md:flex-row">
+        <div class="border-bottom-1 md:border-right-1 md:border-bottom-none surface-border flex-auto p-3">
+          <div class="flex align-items-center mb-3">
+            <i class="pi pi-code text-blue-500 text-xl mr-2"></i>
+            <span class="text-500 font-medium">Active Programs</span>
+          </div>
+          <span class="block text-900 font-medium mb-3 text-2xl">{{dashboardcount.totalprogram}}</span>
+          <div *ngIf="dashboardcount.programslastweek==0" class="flex align-items-center">
+            <i class="pi pi-arrow-down text-pink-500 text-xl mr-2"></i>
+            <span class="text-pink-500 font-medium ">{{dashboardcount.programslastweek }}</span>
+            <span class="text-500" style="padding: 8px;">Added Last Week</span>
+          </div>
+          <div *ngIf="dashboardcount.programslastweek>0" class="flex align-items-center">
+            <i class="pi pi-arrow-up text-green-500 text-xl mr-2"></i>
+            <span class="text-green-500 font-medium ">+{{dashboardcount.programslastweek }}</span>
+            <span class="text-500" style="padding: 8px;">Added Last Week</span>
+          </div>
+        </div>
+        <div class="border-bottom-1 md:border-right-1 md:border-bottom-none surface-border flex-auto p-3">
+          <div class="flex align-items-center mb-3">
+            <i class="pi pi-user text-orange-500 text-xl mr-2"></i>
+            <span class="text-500 font-medium">Researchers</span>
+          </div>
+          <span class="block text-900 font-medium mb-3 text-2xl">{{dashboardcount.totalresearchers}}</span>
+          <div *ngIf="dashboardcount.newresearcheradded>0" class="flex align-items-center">
+            <i class="pi pi-arrow-up text-green-500 text-xl mr-2"></i>
+            <span class="text-green-500 font-medium ">+{{dashboardcount.newresearcheradded}}</span>
+            <span class="text-500" style="padding: 8px;">Registered Last Week</span>
+          </div>
+          <div *ngIf="dashboardcount.newresearcheradded==0" class="flex align-items-center">
+            <i class="pi pi-arrow-down text-pink-500 text-xl mr-2"></i>
+            <span class="text-pink-500 font-medium ">{{dashboardcount.newresearcheradded}}</span>
+            <span class="text-500" style="padding: 8px;">Registered Last Week</span>
+          </div>
+        </div>
+        <div class="border-bottom-1 md:border-bottom-none surface-border flex-auto p-3">
+          <div class="flex align-items-center mb-3">
+            <i class="pi pi-slack text-cyan-500 text-xl mr-2"></i>
+            <span class="text-500 font-medium">Vulnerabilities Reported</span>
+          </div>
+          <span class="block text-900 font-medium mb-3 text-2xl">{{dashboardcount.expolitablebugs}}</span>
+          <div *ngIf="dashboardcount.bugslastquarter>0" class="flex align-items-center">
+            <i class="pi pi-arrow-up text-green-500 text-xl mr-2"></i>
+            <span class="text-green-500 font-medium ">+{{dashboardcount.bugslastquarter}}</span>
+            <span class="text-500" style="padding: 8px;">Reported Last Quarter</span>
+          </div>
+          <div *ngIf="dashboardcount.bugslastquarter==0" class="flex align-items-center">
+            <i class="pi pi-arrow-down text-pink-500 text-xl mr-2"></i>
+            <span class="text-pink-500 font-medium ">{{dashboardcount.bugslastquarter}}</span>
+            <span class="text-500" style="padding: 8px;">Reported Last Quarter</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="grid pt-2 mt-2">
+      <div class="col-12 xl:col-6">
+        <div class="surface-card shadow-2 border-round p-4">
+          <div class="text-xl text-900 font-medium mb-4">Recent Queries</div>
+          <ul *ngIf="query.length>0" class="list-none p-0 m-0">
+            <li *ngFor="let q of query" class="pb-2 border-bottom-1 surface-border">
+              <div class="font-medium text-900 mb-1 mt-2">Q. {{q.query}}</div>
+              <div class="line-height-3 text-600" style="max-width: 30rem">Posted By : {{q.full_name}}</div>
+            </li>
+          </ul>
+          <ul *ngIf="query.length==0" class="list-none p-0 m-0">
+            <li class="pb-3 border-bottom-1 surface-border">
+              <div class="font-medium text-900 mb-2">No Queries Pending</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div class="col-12 xl:col-6">
+        <div class="surface-card shadow-2 border-round p-4">
+          <div class="flex justify-content-between align-items-center">
+            <span class="text-xl text-900 font-medium">Top 5 Searched Help</span>
+          </div>
+          <div style="text-align: left;">
+
+            <highcharts-chart [Highcharts]="Highcharts" [options]="chartOptions"
+              style="display: block; align-items: left; height: 300px;"></highcharts-chart>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

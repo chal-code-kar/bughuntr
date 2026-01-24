@@ -1,0 +1,98 @@
+<div>
+  <div class="surface-ground border-top-1 border-bottom-1 border-gray-300 px-4 py-3">
+      <div class="flex flex-column md:align-items-center md:justify-content-between md:flex-row">
+          <div class="font-medium text-3xl text-900">Help Menu</div>
+          <div class="mt-3 md:mt-0">
+              <button pTooltip="Add Help" [routerLink]="['/Add-Help']"
+                  tooltipPosition="top" label="Add Help" pButton pRipple style="margin-left: 4px;" type="button"
+                  icon="pi pi-plus" class="p-button-primary"></button>
+          </div>
+      </div>
+  </div>
+</div>
+
+<p-toast></p-toast>
+
+<div class="card">
+  <div class="p-5">
+    <p-table #dt [value]="help" [rows]="4" [paginator]="true"[(selection)]="selected"
+    [rowHover]="true" [responsive]="true"
+    styleClass="p-datatable-gridlines" [globalFilterFields]="['name','description']">
+    <ng-template pTemplate="caption">
+      <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+          placeholder="Search" />
+  </ng-template>
+
+  <ng-template pTemplate="header">
+            <tr>
+                <th style="width: 20%">Name</th>
+                <th style="width: 70%">Description</th>
+                <th >Actions</th>
+
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-help>
+            <tr>
+                <td>{{help.name}}</td>
+                <td [innerHTML]="help.description">{{help.description}}</td>
+                <td>
+                    
+                    
+                    <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editHelp(help.srno)"></button>&nbsp;&nbsp;
+                    <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="openDelete(help.srno)" ></button>
+                </td>
+            </tr>
+        </ng-template>
+
+    </p-table>
+  </div>
+</div>
+
+<p-dialog [(visible)]="helpDialog" [style]="{width: '1000px'}" header="Help Details" [modal]="true" styleClass="p-fluid">
+    <ng-template pTemplate="content">
+        <div >
+          <h4 style="color: #607D8B;">Name :</h4>
+            <input type="text" pInputText id="name" [(ngModel)]="data.name" />
+        </div>
+
+        <div>
+          <div class="flex flex-column md:align-items-center md:justify-content-between md:flex-row">
+            <div class="font-medium "><h4 style="color: #607D8B;">Parent Menu :</h4></div>
+            <div class="mt-3 md:mt-0">
+            <button pTooltip="Clear Parent Menu" tooltipPosition="Clear" label="Edit Menu" pButton pRipple style="margin-left: 8px;" type="button" class="p-button-text" (click)="clearMenu()"></button>
+          </div>
+           </div>
+
+          <p-dropdown [disabled]="disable" [showClear]="true" [options]="model" [placeholder]="(parent==null)? 'Select parent menu':parent.name" [(ngModel)]="parent_menu" optionLabel="label" [style]="{'width':'100%'}" ></p-dropdown>
+      </div>
+      <div *ngIf="sub_parent_child!=null || parent_menu!=null">
+        <h4 style="color: #607D8B;">Sub Parent Menu</h4>
+        <p-dropdown  [disabled]="disable" [placeholder]="(parent_menu!=null)? 'Select parent menu':(sub_parent!=null)? sub_parent.name:sub_parent_child.name" [showClear]="true" [options]="(parent_menu!=null)? parent_menu.items:(sub_parent_main!=null)? sub_parent_main:sub_parent_child_main"
+            [(ngModel)]="sub_parent_menu"  [style]="{'width':'100%'}"></p-dropdown>
+    </div>
+    <div *ngIf="sub_parent!=null || sub_parent_menu!=null">
+        <h4 style="color: #607D8B;">Sub Parent Child Menu</h4>
+        <p-dropdown [disabled]="disable" [placeholder]="(sub_parent_menu!=null)? 'Select parent menu':sub_parent_child.name" [showClear]="true" [options]="(sub_parent_menu!=null)? sub_parent_menu.items:sub_parent_child_main"
+            [(ngModel)]="sub_parent_child_menu"  [style]="{'width':'100%'}"></p-dropdown>
+    </div>
+        <div >
+          <h4 style="color: #607D8B;">Description :</h4>
+            <p-editor [style]="{'height':'300px'}" [(ngModel)]="data.description"></p-editor>
+        </div>
+    </ng-template>
+
+    <ng-template pTemplate="footer">
+        <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+        <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveHelp(data.srno)"></button>
+    </ng-template>
+</p-dialog>
+<p-dialog [(visible)]="deleteDialog" [style]="{width: '500px'}" header="Help Details" [modal]="true" styleClass="p-fluid">
+  <ng-template pTemplate="content">
+      Are you sure to delete {{data.name}} ?
+  </ng-template>
+  <ng-template pTemplate="footer">
+      <button pButton pRipple label="No" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+      <button pButton pRipple label="Yes" icon="pi pi-check" class="p-button-text" (click)="deletehelp(data.srno)"></button>
+  </ng-template>
+</p-dialog>
+

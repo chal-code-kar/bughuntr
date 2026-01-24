@@ -1,0 +1,66 @@
+<p-toast></p-toast>
+<p-confirmDialog header="Confirmation" icon="pi pi-exclamation-triangle"></p-confirmDialog>
+
+
+<div class="surface-ground border-top-1 border-bottom-1 border-gray-300 px-4 py-3">
+    <div class="flex flex-column md:align-items-center md:justify-content-between md:flex-row grid">
+        <div class="font-medium text-3xl text-900 col-12 md:col-7">ETL Data</div>
+        <div class="col-12 md:col-5 " style="text-align: Right;">
+            <span class="col-12 md:col-12" style="text-align: left;">
+                <p-button label="Add ETL Data"  icon="pi pi-plus" [routerLink]="['/add-etl']"></p-button>
+            </span>
+           
+        </div>
+    </div>
+</div>    
+
+
+
+
+<div >
+    <p-table #dt1 [paginator]="true" [rows]="10" [value]="data" [rowHover]="true" [responsive]="true"
+        styleClass="p-datatable-gridlines p-datatable-striped" [globalFilterFields]="['employee_number','first_name','last_name','full_name','email_address','iou_name','assignment_id','assignment_status','base_branch','depute_branch','country_of_depute','base_dc_id','per_system_status','last_update_date','eai_update_date']">
+
+        
+
+        <ng-template pTemplate="caption">
+            <div class="mt-3 md:mt-0" style="text-align:right">
+                <span class="p-input-icon-left p-ml-auto">
+                    <i class="pi pi-search"></i>
+
+                    <input pInputText type="text" (input)="dt1.filterGlobal($any($event.target).value, 'contains')"
+                        placeholder="Search" />
+                </span>
+            </div>
+
+        </ng-template>
+
+        <ng-template pTemplate="header">
+            <tr>
+                <th pSortableColumn="srno" style="text-align: center; width:5%">Sr. No<p-sortIcon
+                    field="srno"> </p-sortIcon>
+                </th>
+                <th pSortableColumn="employee_number" style="text-align: center; width:5%">Employee Number<p-sortIcon
+                    field="employee_number"> </p-sortIcon>
+                </th>
+                <th pSortableColumn="full_name" style="text-align: center; width:30%">Full Name<p-sortIcon field="full_name"></p-sortIcon>
+                </th>
+                <th pSortableColumn="iou_name" style="text-align: center; width:15%">IOU Name<p-sortIcon
+                    field="iou_name"> </p-sortIcon>
+                </th>
+
+  
+            </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-columns let-i="rowIndex">
+            <tr>
+                <td style="text-align: center;">{{i+1}}</td>
+                <td style="text-align: center;">{{columns.employee_number}}</td>
+                <td style="text-align: center;">{{columns.full_name}}</td>
+                
+                <td style="text-align: center;">{{columns.iou_name}}</td>
+                              
+            </tr>
+        </ng-template>
+    </p-table>
+</div>

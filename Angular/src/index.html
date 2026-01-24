@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Bughuntr</title>
+ 
+  <base href="/Bughuntr">
+
+  <link id="app-theme" rel="stylesheet" type="text/css" href="lightTheme.css">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <script type="text/javascript">
+    var $jq = jQuery.noConflict();
+  </script>
+    <script type="text/javascript">
+    var isSafari = Object.prototype.toString.call(window.HTMLElement).indexOf('Constructor') > 0;
+    var isIE=(navigator.userAgent.indexOf("MSIE ") > 0 || navigator.userAgent.match(/Trident.*rv\:11\./));
+    if (isSafari || isIE) 
+      { 
+      $jq("head").append('<script type="text/javascript" src="appResources/js/promise.min.js"><\/script>');
+      }
+    </script>
+</head>
+<body onresize="positionWidget();positionSecondDiv();" onload="loadWidgets()">
+ 
+   <app-root></app-root> 
+
+</body>
+</html>

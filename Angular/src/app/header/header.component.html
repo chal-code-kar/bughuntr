@@ -1,0 +1,125 @@
+<p-toast></p-toast>
+<div class="font">
+    <div id="webView">
+        <div class="surface-section flex flex-column lg:flex-row lg:align-items-center lg:justify-content-between text-white"
+            style="height: 48px; padding-left: 16px; padding-right: 16px; background-color: #2a4d69 !important;">
+            <div class="flex align-items-center">              
+                <div class="text-900 font-medium text-white" style="font-size: 15px;">BugHuntr
+                </div>
+            </div>
+ 
+           
+ 
+            <div class="flex align-items-center mt-3 lg:mt-0">
+                <div class="flex align-items-center mt-3 lg:mt-0">
+ 
+                    <a class="text-white text-xl p-button-text" [routerLink]="['/faq-getall']" pTooltip="FAQs"
+                        style="width: 40px; height: 40px;float: right; text-decoration: none; margin-right: 12px;"
+                        tooltipPosition="left" icon="pi pi-info-circle" pButton>
+                    </a>
+ 
+ 
+ 
+                    <a class="text-white text-xl p-button-text" [routerLink]="['/blogs']" pTooltip="Guidance Page"
+                        style="width: 40px; height: 40px;float: right; text-decoration: none; margin-right: 12px;"
+                        tooltipPosition="left" icon="pi pi-comments" pButton>
+                    </a>
+                    <a class="text-white text-xl p-button-text"
+                        style="width: 40px; height: 40px;float: right; text-decoration: none;margin-right: 12px; font-size: 20px !important"
+                        (click)="switchTheme(theme)" pTooltip="{{themeTooltip}}" tooltipPosition="left" icon="{{icon}}"
+                        pButton>
+                    </a>
+                    <img src="assets/image/{{profilePic}}.png"
+                        style="width: 24px; height: 24px; float: right; text-decoration: none; margin-right: 12px;"
+                        (click)="op.toggle($event) " tooltipPosition="left">
+ 
+ 
+                    <a class="text-white text-xl p-button-text"
+                        style="width: 40px; height: 40px;float: right; text-decoration: none;margin-right: 12px; font-size: 20px !important"
+                        (click)="LogoutApi()" pTooltip="Logout" tooltipPosition="left" icon="pi pi-power-off"
+                        pButton>
+                    </a>
+                </div>
+            </div>
+        </div>
+ 
+        <div id="mobileView" class="flex-row"
+            style="background-color: #2a4d69; height: 48px; padding-left: 16px; padding-right: 16px; padding-top: 10px;">
+            <div class="grid">
+                <div class="col-8">
+                    <div class="text-900 font-medium text-white" style="font-size: 18px;">BugHuntr</div>
+                </div>
+                <div class="col-4" style="text-align:right;">
+                    <a id="uam_modal" style="width: 40px; height: 40px;">
+                        <i class="pi pi-power-off text-white text-xl"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+ 
+ 
+        <p-overlayPanel #op>
+            <ng-template pTemplate style="padding: 0px !important;">
+                <div style="padding: 12px;">
+                    <div style="margin-bottom: 12px; font-size: 14px;">
+                        <b>User Name :</b><br> {{userInformation.firstName}}
+                    </div>
+                    <hr>
+                    <div style="margin-top: 12px; font-size: 12px;">
+                        <b>Last Login:</b> <br> {{userInformation.lastLogin}}
+                    </div>
+                    <hr>
+ 
+                    <div style="font-size: 14px;text-align: center; cursor: pointer;" routerLink="getquery">
+ 
+                        <b>My Queries</b>
+ 
+                    </div>
+ 
+                    <hr *ngIf="isResearcher">
+ 
+                    <div *ngIf="isResearcher" style="font-size: 14px;text-align: center; cursor: pointer;"
+                        routerLink="/Profile/{{srno}}">
+ 
+                        <b>View Profile</b>
+ 
+                    </div>
+                    <hr>
+                    <div style="font-size: 14px;text-align: center; cursor: pointer;" routerLink="leaderboard">
+ 
+                        <b>Leaderboard</b>
+ 
+                    </div>
+                    <hr>
+                    <div style="font-size: 14px;text-align: center; cursor: pointer;" routerLink="History">
+ 
+                        <b>History</b>
+ 
+                    </div>
+                </div>
+            </ng-template>
+        </p-overlayPanel>
+        <input type="hidden" id="uam_logoutUrl" name="uam_logoutUrl" value={{logout}} />
+        <input type="hidden" id="uam_appSessionOff" name="uam_appSessionOff" value={{logoutApp}} />
+        <div id="uam_boxes" style="text-align: left"></div>
+    </div>
+</div>
+ 
+ 
+<p-dialog header="Header" [(visible)]="visiblePopup" [style]="{width: '50vw'}">
+    <div class="flex flex-wrap border-top-1 surface-border pt-4">
+        <div class="bg-blue-50 flex align-items-center justify-content-center py-3 px-0 w-full md:w-4 border-round">
+            <img src="assets/images/blocks/illustration/security.svg" alt="Image" class="w-9">
+        </div>
+        <p class="text-700 line-height-3 m-0 p-5 w-full md:w-8">
+            This will sign you out from Bughuntr Application.<Br> Are you sure you want to sign out?
+        </p>
+    </div>
+    <ng-template pTemplate="footer">
+        <div class="border-top-1 surface-border pt-3">
+            <button pButton pRipple icon="pi pi-times" (click)="visiblePopup = false" label="NO"
+                class="p-button-text"></button>
+            <button pButton pRipple icon="pi pi-check" (click)="visiblePopup = false; signout()" label="YES"></button>
+        </div>
+    </ng-template>
+</p-dialog>

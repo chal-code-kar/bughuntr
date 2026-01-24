@@ -1,0 +1,41 @@
+You have been given the source code of the BugHuntr application.
+You have to edit this app in VS Code. You Have README file in application folder which has detailed Description On Application working.
+In this app, there are a number of vulnerabilities. You have to solve these vulnerabilities by making changes in the code.
+
+You need to perform the following tasks:
+Run and Explore Application
+Find and resolve the Vulnerabilities.
+Use OWASP dependency-check plugin to scan dependencies. If any vulnerable dependencies are present in source code, try to minimize that.
+Use ZAP for finding Vulnerabilities.
+
+1. Running BugHuntr App Steps
+Open Terminal present on Desktop, All the paths will be relative to current pwd i.e 'home/labs/Desktop/project/'
+ Step 1.1: Build the frontend
+    cd bughuntr/Angular
+    npm i
+    npx ng build
+
+Step 1.2: Now run the backend. (open another terminal)
+cd bughuntr
+mvn spring-boot:run
+
+Application will start on http://localhost:8080 Please start the app and enter the login credentials provided in README file in application folder 'bughuntr/README.md':
+After successful login, please start using the app and try to find out vulnerabilities by checking all the functionalities of the app.
+You have been provided with H2 Database.After backend is started on 8080 you can access h2-console with url:- http://localhost:8080/h2-console/
+Have the jdbc url,username,password as mentioned in README.md file
+
+2. OWASP Dependency Check Task
+
+Try to reduce vulnerabilities by upgrading deprecated and outdated dependencies.
+Step 2.1: navigate to project
+cd bughuntr
+
+Step 2.2: Now run the following command
+mvn dependency-check:check
+
+Step 2.3: Report Generation
+It will take a while and the report will be generated in the location below:
+target/dependency-check-report.html
+Run and Use ZAP and Postman for finding Vulnerability present on Desktop.
+
+NOTE: Please refrain from modifying the credentials in application.properties.

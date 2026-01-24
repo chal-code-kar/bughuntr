@@ -1,0 +1,35 @@
+<div class="pr-0 lg:pr-5 lg:pl-5  ">
+    <div>
+        <h4 style="color: #607D8B;">Cateogry</h4>
+        <p-dropdown [style]="{'width':'50%'}"[options]="items" [(ngModel)]="changeid"
+        
+        
+        [placeholder]="master" optionLabel= "guidelines" optionValue= "srno" [showClear]="true"></p-dropdown>
+        
+    </div>
+    <div>
+        <h4 style="color: #607D8B;">Panel Title</h4>
+        <input class="col-12 md:col-12"  [(ngModel)]="paneltitle" type="text" pInputText placeholder="add paneltitle">
+    </div>
+    <div>
+        <h4 style="color: #607D8B;">Panel Description</h4>
+        <input class="col-12 md:col-12" [(ngModel)]="paneldescription" type="text" pInputText placeholder="add paneldescription">
+    </div>
+    <div>
+        <h4 style="color: #607D8B;">Entries</h4>
+        <p-editor [style]="{'height':'320px'}" [(ngModel)]="entries"></p-editor>
+    </div>
+    <div class="grid" style="margin-top: 3%;">
+        <div class="col-12 md:col-4"></div>
+        <div class="col-12 md:col-4" style="text-align: center;">
+            <button pButton pRipple type="button" class="p-button-success" label="Submit" icon="pi pi-save"
+                (click)="sumbit()"></button>&nbsp;&nbsp;
+
+               
+                    <button pTooltip="Cancel" [routerLink]="['/all-resources']" tooltipPosition="top" label="Cancel"
+                      pButton pRipple  type="button" icon="pi pi-times" class="p-button-primary"></button>
+                
+        </div>
+        <div class="col-12 md:col-4" style="text-align: right;"></div>
+    </div>
+</div>

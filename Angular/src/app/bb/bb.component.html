@@ -1,0 +1,261 @@
+<div class="grid grid-nogutter surface-section text-800">
+  <div class="col-12 md:col-6 p-6 text-center md:text-left flex align-items-center ">
+    <section>
+      <span class="block text-6xl font-bold mb-1">A New Vision for Security</span>
+      <div class="text-6xl text-primary font-bold mb-3">Let the Hunt Begin!!</div>
+      <p class="mt-0 mb-4 text-700 line-height-3">Bug Bounty Platform for all associates. Join Programs, Report
+        Vulnerabilities, Earn Rewards. Let your skills speak for you.</p>
+
+      <button id="button" pButton pRipple label="Learn More" type="button" class="p-button-raised"
+        [routerLink]="['/Help']"></button>
+    </section>
+ </div>
+
+
+  <div class="col-12 md:col-6 overflow-hidden sm:ml-auto block md:h-full">
+
+    <img src="assets/image/hero1.png" alt="Image"
+      style="clip-path: polygon(8% 0, 100% 0%, 100% 100%, 0 100%);padding-top: 4px;">
+
+
+  </div>
+</div>
+
+
+
+
+
+
+
+
+<div class="surface-card px-4 py-8 md:px-6 lg:px-8">
+  <div class="flex flex-column lg:flex-row">
+    <div class="flex-1 pr-0 lg:pr-5 mb-5 lg:mb-0">
+      <div class="font-bold text-4xl mb-4"> B_GH_NTR is incomplete without <span class="text-blue-600"> U</span>. </div>
+      <div class="font-medium text-2xl mb-3">About BugHuntr</div>
+      <p class="text-gray-600 font-medium text-xl mt-0 mb-7 line-height-3">The old way of thinking about security will
+        no longer work in this world of continuous integration and continuous delivery. Introducing to you the first
+        ever internal bug-bounty
+        platform that invites any talent irrespective of the Unit, Area or field to spot anything malicious & ensures to
+        give you everything you need to secure your digital innovation.<br>
+
+        Our motto is to make the applications on our platform robust and bug-free to build a safer internet!!</p>
+    </div>
+    <div *ngIf="dashbrd" class="flex-1">
+      <div class="flex flex-wrap">
+        <div class="w-full lg:w-6 p-3">
+          <div class="p-3"
+            style="background-image: linear-gradient(135deg, #667eea 10%, #764ba2 100%); min-height: 150px; border-radius: 10px">
+            <span class="text-white font-bold text-5xl">{{dashboardcount.totalprogram}}+</span>
+            <p class="mt-3 mb-0 font-medium text-xl  text-white text-400">Active Programs</p>
+          </div>
+        </div>
+        <div class="w-full lg:w-6 p-3">
+          <div class="p-3"
+            style="background-image: linear-gradient(135deg, #667eea 10%, #764ba2 100%); min-height: 150px; border-radius: 10px">
+            <span class="text-white font-bold text-5xl">{{dashboardcount.totalresearchers}}+</span>
+            <p class="mt-3 mb-0 font-medium text-xl text-white text-400">Researchers</p>
+          </div>
+        </div>
+        <div class="w-full lg:w-6 p-3">
+          <div class="p-3"
+            style="background-image: linear-gradient(135deg, #667eea 10%, #764ba2 100%); min-height: 150px; border-radius: 10px">
+            <span class="text-white font-bold text-5xl">{{dashboardcount.totalbounty}}+</span>
+            <p class="mt-3 mb-0 font-medium text-xl text-white text-400">Bounty Paid</p>
+          </div>
+        </div>
+        <div class="w-full lg:w-6 p-3">
+          <div class="p-3"
+            style="background-image: linear-gradient(135deg, #667eea 10%, #764ba2 100%); min-height: 150px; border-radius: 10px">
+            <span class="text-white font-bold text-5xl">{{dashboardcount.bugslastquarter}}+</span>
+            <p class="mt-3 mb-0 font-medium text-xl text-white text-400">Bugs Reported Last Quarter</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+<div class="surface-section px-4 py-8 md:px-6 lg:px-8 text-center">
+  <div class="mb-6 font-bold text-2xl">
+    <span class="text-900">One Product, </span>
+    <span class="text-blue-600">Many Solutions</span>
+  </div>
+  <div class="grid">
+    <div class="col-12 md:col-4 mb-4 px-5">
+      <span class="p-3 shadow-2 mb-3 inline-block surface-card" style="border-radius: 10px">
+        <i class="pi pi-comments text-4xl text-blue-500"></i>
+      </span>
+      <div class="text-900 mb-3 font-medium">A Platform for all TCSer's</div>
+      <span class="text-700 text-sm line-height-3">A Platform of all the associates to join, collaborate and excel in
+        security. You can upgrade skills through contributing to the community</span>
+    </div>
+    <div class="col-12 md:col-4 mb-4 px-5">
+      <span class="p-3 shadow-2 mb-3 inline-block surface-card" style="border-radius: 10px">
+        <i class="pi pi-sync text-4xl text-blue-500"></i>
+      </span>
+      <div class="text-900 mb-3 font-medium">Agile, continuous security testing</div>
+      <span class="text-700 text-sm line-height-3">A standard penetration test is time-bound and assesses a single
+        moment in time. Kickstart your bug bounty program and protect your assets every hour of every day, and every
+        week.</span>
+    </div>
+    <div class="col-12 md:col-4 mb-4 px-5">
+      <span class="p-3 shadow-2 mb-3 inline-block surface-card" style="border-radius: 10px">
+        <i class="pi pi-check-circle text-4xl text-blue-500"></i>
+      </span>
+      <div class="text-900 mb-3 font-medium">CVSS score based Rewards</div>
+      <span class="text-700 text-sm line-height-3">Vulnerabilities are rewarded based on the CVSS score. The level of
+        vulnerability will be amongst Low, Medium, High or Critical. Crucial the vulnerability, higher the bounty
+        rewarded!</span>
+    </div>
+  </div>
+</div>
+<div *ngIf="showB" class="surface-ground px-2 py-4 md:px-3 lg:px-4">
+  <div>
+    <div class="font-bold text-4xl text-900 mb-5 text-center">Latest Articles</div>
+    <div class="grid nogutter">
+      <div class="col-12 lg:col-4 p-3" *ngFor="let sample of blogtemp">
+        <div class="shadow-2 border-round h-full surface-card">
+          <div style="min-height:250px; background: url('assets/image/cover2.png') no-repeat; background-size: cover"
+            class="p-3 flex flex-column justify-content-between">
+            <div class="flex justify-content-start flex-wrap align-items-center mb-3">
+              <div *ngFor="let tags of sample.category?.split(','); index as i">
+                <span *ngIf="i==0"
+                  class="inline bg-teal-100 text-teal-600 text-sm block py-1 px-2 border-round mr-3 font-medium">{{tags}}</span>
+                <span *ngIf="i==1"
+                  class=" inline bg-orange-100 text-orange-600 text-sm block py-1 px-2 border-round mr-3 font-medium">{{tags}}</span>
+              </div>
+            </div>
+            <div>
+              <div class="text-white font-medium text-xl mb-3">{{sample.title}}</div>
+              <p class="text-gray-200 line-height-3 mt-0 mb-1"><i class=" pi pi-calendar"
+                  style="padding-top: 14px;"></i>
+                {{sample.createdate | date}},</p>
+              <span class="text-gray-200 line-height-3 mt-0 mb-1 text-600">Posted By : </span>
+              <span class="text-gray-200 line-height-3 mt-0 mb-1 font-bold  text-700">{{sample.emp_name}}</span>
+            </div>
+          </div>
+          <div class="p-4">
+            <div class="text-sm mb-3 text-700 justify-content-center align-content-center" style="height: 85px;"><span
+                [innerHTML]="sample.brief | slice:0 :210" class="text-900"><b>...</b></span></div>
+            <div class="flex justify-content-center flex-wrap align-items-center">
+              <button pButton pRipple label="Read More" type="button" class="p-button-outlined"
+                [routerLink]="['/blog/'+sample.srno]"></button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="surface-ground px-4 py-8 md:px-6 lg:px-8">
+  <div class="flex flex-wrap relative overflow-hidden"
+    style="border-radius:1rem; background:radial-gradient(100% 1126.49% at 100% 0%, rgba(106, 200, 212, 0.4) 0%, rgba(33, 33, 33, 0) 100%), #212121;">
+    <div class="col-12 md:col-5 text-center pt-8 mt-8 pl-4">
+      <span class="uppercase text-white font-bold">You can be the <span
+          class="text-cyan-600 font-bold mb-3">#Next</span>.</span>
+      <div class="text-white text-medium text-5xl mt-3 mb-5">Join the Hunt Today! </div>
+      <button *ngIf="isR" RippleModule [routerLink]="['/app-rprofile']"
+        class="p-3 bg-cyan-500 hover:bg-cyan-300 cursor-pointer transition-colors font-medium gray-900 border-none p-component transition-colors transition-duration-150"
+        style="border-radius: 35px">Join Now</button>
+      <button *ngIf="!isR" RippleModule [routerLink]="['/leaderboard']"
+        class="p-3 bg-cyan-500 hover:bg-cyan-300 cursor-pointer transition-colors font-medium gray-900 border-none p-component transition-colors transition-duration-150"
+        style="border-radius: 35px">Leaderboard</button>
+    </div>
+
+    <div class="col-12 md:col-7">
+      <div class="text-700 text-center mb-1">
+        <div class="text-white font-bold text-3xl mb-0 mt-4">Our <span
+            class="text-cyan-600 font-bold mb-3">Leaderboard</span></div>
+        <div class="flex justify-content-center align-items-center mb-4 ">
+          <div class="col-12 md:col-4 xl:col-3 pt-8">
+            <span class="inline-flex border-circle align-items-center justify-content-center border-2 text-white  mb-2"
+              style="width:38px;height:38px">2</span>
+            <div class="shadow-2 p-3 justify-content-center bg-yellow-50" style="border-radius: 10px;">
+              <div class="flex flex-column surface-border pb-1 align-items-center ">
+                <img src="assets/image/{{leaderboard[1].profile_pic}}.png"
+                  style="width: 100px;height: 100px; border-radius: 50px;" class="mb-1" />
+                <div *ngIf="leaderboard[1]!=null && leaderboard[1].points != 0"
+                  class="flex flex-column align-items-center">
+                  <span class="text-lg text-cyan-900 font-medium mb-2">{{leaderboard[1].avatar}}</span>
+                  <span class="text-md text-700 font-medium">Points:</span>
+                  <div class="flex flex-row align-items-center mt-1">
+                    <img src="assets/image/star.png" style="width: 25px;height: 20px;padding-right: 4px;" />
+                    <span class="text-700 font-medium">{{leaderboard[1].points}}</span>
+                  </div>
+                </div>
+                <div *ngIf="leaderboard[1]==null || leaderboard[1].points == 0 "
+                  class="flex flex-column align-items-center">
+                  <span class="text-lg text-cyan-900 font-medium mb-2">????</span>
+                  <span class="text-md text-700 font-medium">Points:</span>
+                  <div class="flex flex-row align-items-center mt-1">
+                    <img src="assets/image/star.png" style="width: 25px;height: 20px;padding-right: 4px;" />
+                    <span class="text-700 font-medium">????</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 md:col-4 xl:col-3">
+            <span class="inline-flex border-circle align-items-center justify-content-center border-2 text-white mb-2"
+              style="width:38px;height:38px">1</span>
+            <div class="bg-yellow-50 shadow-2 p-3 justify-content-center" style="border-radius: 10px;">
+              <div class="flex flex-column surface-border pb-1 align-items-center ">
+                <img src="assets/image/{{leaderboard[0].profile_pic}}.png"
+                  style="width: 100px;height: 100px; border-radius: 50px;" />
+                <div *ngIf="leaderboard[0] != null  && leaderboard[0].points != 0"
+                  class="flex flex-column align-items-center">
+                  <span class="text-lg text-cyan-900 font-medium mb-2">{{leaderboard[0].avatar}}</span>
+                  <span class="text-md text-700 font-medium">Points:</span>
+                  <div class="flex flex-row align-items-center mt-1">
+                    <img src="assets/image/star.png" style="width: 25px;height: 20px;padding-right: 4px;" />
+                    <span class="text-700 font-medium">{{leaderboard[0].points}}</span>
+                  </div>
+                </div>
+                <div *ngIf="leaderboard[0]==null  || leaderboard[0].points == 0 "
+                  class="flex flex-column align-items-center">
+                  <span class="text-lg text-cyan-900 font-medium mb-2">????</span>
+                  <span class="text-md text-700 font-medium">Points:</span>
+                  <div class="flex flex-row align-items-center mt-1">
+                    <img src="assets/image/star.png" style="width: 25px;height: 20px;padding-right: 4px;" />
+                    <span class="text-700 font-medium">????</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-12 md:col-4 xl:col-3 pt-8">
+            <span class="inline-flex border-circle align-items-center justify-content-center border-2 text-white mb-1"
+              style="width:38px;height:38px">3</span>
+            <div class="bg-yellow-50 shadow-2  p-3 justify-content-center" style="border-radius: 10px;">
+              <div class="flex flex-column surface-border pb-1 align-items-center ">
+                <img src="assets/image/{{leaderboard[2].profile_pic}}.png"
+                  style="width: 100px;height: 100px; border-radius: 50px;" class="mb-1" />
+                <div *ngIf="leaderboard[2]!=null && leaderboard[2].points != 0"
+                  class="flex flex-column align-items-center">
+                  <span class="text-lg text-cyan-900 font-medium mb-2">{{leaderboard[2].avatar}}</span>
+                  <span class="text-md text-700 font-medium">Points:</span>
+                  <div class="flex flex-row align-items-center mt-1">
+                    <img src="assets/image/star.png" style="width: 25px;height: 20px;padding-right: 4px;" />
+                    <span class="text-700 font-medium">{{leaderboard[2].points}}</span>
+                  </div>
+                </div>
+                <div *ngIf="leaderboard[2]==null || leaderboard[2].points == 0 "
+                  class="flex flex-column align-items-center">
+                  <span class="text-lg text-cyan-900 font-medium mb-2">????</span>
+                  <span class="text-md text-700 font-medium">Points:</span>
+                  <div class="flex flex-row align-items-center mt-1">
+                    <img src="assets/image/star.png" style="width: 25px;height: 20px;padding-right: 4px;" />
+                    <span class="text-700 font-medium">????</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

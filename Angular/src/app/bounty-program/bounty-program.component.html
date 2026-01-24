@@ -1,0 +1,199 @@
+<div class="surface-ground border-top-1 border-bottom-1 border-gray-300 px-4 py-3">
+  <div class="flex flex-column md:align-items-center md:justify-content-between md:flex-row grid">
+    <div class="font-medium text-3xl text-900 col-12 md:col-7">Bounty Program Details</div>
+    <div class="col-12 md:col-5 grid" *ngIf="canCreate">
+      <span class="col-12 md:col-4">
+        <span class="p-input-icon-left">
+          <i class="pi pi-search"></i>
+          <input pInputText="text" pInputText placeholder="Search" (input)="SearchData($any($event.target).value)" style="width: 100%;"/>
+        </span>
+      </span>
+      <span class="col-12 md:col-5">
+        <p-dropdown (onChange)="SearchData('')" [options]="invitedoptions" placeholder="Select Project Type"
+          [(ngModel)]="ptype" optionLabel="name" [style]="{'width':'100%'}" optionValue="code"></p-dropdown>
+      </span>
+      <span class="col-12 md:col-3" style="text-align: right;">
+        <p-button *ngIf="canCreate" label="Create" [routerLink]="['/create']" icon="pi pi-plus"></p-button>
+      </span>
+    </div>
+    <div class="col-12 md:col-5 grid" *ngIf="!canCreate">
+      <span class="col-12 md:col-3" style="text-align: right;">
+      </span>
+
+      <span class="col-12 md:col-4">
+        <span class="p-input-icon-left">
+          <i class="pi pi-search"></i>
+          <input pInputText="text" pInputText placeholder="Search" (input)="SearchData($any($event.target).value)" style="width: 100%;"/>
+        </span>
+      </span>
+      <span class="col-12 md:col-5">
+        <p-dropdown (onChange)="SearchData('')" [options]="invitedoptions" placeholder="Select Project Type"
+          [(ngModel)]="ptype" optionLabel="name" [style]="{'width':'100%'}" optionValue="code"></p-dropdown>
+      </span>
+    </div>
+  </div>
+</div>
+<div class="p-5 grid" style="width: 100%;" >
+  <div class="col-12 md:col-9">
+    <p-tabView>
+      <p-tabPanel header="All Programs">
+        <div #dt class="surface-card shadow-2 border-round p-4">
+          <ul class="list-none p-0 m-0">
+            <div style="margin-top: 10px;"*ngIf="temp == null || temp.length==0">
+              <h4>No Active Program Found </h4>
+            </div>
+            <div style="margin-top: 10px;" *ngFor="let sample of temp">
+              <li class="pb-3 border-bottom-1 surface-border">
+                <div *ngIf="sample.status !='DEACTIVE' && sample.status !='DRAFT'" class="font-medium text-blue-600 mb-2"> <span style="cursor:pointer" routerLink="/project/{{sample.srno}}">BB{{sample.srno}} - {{sample.bprogramme_name}}</span>
+                  <span class="text-orange-500 font-medium"> ({{sample.ptype}})</span>
+                </div>
+                <div *ngIf="sample.status =='DRAFT'" class="font-medium text-gray-600 mb-2"> <span style="cursor:pointer" routerLink="/project/{{sample.srno}}">BB{{sample.srno}} - {{sample.bprogramme_name}}</span>
+                  <span class="text-orange-500 font-medium"> ({{sample.ptype}})</span>
+                  <span class="text-gray-500 font-medium"> ({{sample.status}})</span>
+                </div>
+                <div *ngIf="sample.status =='DEACTIVE'" class="font-medium text-gray-600 mb-2"> <span style="cursor:pointer" routerLink="/project/{{sample.srno}}">BB{{sample.srno}} - {{sample.bprogramme_name}}</span>
+                  <span class="text-orange-500 font-medium"> ({{sample.ptype}})</span>
+                  <span class="text-gray-500 font-medium"> ({{sample.status}})</span>
+                </div>
+                
+                <div class="line-height-3 text-600">
+                  {{sample.bproject_description}}
+                </div>
+                <div class="pt-3 pb-3">
+                  <i class="pi pi-calendar mr-2"></i>{{sample.bprojectstart_date | date:'dd-MMM-yyyy'}} -
+                  {{sample.bprojectend_date | date:'dd-MMM-yyyy'}}
+                </div>
+                <i class="pi pi-money-bill"></i>
+                <span class="pt-3 pb-3" *ngFor="let item of sample.jobpricing">
+                  <b style="margin-left: 4px;">Rewards:</b> {{item.min_gems}} - {{item.max_gems}} GEMS </span>
+              </li>
+            </div>
+          </ul>
+        </div>
+        <p-paginator [rows]="5" [totalRecords]="totalProject.length" [pageLinkSize]="3"
+          (onPageChange)="onPageChange($event)"></p-paginator>
+      </p-tabPanel>
+      <p-tabPanel *ngIf="canCreate" header="My Programs">
+        <div #dt class="surface-card shadow-2 border-round p-4">
+          <ul class="list-none p-0 m-0">
+            <div style="margin-top: 10px;"*ngIf="myPrograms == null || myPrograms.length==0">
+              <h4>No Program Created</h4>
+            </div>
+            <div style="margin-top: 10px;" *ngFor="let sample of temp1">
+              <li class="pb-3 border-bottom-1 surface-border">
+                <div *ngIf="sample.status !='DEACTIVE' && sample.status !='DRAFT'" class="font-medium text-blue-600 mb-2"> <span style="cursor:pointer" routerLink="/project/{{sample.srno}}">BB{{sample.srno}} - {{sample.bprogramme_name}}</span>
+                  <span class="text-orange-500 font-medium"> ({{sample.ptype}})</span>
+                </div>
+                <div *ngIf="sample.status =='DRAFT'" class="font-medium text-gray-600 mb-2"> <span style="cursor:pointer" routerLink="/project/{{sample.srno}}">BB{{sample.srno}} - {{sample.bprogramme_name}}</span>
+                  <span class="text-orange-500 font-medium"> ({{sample.ptype}})</span>
+                  <span class="text-gray-500 font-medium"> ({{sample.status}})</span>
+                </div>
+                <div *ngIf="sample.status =='DEACTIVE'" class="font-medium text-gray-600 mb-2"> <span style="cursor:pointer" routerLink="/project/{{sample.srno}}">BB{{sample.srno}} - {{sample.bprogramme_name}}</span>
+                  <span class="text-orange-500 font-medium"> ({{sample.ptype}})</span>
+                  <span class="text-gray-500 font-medium"> ({{sample.status}})</span>
+                </div>
+                <div class="line-height-3 text-600">
+                  {{sample.bproject_description}}
+                </div>
+                <div class="pt-3 pb-3">
+                  <i class="pi pi-calendar mr-2"></i>{{sample.bprojectstart_date | date:'dd-MMM-yyyy'}} -
+                  {{sample.bprojectend_date | date:'dd-MMM-yyyy'}}
+                </div>
+                <i class="pi pi-money-bill"></i>
+                <span class="pt-3 pb-3" *ngFor="let item of sample.jobpricing">
+                  <b style="margin-left: 4px;">Rewards:</b> {{item.min_gems}} - {{item.max_gems}} GEMS </span>
+              </li>
+            </div>
+          </ul>
+        </div>
+        <br>
+        <p-paginator [rows]="5" [totalRecords]="myPrograms.length" [pageLinkSize]="3"
+          (onPageChange)="onPageChange1($event)"></p-paginator>
+      </p-tabPanel>
+      <p-tabPanel header="Joined Programs">
+        <div #dt class="surface-card shadow-2 border-round p-4">
+          <ul class="list-none p-0 m-0">
+            <div style="margin-top: 10px;"*ngIf="joinedPrograms==null || joinedPrograms.length==0 ">
+              <h4>No Program Joined</h4>
+            </div>
+            <div style="margin-top: 10px;" *ngFor="let sample of temp2">
+              <li class="pb-3 border-bottom-1 surface-border">
+                <div *ngIf="sample.status !='DEACTIVE' && sample.status !='DRAFT'" class="font-medium text-blue-600 mb-2"> <span style="cursor:pointer" routerLink="/project/{{sample.srno}}">BB{{sample.srno}} - {{sample.bprogramme_name}}</span>
+                  <span class="text-orange-500 font-medium"> ({{sample.ptype}})</span>
+                </div>
+                <div *ngIf="sample.status =='DEACTIVE'" class="font-medium text-gray-600 mb-2"> <span style="cursor:pointer" routerLink="/project/{{sample.srno}}">BB{{sample.srno}} - {{sample.bprogramme_name}}</span>
+                  <span class="text-orange-500 font-medium"> ({{sample.ptype}})</span>
+                  <span class="text-gray-500 font-medium"> ({{sample.status}})</span>
+                </div>
+                <div class="line-height-3 text-600">
+                  {{sample.bproject_description}}
+                </div>
+                <div class="pt-3 pb-3">
+                  <i class="pi pi-calendar mr-2"></i>{{sample.bprojectstart_date | date:'dd-MMM-yyyy'}} -
+                  {{sample.bprojectend_date | date:'dd-MMM-yyyy'}}
+                </div>
+                <i class="pi pi-money-bill"></i>
+                <span class="pt-3 pb-3" *ngFor="let item of sample.jobpricing">
+                  <b style="margin-left: 4px;">Rewards:</b> {{item.min_gems}} - {{item.max_gems}} GEMS </span>
+              </li>
+            </div>
+          </ul>
+        </div>
+        <br>
+        <p-paginator [rows]="5" [totalRecords]="joinedPrograms.length" [pageLinkSize]="3"
+          (onPageChange)="onPageChange2($event)"></p-paginator>
+      </p-tabPanel>
+</p-tabView>
+</div>
+  <div class="w-full lg:w-3 col-12 md:col-3" style="padding-top:0px">
+    <div *ngIf="PrgrammeStatistics.isReported || canCreate || bbadmin" class="shadow-2 border-round surface-card mb-3 flex-column justify-content-between flex">
+      <div  class="p-4">
+        <p class="mt-0 mb-3 text-blue-600 p-text-bold line-height-3">
+          <b> All Program Statistics</b>
+        </p>
+        <p class="mt-0 mb-3 text-700 line-height-3">
+          Total <b>{{PrgrammeStatistics.totalprogrammecount}}</b> Programmes registered
+        </p>
+        <p class="mt-0 mb-3 text-700 line-height-3">
+          <b>{{PrgrammeStatistics.vulnRewarded}}</b> vulnerabilities rewarded
+        </p>
+        <p class="mt-0 mb-1 text-700 line-height-3">
+          Validation within <b>1 week</b>
+        </p>
+        <p class="mt-0 mb-3 text-500 line-height-2">
+          {{PrgrammeStatistics.approvedPercentage}} % of submissions are accepted or rejected
+        </p>
+        <p class="mt-0 mb-3 text-700 line-height-3">
+          <b>{{PrgrammeStatistics.statistics4}}</b> average payout (last 3 months)
+        </p>
+      </div>
+    </div>
+    <div *ngIf="!PrgrammeStatistics.isReported && !canCreate && !bbadmin" class="shadow-2 border-round surface-card mb-3 flex-column justify-content-between flex">
+      <div  class="p-4" style="background: rgba(216, 216, 216, 0.5)">
+        <p class="mt-0 mb-3 text-blue-600 p-text-bold line-height-3" style="opacity: 0.3;">
+          <b> All Program Statistics</b>
+        </p>
+        <div class="flex-column justify-content-between flex" style="text-align: center; ">
+          <i class="pi pi-lock mb-2" style="font-size: 2rem;"></i>
+          <b>To Unlock Program Statistics, Please Report Vulnerability</b>
+         </div>
+      </div>
+    </div>
+
+    <div  class="shadow-2 border-round surface-card mb-3  flex-column justify-content-between flex">
+      <div class="p-4">
+        <p class="mt-0 mb-3 text-blue-600 p-text-bold line-height-3">
+          <b>Recently joined Researchers</b>
+        </p>
+        <p-carousel *ngIf="PrgrammeStatistics.ResearchersJoinedAllPrgrammme.length" [value]="PrgrammeStatistics.ResearchersJoinedAllPrgrammme" [numVisible]="2">
+          <ng-template let-i pTemplate="i">
+            <img routerLink="/Profile/{{i.srno}}" src="assets/image/{{i.profile_pic}}.png" style="width:60px; height:60px; border-radius: 50%;" pTooltip="{{i.avatar}}" tooltipPosition="top" />
+          </ng-template>
+      </p-carousel>
+        <p>
+          Total <b>{{PrgrammeStatistics.total_researcher}}</b> Researchers registered
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

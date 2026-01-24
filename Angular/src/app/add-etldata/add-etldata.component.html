@@ -1,0 +1,28 @@
+<p-toast></p-toast>
+<div class="p-5">
+    <div class="surface-ground border-top-1 border-bottom-1 border-gray-300 px-4 py-3">
+        <div class="flex flex-column md:align-items-center md:justify-content-between md:flex-row grid">
+            <div class="font-medium text-3xl text-900 col-12 md:col-7">ADD ETL Data</div>
+            <div class="col-10 md:col-5 " style="text-align: Right;">               
+            </div>
+        </div>
+    </div>   
+        <div>
+            <h4 style="color: #607D8B;">Employee No.<span style="color: red"> *</span>:</h4>
+            <input class="col-5 md:col-5" type="text" [(ngModel)]="employee_number" pInputText placeholder="enter employee no">
+        </div>
+
+        <h4 style="color: #607D8B;">Full name<span style="color: red"> *</span>:</h4>
+        <input class="col-5 md:col-5" type="text" [(ngModel)]="full_name" pInputText placeholder="enter Full name">
+
+        <h4 style="color: #607D8B;">IOU name<span style="color: red"> *</span>:</h4>
+        <input class="col-5 md:col-5" type="text" [(ngModel)]="iou_name" pInputText placeholder="enter IOU name">
+
+
+         <div>
+            <button pButton pRipple type="button" label="Submit" class="p-button-success" style="margin-right:20px;margin-left:150px;margin-top:15px;text-align: left" (click)="etlinsert()"></button>
+        
+        <button pButton pRipple type="button" label="Back" class="p-button-raised p-button-danger" [routerLink]="'/etl-data'"></button> 
+    </div>
+</div>
+
