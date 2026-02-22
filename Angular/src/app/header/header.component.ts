@@ -77,7 +77,7 @@ export class HeaderComponent implements OnInit {
      
   this.http.post(this.logout, null).subscribe({
   next: async (response) => {
-    await this.router.navigateByUrl('/login', { replaceUrl: true });
+    await this.router.navigate(['/login'], { replaceUrl: true });
     window.location.reload();
   },
   error: (err) => {

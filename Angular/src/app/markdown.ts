@@ -5,7 +5,9 @@ export function markedOptionsFactory(): MarkedOptions {
     const renderer = new MarkedRenderer();
     renderer.link=(href, title, text) =>
    {
-      return "<a href='" + href + "'" + (title ? " title='" + title + "'" : '') + " rel='noopener noreferrer' target='_blank'>" + text + "</a>";
+      const allowedProtocols = /^(https?:\/\/|\/|#)/i;
+      const safeHref = (href && allowedProtocols.test(href)) ? href : '#';
+      return "<a href='" + safeHref + "'" + (title ? " title='" + title + "'" : '') + " rel='noopener noreferrer' target='_blank'>" + text + "</a>";
     }
   renderer.table=(header,body) =>
   {

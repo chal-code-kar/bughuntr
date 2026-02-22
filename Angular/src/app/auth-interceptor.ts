@@ -60,7 +60,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
         if (event.body !== null && event.body.hasOwnProperty('text')) {
           if (event.body.text === 'SM_USER_CHANGE' || event.body.text === 'SESSION_EXPIRED') {
-            location.href = "index.html";
+            this.router.navigate(['/']);
             return;
           }
 
@@ -72,12 +72,12 @@ export class AuthInterceptor implements HttpInterceptor {
           }
 
           if (event.body.text === 'USER_NULL') {
-            window.location.href = "login.html";
+            this.router.navigate(['/login']);
           }
         }
 
         if (event.headers.get('str_glob') !== this.globals.brandingRef && this.globals.brandingRef !== "NOT_SET" && event.headers.get('str_glob') !== null) {
-          location.href = "index.html";
+          this.router.navigate(['/']);
           return;
         }
 

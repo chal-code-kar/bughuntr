@@ -86,7 +86,7 @@ export class AllResourcesComponent implements OnInit {
   editFunction(id){
 
 
-    this.router.navigate(['edit-resources/' + id]);
+    this.router.navigate(['edit-resources', id]);
 
   }
 

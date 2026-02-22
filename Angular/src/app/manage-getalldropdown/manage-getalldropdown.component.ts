@@ -80,7 +80,7 @@ export class ManageGetalldropdownComponent implements OnInit {
 
   editOption(id) {
 
-    this.router.navigate(['manage-edit/' + id]);
+    this.router.navigate(['manage-edit', id]);
   }
 
 }

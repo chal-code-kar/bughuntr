@@ -31,7 +31,12 @@ this.depth = 0;
 
 onItemSelected(item: any) {
 if (!item.subMenus || !item.subMenus.length) {
-this.router.navigate([item.url]);
+const url = item.url;
+if (url && typeof url === 'string' && url.startsWith('/') && !url.startsWith('//') && !url.includes('://')) {
+  this.router.navigate([url]);
+} else {
+  this.router.navigate(['/']);
+}
 this.globals.view=!this.globals.view;
 }
 if (item.subMenus && item.subMenus.length) {
