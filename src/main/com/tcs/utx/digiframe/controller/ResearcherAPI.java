@@ -194,10 +194,16 @@ public class ResearcherAPI {
 
 			int emp_id = BrandingDetailsController.getUser();
 			boolean isEditable = false;
-			
-	        
-	        
+			boolean isAdmin = this.permissionService.isOperationPermissible(TEXT_BUGHUNTR, TEXT_ADMIN, "View", emp_id, 0, 0);
+
 			data = this.researcherService.getResearcherById(id).get(0);
+
+			// IDOR fix (3.1): Only allow viewing specific researcher profile if requester is the researcher or admin
+			if (emp_id != (int) data.get(TEXT_EMP_ID) && !isAdmin) {
+				data.clear();
+				data.put("text", ACCESS_DENIED);
+				return new ResponseEntity<>(data, HttpStatus.FORBIDDEN);
+			}
 
 			if (emp_id == (int) data.get(TEXT_EMP_ID)) {
 				isEditable = true;
@@ -223,6 +229,10 @@ public class ResearcherAPI {
 			boolean isGuest = brandingService.isUserGuest();
 			if (isGuest) {
 				return new ResponseEntity<>(ACCESS_DENIED, HttpStatus.FORBIDDEN);
+			}
+			// IDOR fix (3.7): Validate path ID matches body ID to prevent parameter tampering
+			if (id != user.getId()) {
+				return new ResponseEntity<>("Path ID does not match request body", HttpStatus.BAD_REQUEST);
 			}
 			String retData = this.researcherService.validateResearchProgramme(user);
 			if (retData != null) {
@@ -315,6 +325,15 @@ public class ResearcherAPI {
 
 			if (!this.permissionService.isOperationPermissible(TEXT_BUGHUNTR, TEXT_ADMIN, "View", emp_id, 0, 0)) {
 				return new ResponseEntity<>(ACCESS_DENIED, HttpStatus.FORBIDDEN);
+			}
+
+			// IDOR fix (3.17): Validate researcher ID exists before processing
+			if (id <= 0) {
+				return new ResponseEntity<>("Invalid researcher ID", HttpStatus.BAD_REQUEST);
+			}
+			List<Map<String, Object>> existingData = this.researcherService.getResearcherById(id);
+			if (existingData == null || existingData.isEmpty()) {
+				return new ResponseEntity<>("Researcher not found", HttpStatus.BAD_REQUEST);
 			}
 
 			this.researcherService.addDetails(id);

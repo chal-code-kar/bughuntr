@@ -525,6 +525,13 @@ public class ProgramAPI {
 
 			detail.setOwner_empid(emp_id);
 			Map<String, Object> tempData = this.programService.getProjectById(detail.getSrno(), emp_id).get(0);
+
+			// IDOR fix (3.11): Check ownership immediately after fetch, before any modifications (TOCTOU fix)
+			if ((int) tempData.get(TEXT_PROJECT_OWNER) != emp_id) {
+				LOG.info("ProgramAPI | Access Denied in updateProgram");
+				return new ResponseEntity<>("You are not authorized to update this project", HttpStatus.FORBIDDEN);
+			}
+
 			String retData = this.programService.validateCreateProgramme(detail);
 			if (retData != null) {
 				return new ResponseEntity<>(retData, HttpStatus.BAD_REQUEST);
@@ -551,11 +558,6 @@ public class ProgramAPI {
 						return new ResponseEntity<>(TEXT_VALID_FAILED, HttpStatus.BAD_REQUEST);
 					}
 				}
-			}
-
-			if ((int) tempData.get(TEXT_PROJECT_OWNER) != emp_id) {
-				LOG.info("ProgramAPI | Access Denied in updateProgram");
-				return new ResponseEntity<>("You are not authorized to update this project", HttpStatus.FORBIDDEN);
 			}
 			
 			int returncCnt = this.programService.updateProgram(detail, emp_id);
@@ -595,6 +597,20 @@ public class ProgramAPI {
 			LOG.info("ProgramAPI | Access Denied in ResearchersJoined");
 			retData.put("text", TEXT_ACCESS_DENIED);
 			return new ResponseEntity<>(retData, HttpStatus.FORBIDDEN);
+		}
+
+		// IDOR fix (3.12): Verify user has access to this program (owner, admin, or member)
+		boolean isBBAdmin = this.permissionService.isOperationPermissible(BUGHUNTR, ADMIN, "View", emp_id, 0, 0);
+		if (!isBBAdmin) {
+			Map<String, Object> projectData = this.programService.getProjectById(projectid, emp_id).get(0);
+			boolean isProjectOwner = (int) projectData.get(TEXT_PROJECT_OWNER) == emp_id;
+			String joinStatus = this.programService.getJoinProgramStatus(projectid, emp_id);
+			boolean isMember = JOINED.equals(joinStatus);
+			if (!isProjectOwner && !isMember) {
+				LOG.info("ProgramAPI | Access Denied in ResearchersJoined - user has no access to this program");
+				retData.put("text", TEXT_ACCESS_DENIED);
+				return new ResponseEntity<>(retData, HttpStatus.FORBIDDEN);
+			}
 		}
 
 		retData = this.programService.ResearchersJoined(projectid, emp_id);

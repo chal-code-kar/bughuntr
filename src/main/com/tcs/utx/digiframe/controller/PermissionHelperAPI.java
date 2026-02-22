@@ -425,6 +425,12 @@ public class PermissionHelperAPI {
 			LOG.info("PermissionHelperController | Access Denied in DeleteRole");
 			return new ResponseEntity<String>(TEXT_NOTADMIN, HttpStatus.FORBIDDEN);
 		}
+
+		// IDOR fix (3.14): Validate role ID is positive before deletion
+		if (id <= 0) {
+			return new ResponseEntity<>("Invalid role ID", HttpStatus.BAD_REQUEST);
+		}
+
 		this.service.deleterole(id);
 		LOG.info("PermissionHelperController | DeleteRole Exit");
 		} catch (DataAccessException e) {
