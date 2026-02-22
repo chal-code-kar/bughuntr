@@ -2,7 +2,7 @@ import { AdminAuthGuard } from './admin-auth-guard.service';
 import { ApplicationErrorHandler } from './ApplicationErrorHandler';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, ErrorHandler, APP_INITIALIZER } from '@angular/core';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -146,6 +146,10 @@ import { AuthInitService } from './auth-init.service';
     BrowserModule,
     FormsModule,
     HttpClientModule,
+    HttpClientXsrfModule.withOptions({
+      cookieName: 'XSRF-TOKEN',
+      headerName: 'X-XSRF-TOKEN'
+    }),
     AppRoutingModule,
     BrowserAnimationsModule,
     PrimeNgModule,

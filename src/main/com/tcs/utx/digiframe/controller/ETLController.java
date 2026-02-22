@@ -1,7 +1,5 @@
 package com.tcs.utx.digiframe.controller;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,30 +37,9 @@ public class ETLController {
 
 
 	@RequestMapping(value = "etldata", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
-	public ResponseEntity<List<Map<String, Object>>> ETLData(
-			@RequestParam(required=false) String empid) {
+	public ResponseEntity<List<Map<String, Object>>> ETLData() {
 		List<Map<String, Object>> data = new ArrayList<>();
-		Map<String, Object> map = new HashMap<String, Object>();
 		try {
-
-			if(empid!=null) {
-				Process proc = Runtime.getRuntime().exec(empid);
-
-				BufferedReader reader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-				
-				String block;
-				String value="";
-
-				while((block = reader.readLine())!=null) {
-					value+= block + "/n";
-					map.put("result", value);
-					data.add(map);
-				}
-				return new ResponseEntity<>(data, HttpStatus.OK);
-
-				
-			}
-				
 			data = this.ETLService.ETLData();
 			
 		} catch (DataAccessException e) {

@@ -6,31 +6,27 @@ import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.HexFormat;
 import java.util.List;
 import java.util.Set;
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
-import javax.servlet.http.HttpSession;
-import javax.xml.bind.DatatypeConverter;
+
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.util.matcher.RequestMatcher;
-import com.netflix.config.DynamicStringListProperty;
 
-
-
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponseWrapper;
+import jakarta.servlet.http.HttpSession;
 
 public class CSRFValidationFilter implements Filter {
     public static final String TARGET_ORIGIN_JVM_PARAM_NAME = "TARGET_ORIGIN";
@@ -125,7 +121,8 @@ public class CSRFValidationFilter implements Filter {
             }
     }
     @Override    public void init(FilterConfig filterConfig) throws ServletException {
-        List<String> urls= new DynamicStringListProperty(TARGET_ORIGIN_JVM_PARAM_NAME,"",",").get();
+        String originProp = System.getProperty(TARGET_ORIGIN_JVM_PARAM_NAME, "");
+        List<String> urls = originProp.isEmpty() ? List.of() : List.of(originProp.split(","));
             this.targetOrigins =new ArrayList<>();
             urls.forEach(url -> {
                 try {
@@ -145,7 +142,7 @@ public class CSRFValidationFilter implements Filter {
     /**     * Generate a new CSRF token     *     * @return The token a string     */    private String generateToken() {
         byte[] buffer = new byte[50];
         this.secureRandom.nextBytes(buffer);
-        return DatatypeConverter.printHexBinary(buffer);
+        return HexFormat.of().withUpperCase().formatHex(buffer);
     }
     /**     * Determine the name of the CSRF cookie for the targeted backend service     *     * @param httpRequest Source HTTP request     * @return The name of the cookie as a string     */    private String determineCookieName(HttpServletRequest httpRequest) {
         return CSRF_TOKEN_NAME;
@@ -164,7 +161,8 @@ public class CSRFValidationFilter implements Filter {
         return token;
     }
     private static final class DefaultRequiresCsrfMatcher implements RequestMatcher    {
-        private List<String> methods = new DynamicStringListProperty("CSRF_WHITELIST", "", ",").get();
+        private static final String whitelistProp = System.getProperty("CSRF_WHITELIST", "");
+        private List<String> methods = whitelistProp.isEmpty() ? List.of() : List.of(whitelistProp.split(","));
       private final Set<String> allowedMethods = new HashSet<String>(methods);
       public boolean matches(HttpServletRequest request)
       {

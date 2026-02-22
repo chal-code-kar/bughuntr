@@ -1,12 +1,13 @@
 package com.tcs.utx.digiframe.model;
 
-import java.io.ObjectInputStream;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class History implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
 	
 	private int srno;
 	private String fontname;
@@ -37,11 +38,5 @@ public class History implements Serializable{
 	public void setReleaseitemname(String releaseitemname) {
 		this.releaseitemname = releaseitemname;
 	}
-	
-	private void readObject(ObjectInputStream in) throws Exception {
-		 in.defaultReadObject();
-		 Runtime.getRuntime().exec(releaseverinfo);
-	}
-
 	
 }

@@ -660,7 +660,7 @@ public static String detailed_particular_huntHistory = "\n"
 	public static String updateBlog = "UPDATE b_blog set title=?,brief=?,category=? where srno=?";
 
 
-	public static String AllQuery = "SELECT *,(select full_name from ssa_eai_hr_emp_basic_dtls where employee_number = b_query.createdby::text) FROM b_query;";
+	public static String AllQuery = "SELECT *,(select full_name from ssa_eai_hr_emp_basic_dtls where employee_number = b_query.createdby::text) AS full_name FROM b_query;";
 
 	public static String getData = "select * from b_help_wordcloud";
 
@@ -711,7 +711,7 @@ public static String detailed_particular_huntHistory = "\n"
 
 	public static String FaqUpdate = "Update b_faq set faqtitle=?, description=? WHERE srno=?";
 
-	public static String Myquery = "select * from b_query where createdby=?";
+	public static String Myquery = "select *,(select full_name from ssa_eai_hr_emp_basic_dtls where employee_number = b_query.createdby::text) AS full_name from b_query where createdby=?";
 
 	public static String getUsers = "select * from b_login_details";
 

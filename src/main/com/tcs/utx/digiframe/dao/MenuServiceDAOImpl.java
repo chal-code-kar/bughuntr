@@ -67,7 +67,7 @@ public class MenuServiceDAOImpl implements MenuServiceDAO {
 			
 			
 		for(String role:userRolesList) {
-			String temp = "(^|(.*,))" + role + "((,.*)|$)";
+			String temp = "(^|(.*,))" + java.util.regex.Pattern.quote(role) + "((,.*)|$)";
 			rows = this.jdbcTemplate.queryForList(GET_USER_MENUS,
 					new Object[] { temp });
 

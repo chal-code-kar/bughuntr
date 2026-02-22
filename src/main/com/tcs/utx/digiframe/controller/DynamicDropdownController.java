@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -151,7 +151,7 @@ public class DynamicDropdownController {
 	}
 	
 	@RequestMapping(value = "GetDropdown", method = RequestMethod.GET,produces = "application/json; charset=utf-8")
-	public ResponseEntity<List<Map<String, Object>>> GetAllDropdownURL(@RequestParam(value="id", required=false) String id) {
+	public ResponseEntity<List<Map<String, Object>>> GetAllDropdownURL() {
 		List<Map<String, Object>> data = new ArrayList<>();
 		Map<String, Object> map = new HashMap<String, Object>();
 	try {
@@ -163,18 +163,11 @@ public class DynamicDropdownController {
 			data.add(map);
 			return new ResponseEntity<>(data, HttpStatus.FORBIDDEN);
 		}
-		if(id!=null)
-		{
-			return ResponseEntity.status(HttpStatus.FOUND)
-				.header("Location", id)
-				.build();
-		}
 		if (!this.service.isOperationPermissible(TEXT_BUGHUNTR, TEXT_ADMIN, "View", emp_id, 0, 0)) {
 			LOG.info("DropdownController | Access Denied in GetDropdown");
 			return new ResponseEntity<>(data, HttpStatus.BAD_REQUEST);
 		}
 
-		
 		data = this.optionService.GetAllDropdown();
 		LOG.info(ACCESS_DENIED_ADDBOUNTYROL_EXIT);
 

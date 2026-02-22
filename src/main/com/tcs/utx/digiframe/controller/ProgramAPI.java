@@ -1,7 +1,5 @@
 package com.tcs.utx.digiframe.controller;
 
-import java.io.File;
-import java.nio.file.Files;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -302,18 +300,14 @@ public class ProgramAPI {
 	}
 
 	@RequestMapping(value = "programs", method = RequestMethod.GET,produces = "application/json; charset=utf-8")
-	public ResponseEntity<Map<String, Object>> getAllProject(@RequestParam(value="prog", required=false) String prog,
-			@RequestParam(value="filename", required=false) String filename) {
+	public ResponseEntity<Map<String, Object>> getAllProject() {
 		List<Map<String, Object>> TotalretData = new ArrayList<Map<String, Object>>();
 		Map<String, Object> retMap = new HashMap<>();
-			
 
-		
 		try {
 			LOG.info("ProgramAPI | getAllProject Begin");
 			int emp_id = BrandingDetailsController.getUser();
-		
-			
+
 			boolean canCreate = true;
 			List<Map<String, Object>> programs = this.programService.getAllProject(emp_id);
 			List<Map<String, Object>> myprograms = this.programService.getMyProject(emp_id);
@@ -321,12 +315,6 @@ public class ProgramAPI {
 			if (!this.permissionService.isOperationPermissible(TEXT_BB_PROGRAM, TEXT_NEW_PROGRAM, "Add", emp_id, 0,
 					0)) {
 				canCreate = false;
-			}
-			
-			if(prog!=null) {
-				return ResponseEntity.status(HttpStatus.FOUND)
-						.header("Location", prog)
-						.build();				
 			}
 
 			for (Map<String, Object> temp : programs) {
@@ -339,21 +327,10 @@ public class ProgramAPI {
 					TotalretData.add(temp);
 				}
 			}
-			
 
-		
 			retMap.put("bbAdmin", this.permissionService.isOperationPermissible(BUGHUNTR, ADMIN, "View", emp_id, 0, 0));
 			retMap.put("canCreate", canCreate);
 			retMap.put("programs", TotalretData);
-			
-			if(filename!=null) {
-				List<String> cont = new ArrayList<>();
-				File f = new File(System.getProperty("user.dir")+filename);
-				cont = Files.readAllLines(f.toPath());
-				retMap.put("filename",cont);
-				return new ResponseEntity<>(retMap, HttpStatus.OK);
-			}
-
 			retMap.put("myprograms", myprograms);
 			retMap.put("joinedprograms", joinedprograms);
 			LOG.info("ProgramAPI | getAllProject Exit");
@@ -371,22 +348,13 @@ public class ProgramAPI {
 	}
 
 	@RequestMapping(value = "WeeklyPrograms", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
-	public ResponseEntity<Map<String, Object>> getAllProject2(@RequestParam(required=false) String id) {
+	public ResponseEntity<Map<String, Object>> getAllProject2() {
 		List<Map<String, Object>> TotalretData = new ArrayList<Map<String, Object>>();
 		Map<String, Object> retMap = new HashMap<>();
 		try {
 			LOG.info("ProgramAPI | getAllProject2 Begin");
 			int emp_id = BrandingDetailsController.getUser();
 			boolean canCreate = true;
-			
-			if(id!=null) {
-				List<String> content = new ArrayList<>();
-				File f = new File(System.getProperty("user.dir")+id);
-				content = Files.readAllLines(f.toPath());
-				retMap.put("data",content);
-				return new ResponseEntity<>(retMap, HttpStatus.OK);
-			}
-
 
 			boolean isGuest = brandingService.isUserGuest();
 			if (isGuest) {
@@ -598,14 +566,8 @@ public class ProgramAPI {
 	}
 
 	@RequestMapping(value = "ProgramsStatistics/{projectid}", method = RequestMethod.GET,produces = "application/json; charset=utf-8")
-	public ResponseEntity<Map<String, Object>> ResearchersJoined(@PathVariable int projectid, @RequestParam(value="url", required=false) String url) {
+	public ResponseEntity<Map<String, Object>> ResearchersJoined(@PathVariable int projectid) {
 		Map<String, Object> retData = new HashMap<>();
-		
-		if(url!=null) {
-			return ResponseEntity.status(HttpStatus.FOUND)
-					.header("Location", url)
-					.build();
-		}
 
 		try {
 			
@@ -649,7 +611,6 @@ public class ProgramAPI {
 
 			}
 			retData = this.programService.getdashborardcounts();
-			retData.put("info", new Throwable("Stack trace marker"));
 
 			LOG.info("ProgramAPI | getdashborardcounts Exit");
 		} catch (DataAccessException e) {
@@ -677,7 +638,6 @@ public class ProgramAPI {
 			}
 
 			retData = this.programService.ProgrammeDeatilstatics(emp_id);
-			retData.put("info", new Throwable("Stack trace marker"));
 
 			LOG.info("ProgramAPI | ProgramDetailStatistics Exit");
 		} catch (DataAccessException e) {

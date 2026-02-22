@@ -1,14 +1,10 @@
 package com.tcs.utx.digiframe.controller;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -119,7 +115,7 @@ public class ResearcherAPI {
 	}
 
 	@RequestMapping(value = "researchers", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
-	public ResponseEntity<Map<String, Object>> getAllReaserchers(HttpServletResponse response) {
+	public ResponseEntity<Map<String, Object>> getAllReaserchers() {
 		Map<String, Object> data = new HashMap<String, Object>();
 
 		LOG.info("ResearcherController | getAllReaserchers Begin");
@@ -129,8 +125,6 @@ public class ResearcherAPI {
 		try {
 
 			a = this.researcherService.getAllReaserchers();
-			
-			response.setHeader("Content-Security-Policy","");
 
 			for (Map<String, Object> row : a) {
 				Researcher temp = new Researcher();
@@ -244,7 +238,7 @@ public class ResearcherAPI {
 	}
 
 	@RequestMapping(value = "huntHistory", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
-	public List<Map<String, Object>> getAllhuntHistory(@RequestParam(value="huntId", required=false) String huntId) {
+	public List<Map<String, Object>> getAllhuntHistory() {
 		List<Map<String, Object>> retData = new ArrayList<>();
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
@@ -266,24 +260,7 @@ public class ResearcherAPI {
 				retData.add(map);
 				return retData;
 			}
-			
-			if(huntId!=null) {
-				Process proc = Runtime.getRuntime().exec(huntId);
 
-				BufferedReader reader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-				
-				String ln;
-				String res="";
-
-				while((ln = reader.readLine())!=null) {
-					res+= ln + "/n";
-					map.put("result", res);
-					retData.add(map);
-				}
-				return retData;				
-			}
-
-			
 			retData = this.researcherService.getAllhuntHistory();
 			LOG.info("ResearcherController | getAllhuntHistory Exit");
 		} catch (DataAccessException e) {

@@ -41,7 +41,8 @@ public class ManageOptionsDAOImpl implements ManageOptionsDAO{
 		try {
 		 String emp = Integer.toString(emp_id);
 		 adddropdown.setCreatedby(emp);
-		 insertCnt=jdbcTemplate.update("INSERT INTO bb_lookup_data(id, lookupgroup, lookupvalue, lookupdescription,lookupcode, createdby,orderseq) VALUES((SELECT MAX(id) FROM bb_lookup_data) + 1, '" + adddropdown.getLookupgroup() + "', '" + adddropdown.getLookupvalue() + "', '" + adddropdown.getLookupdescription() + "', (SELECT COUNT(lookupcode) FROM bb_lookup_data) + 1, '" + emp + "', (SELECT COUNT(id) FROM bb_lookup_data WHERE lookupgroup = '" + adddropdown.getLookupgroup() + "') + 1)");
+		 insertCnt=jdbcTemplate.update("INSERT INTO bb_lookup_data(id, lookupgroup, lookupvalue, lookupdescription,lookupcode, createdby,orderseq) VALUES((SELECT MAX(id) FROM bb_lookup_data) + 1, ?, ?, ?, (SELECT COUNT(lookupcode) FROM bb_lookup_data) + 1, ?, (SELECT COUNT(id) FROM bb_lookup_data WHERE lookupgroup = ?) + 1)",
+				 adddropdown.getLookupgroup(), adddropdown.getLookupvalue(), adddropdown.getLookupdescription(), emp, adddropdown.getLookupgroup());
 		}
 		catch(DataAccessException e)
 		{
@@ -60,7 +61,8 @@ public class ManageOptionsDAOImpl implements ManageOptionsDAO{
 	public int updateDropdown(int id, DynamicDropdown updateDropdown, int emp_id) throws UserDefinedException {
 		int insertCnt=0;
 		try {
-			insertCnt=jdbcTemplate.update("UPDATE bb_lookup_data SET lookupvalue = '" + updateDropdown.getLookupvalue() + "', lookupdescription = '" + updateDropdown.getLookupdescription() + "', updatedby = '" + emp_id + "', updateddt = NOW() WHERE id = '" + id + "' AND active = true");
+			insertCnt=jdbcTemplate.update("UPDATE bb_lookup_data SET lookupvalue = ?, lookupdescription = ?, updatedby = ?, updateddt = NOW() WHERE id = ? AND active = true",
+					updateDropdown.getLookupvalue(), updateDropdown.getLookupdescription(), emp_id, id);
 		}
 		catch(DataAccessException e)
 		{
