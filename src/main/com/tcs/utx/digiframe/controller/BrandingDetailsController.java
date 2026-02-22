@@ -1,6 +1,5 @@
 package com.tcs.utx.digiframe.controller;
 
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -130,24 +129,26 @@ public class BrandingDetailsController {
 	 * @return
 	 */
 	private String getLastloginTime(HttpServletRequest request) {
+		HttpSession session = request.getSession(false);
 		String previousLoginTime = null;
-		previousLoginTime = request.getHeader("PrevLoginTime");
-		if (previousLoginTime != null && !"".equals(previousLoginTime.trim())) {
 
-			BigDecimal loginTimeSecs = new BigDecimal(previousLoginTime);
-			BigDecimal loginTimeMillis = loginTimeSecs.multiply(new BigDecimal("1000"));
+		if (session != null) {
+			Object storedLoginTime = session.getAttribute("PrevLoginTime");
+			if (storedLoginTime instanceof Long) {
+				long loginTimeLong = (Long) storedLoginTime;
+				Date date = new Date(loginTimeLong);
+				Calendar cal = new GregorianCalendar();
+				cal.setTime(date);
+				SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd,yyyy hh:mm:ss aa z");
+				dateFormat.setCalendar(cal);
+				previousLoginTime = dateFormat.format(date);
+			}
 
-			long loginTimeLong = Long.parseLong(loginTimeMillis.toString());
-			Date date = new Date(loginTimeLong);
+			// Store current time as the previous login time for next request
+			session.setAttribute("PrevLoginTime", System.currentTimeMillis());
+		}
 
-			Calendar cal = new GregorianCalendar();
-			cal.setTime(date);
-
-			SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd,yyyy hh:mm:ss aa z");
-			dateFormat.setCalendar(cal);
-
-			previousLoginTime = dateFormat.format(date);
-		} else {
+		if (previousLoginTime == null) {
 			Calendar cal = new GregorianCalendar();
 			Date date = new Date();
 			SimpleDateFormat dateFormat = new SimpleDateFormat("EE MMM dd hh:mm:ss z aa yyyy");

@@ -39,8 +39,12 @@ public class SecurityConfig {
 		    .headers(headers -> headers
 	            .frameOptions(frame -> frame.deny())
 	            .contentTypeOptions(contentType -> {})
+	            .xssProtection(xss -> xss.headerValue(org.springframework.security.web.header.writers.XXssProtectionHeaderWriter.HeaderValue.ENABLED_MODE_BLOCK))
+	            .cacheControl(cache -> {})
 	            .httpStrictTransportSecurity(hsts -> hsts.maxAgeInSeconds(31536000).includeSubDomains(true))
-	            .contentSecurityPolicy(csp -> csp.policyDirectives("default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'")));
+	            .contentSecurityPolicy(csp -> csp.policyDirectives("default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'"))
+	            .referrerPolicy(referrer -> referrer.policy(org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
+	            .permissionsPolicy(permissions -> permissions.policy("camera=(), microphone=(), geolocation=(), payment=()")));
 		return http.build();
 	}
 

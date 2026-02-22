@@ -72,9 +72,8 @@ public class CSRFValidationFilter implements Filter {
                 session.setAttribute(CSRF_TOKEN_NAME, trueToken);
             }
             StringBuilder sb = new StringBuilder(2048);
-            sb.append(this.determineCookieName(httpReq)).append("=").append((String) session.getAttribute(CSRF_TOKEN_NAME)).append("; Path=/; Secure; SameSite=Strict");
+            sb.append(this.determineCookieName(httpReq)).append("=").append((String) session.getAttribute(CSRF_TOKEN_NAME)).append("; Path=/; HttpOnly; Secure; SameSite=Strict");
             httpRespWrapper.addHeader("Set-Cookie", sb.toString());
-            httpRespWrapper.setHeader(CSRF_TOKEN_NAME, (String) session.getAttribute(CSRF_TOKEN_NAME));
             chain.doFilter(request, httpRespWrapper);
             return;
         }
@@ -125,9 +124,8 @@ public class CSRFValidationFilter implements Filter {
 
         HttpServletResponseWrapper httpRespWrapper = new HttpServletResponseWrapper(httpResp);
         StringBuilder sb = new StringBuilder(2048);
-        sb.append(this.determineCookieName(httpReq)).append("=").append(newToken).append("; Path=/; Secure; SameSite=Strict");
+        sb.append(this.determineCookieName(httpReq)).append("=").append(newToken).append("; Path=/; HttpOnly; Secure; SameSite=Strict");
         httpRespWrapper.addHeader("Set-Cookie", sb.toString());
-        httpRespWrapper.setHeader(CSRF_TOKEN_NAME, newToken);
 
         chain.doFilter(request, httpRespWrapper);
     }
@@ -191,14 +189,6 @@ public class CSRFValidationFilter implements Filter {
     }
 
     private String getSourceIP(HttpServletRequest request) {
-		String sourceIP = "";
-		String xForwardedFor = request.getHeader("X-FORWARDED-FOR");
-		if (xForwardedFor != null) {
-			String[] xforwardedIPs = xForwardedFor.split(",");
-			sourceIP = xforwardedIPs[0].replaceAll("[^0-9.:]", "");
-		} else {
-			sourceIP = request.getServerName();
-		}
-		return sourceIP;
+		return request.getRemoteAddr();
 	}
 }

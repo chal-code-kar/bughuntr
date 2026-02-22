@@ -44,12 +44,9 @@ public class LogoutController {
 			session.invalidate();
 		}
 		LOG.info("LogoutController | logout action terminated ");
-		response.setHeader("pragma", noCacheString);
-		response.setHeader(cacheControlString, noCacheString);
-		response.setHeader(cacheControlString, "no-store");
-		response.addDateHeader(expiresString, 0);
-		response.setDateHeader("max-age", 0);
-		response.setIntHeader(expiresString, -1); 
+		response.setHeader(cacheControlString, "no-cache, no-store, must-revalidate, private, max-age=0");
+		response.setHeader("Pragma", noCacheString);
+		response.setDateHeader(expiresString, 0);
 		}
 
 	/**
@@ -64,12 +61,9 @@ public class LogoutController {
 			SecurityContextHolder.clearContext();
 			session.invalidate();
 		}
-		response.setHeader("pragma", noCacheString);
-		response.setHeader(cacheControlString, noCacheString);
-		response.setHeader(cacheControlString, "no-store");
-		response.addDateHeader(expiresString, 0);
-		response.setDateHeader("max-age", 0);
-		response.setIntHeader(expiresString, -1); 
+		response.setHeader(cacheControlString, "no-cache, no-store, must-revalidate, private, max-age=0");
+		response.setHeader("Pragma", noCacheString);
+		response.setDateHeader(expiresString, 0);
 		LOG.info("LogoutController | logoutAppSession action terminated ");
 	}
 	
