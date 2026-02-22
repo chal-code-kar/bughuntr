@@ -29,10 +29,10 @@ public class SecurityConfig {
 
 		http.csrf(csrf -> csrf
 				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-				.ignoringRequestMatchers("/h2-console/**", "/BugHuntr/api/dologin"))
+				.ignoringRequestMatchers("/BugHuntr/api/dologin"))
 			.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/Bughuntr/isAuthUser","/","/Bughuntr/**","/Bughuntr/login","/BugHuntr/api/v1/help", "/index.html", "/**/index.html*", "/**/*.js*",
-						"/**/*.css*","/BugHuntr/api/dologin/**", "/BugHuntr/api/menu", "/Bughuntr/login","/h2-console/**"
+				.requestMatchers("/Bughuntr/isAuthUser","/","/Bughuntr/**","/Bughuntr/login", "/index.html", "/**/index.html*", "/**/*.js*",
+						"/**/*.css*","/BugHuntr/api/dologin/**", "/BugHuntr/api/menu", "/Bughuntr/login"
 						)
 				.permitAll()
 				.anyRequest().authenticated())

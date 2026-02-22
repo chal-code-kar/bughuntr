@@ -46,15 +46,26 @@ public class WorklistAPI {
         Map<String, Object> workList = new HashMap<>();
         try {
             LOG.info("WorkListController | getWorkList | invoked");
-            
+
     		boolean isGuest = brandingService.isUserGuest();
     		if (isGuest) {
     			workList.put("text", ACCESS_DENIED);
     			return new ResponseEntity<>(workList, HttpStatus.FORBIDDEN);
     		}
-    		
+
+            int authenticated_user = BrandingDetailsController.getUser();
+
+    		// Only allow viewing another user's worklist if the requester is an admin
+    		if (user_id != null && user_id != authenticated_user) {
+    			if (!this.permissionService.isOperationPermissible("BugHuntr", "Admin", "View", authenticated_user, 0, 0)) {
+    				LOG.info("WorkListController | Access Denied - user attempted to view another user's worklist");
+    				workList.put("text", ACCESS_DENIED);
+    				return new ResponseEntity<>(workList, HttpStatus.FORBIDDEN);
+    			}
+    		}
+
     		if(user_id==null){
-				user_id = BrandingDetailsController.getUser();
+				user_id = authenticated_user;
 			}
 
             int emp_id = Integer.valueOf(user_id);
@@ -85,6 +96,13 @@ public class WorklistAPI {
             LOG.info("WorkListController | reports | invoked");
             try {
             int emp_id = BrandingDetailsController.getUser();
+
+    		boolean isGuest = brandingService.isUserGuest();
+    		if (isGuest) {
+    			LOG.info("WorkListController | Access Denied in reports");
+    			return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+    		}
+
             if (this.permissionService.isOperationPermissible("BugHuntr", "Admin", "View", emp_id, 0, 0)) {
             	reportList = this.service.reportsForResearcher(emp_id, "Admin");
             } else if (this.permissionService.isOperationPermissible("BB Program", "New Program", "Add", emp_id, 0,

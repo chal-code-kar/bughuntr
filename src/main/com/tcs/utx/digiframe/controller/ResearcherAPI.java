@@ -124,6 +124,12 @@ public class ResearcherAPI {
 
 		try {
 
+			boolean isGuest = brandingService.isUserGuest();
+			if (isGuest) {
+				data.put("text", ACCESS_DENIED);
+				return new ResponseEntity<>(data, HttpStatus.FORBIDDEN);
+			}
+
 			a = this.researcherService.getAllReaserchers();
 
 			for (Map<String, Object> row : a) {
@@ -278,6 +284,11 @@ public class ResearcherAPI {
 		LOG.info("ResearcherController | IsAvatarAvailable Begin");
 		boolean result = false;
 		try {
+			boolean isGuest = brandingService.isUserGuest();
+			if (isGuest) {
+				LOG.info("ResearcherController | Access Denied in IsAvatarAvailable");
+				return "false";
+			}
 
 			result = this.researcherService.isAvatarAvailable(avatarName);
 
@@ -323,6 +334,15 @@ public class ResearcherAPI {
 		boolean result = false;
 		try {
 			LOG.info("ResearcherController | isActionallowed Begin");
+			int emp_id = BrandingDetailsController.getUser();
+
+			// Only allow checking own action status, or admin can check any user
+			if (emp_id != id &&
+				!this.permissionService.isOperationPermissible(TEXT_BUGHUNTR, TEXT_ADMIN, "View", emp_id, 0, 0)) {
+				LOG.info("ResearcherController | Access Denied in isActionallowed");
+				return "false";
+			}
+
 			result = this.researcherService.isActionAllowed(id);
 			LOG.info("ResearcherController | isActionallowed Exit");
 		} catch (DataAccessException e) {
@@ -341,6 +361,12 @@ public class ResearcherAPI {
 		LOG.info("ResearcherController | isResearcher Begin");
 		boolean result = false;
 		try {
+			boolean isGuest = brandingService.isUserGuest();
+			if (isGuest) {
+				LOG.info("ResearcherController | Access Denied in isResearcher");
+				return "false";
+			}
+
 			int emp_id = BrandingDetailsController.getUser();
 			result = this.researcherService.isResearcher(emp_id);
 			LOG.info("ResearcherController | isResearcher Exit");

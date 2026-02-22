@@ -342,17 +342,23 @@ public class PermissionHelperAPI {
 
 	@RequestMapping(value = "employee/{employeeid}", method = RequestMethod.GET,produces = "application/json; charset=utf-8")
 	public ResponseEntity<List<Map<String, Object>>> getEmployeeDetail(@PathVariable String employeeid) {
-		LOG.info("PermissionHelperController | AllUsersRole Begin");
+		LOG.info("PermissionHelperController | getEmployeeDetail Begin");
 		int emp_id = BrandingDetailsController.getUser();
 
 		List<Map<String, Object>> data = new ArrayList<>();
 		try {
-	
+
 		boolean isGuest = brandingService.isUserGuest();
 		if (isGuest) {
 			LOG.info("PermissionHelperController | Access Denied in getEmployeeDetail");
 			return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
 		}
+
+		if (!this.service.isOperationPermissible(TEXT_BUGHUNTR, TEXT_ADMIN, "View", emp_id, 0, 0)) {
+			LOG.info("PermissionHelperController | Access Denied in getEmployeeDetail");
+			return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+		}
+
 		if (String.valueOf(employeeid).length() > 2) {
 			data = this.service.getEmployeeDetail(employeeid);
 			if(data.isEmpty()) {
@@ -378,15 +384,21 @@ public class PermissionHelperAPI {
 		List<Map<String, Object>> data =  new ArrayList<Map<String, Object>>();
 		try {
 		LOG.info("PermissionHelperController | GetEmployeeData Begin");
-		data = this.service.getEmployeeData();
-		
-	
+		int emp_id = BrandingDetailsController.getUser();
+
 		boolean isGuest = brandingService.isUserGuest();
 		if (isGuest) {
 			LOG.info("PermissionHelperController | Access Denied in getEmployeeData");
 			return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
 		}
-		
+
+		if (!this.service.isOperationPermissible(TEXT_BUGHUNTR, TEXT_ADMIN, "View", emp_id, 0, 0)) {
+			LOG.info("PermissionHelperController | Access Denied in getEmployeeData");
+			return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+		}
+
+		data = this.service.getEmployeeData();
+
 		LOG.info(ACCESS_DENIED_ADDBOUNTYROL_EXIT);
 		} catch (DataAccessException e) {
 			LOG.error("PermissionHelperController | Exception in getEmployeeData - ", e);
@@ -403,8 +415,14 @@ public class PermissionHelperAPI {
 		LOG.info("PermissionHelperController | DeleteRole Begin");
 		try {
 		int emp_id = BrandingDetailsController.getUser();
+
+		boolean isGuest = brandingService.isUserGuest();
+		if (isGuest) {
+			return new ResponseEntity<>(ACCESS_DENIED, HttpStatus.FORBIDDEN);
+		}
+
 		if (!this.service.isOperationPermissible(TEXT_BUGHUNTR, TEXT_ADMIN, "View", emp_id, 0, 0)) {
-			LOG.info("PermissionHelperController | DeleteRole Begin");
+			LOG.info("PermissionHelperController | Access Denied in DeleteRole");
 			return new ResponseEntity<String>(TEXT_NOTADMIN, HttpStatus.FORBIDDEN);
 		}
 		this.service.deleterole(id);
@@ -426,6 +444,20 @@ public class PermissionHelperAPI {
 		Map<String, Object> retData = new HashMap<>();
 		try {
 			LOG.info("PermissionHelperController | GetData Begin");
+			int emp_id = BrandingDetailsController.getUser();
+
+			boolean isGuest = brandingService.isUserGuest();
+			if (isGuest) {
+				retData.put(TEXT_ERROR, ACCESS_DENIED);
+				return new ResponseEntity<>(retData, HttpStatus.FORBIDDEN);
+			}
+
+			if (!this.service.isOperationPermissible(TEXT_BUGHUNTR, TEXT_ADMIN, "View", emp_id, 0, 0)) {
+				retData.put(TEXT_ERROR, ACCESS_DENIED);
+				LOG.info("PermissionHelperController | Access Denied in getData");
+				return new ResponseEntity<>(retData, HttpStatus.FORBIDDEN);
+			}
+
 			retData = this.service.getData();
 			LOG.info("PermissionHelperController | GetData End");
 		} catch (DataAccessException e) {
@@ -446,6 +478,14 @@ public class PermissionHelperAPI {
 		LOG.info("PermissionHelperController | GetUsers Begin");
 		try {
 		int emp_id = BrandingDetailsController.getUser();
+
+		boolean isGuest = brandingService.isUserGuest();
+		if (isGuest) {
+			retData.put(TEXT_ERROR, ACCESS_DENIED);
+			LOG.info("PermissionHelperController | Access Denied in GetUsers");
+			return new ResponseEntity<>(retData, HttpStatus.FORBIDDEN);
+		}
+
 		if (!this.service.isOperationPermissible(TEXT_BUGHUNTR, TEXT_ADMIN, "View", emp_id, 0, 0)) {
 			retData.put(TEXT_ERROR, ACCESS_DENIED);
 			LOG.info("PermissionHelperController | Access Denied in GetUsers");

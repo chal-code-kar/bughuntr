@@ -308,6 +308,18 @@ public class ProgramAPI {
 			LOG.info("ProgramAPI | getAllProject Begin");
 			int emp_id = BrandingDetailsController.getUser();
 
+			boolean isGuest = brandingService.isUserGuest();
+			if (isGuest) {
+				retMap.put("text", ACCESS_DENIED);
+				return new ResponseEntity<>(retMap, HttpStatus.FORBIDDEN);
+			}
+
+			if (this.permissionService.isOperationPermissible(BUGHUNTR, GUEST, "View", emp_id, 0, 0)) {
+				LOG.info("ProgramAPI | Access Denied in getAllProject");
+				retMap.put("text", TEXT_ACCESS_DENIED);
+				return new ResponseEntity<>(retMap, HttpStatus.FORBIDDEN);
+			}
+
 			boolean canCreate = true;
 			List<Map<String, Object>> programs = this.programService.getAllProject(emp_id);
 			List<Map<String, Object>> myprograms = this.programService.getMyProject(emp_id);
@@ -570,13 +582,21 @@ public class ProgramAPI {
 		Map<String, Object> retData = new HashMap<>();
 
 		try {
-			
-			
 		LOG.info("ProgramAPI | ResearchersJoined Begin");
 		int emp_id = BrandingDetailsController.getUser();
-		LOG.info("ProgramAPI | ResearchersJoined Begin");
-		
-		
+
+		boolean isGuest = brandingService.isUserGuest();
+		if (isGuest) {
+			retData.put("text", ACCESS_DENIED);
+			return new ResponseEntity<>(retData, HttpStatus.FORBIDDEN);
+		}
+
+		if (this.permissionService.isOperationPermissible(BUGHUNTR, GUEST, "View", emp_id, 0, 0)) {
+			LOG.info("ProgramAPI | Access Denied in ResearchersJoined");
+			retData.put("text", TEXT_ACCESS_DENIED);
+			return new ResponseEntity<>(retData, HttpStatus.FORBIDDEN);
+		}
+
 		retData = this.programService.ResearchersJoined(projectid, emp_id);
 		
 		LOG.info("ProgramAPI | ResearchersJoined Exit");

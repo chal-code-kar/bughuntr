@@ -54,11 +54,18 @@ public class AdminAPI {
 
 		Map<String, Object> retData = new HashMap<>();
 		try {
+			int emp_id = BrandingDetailsController.getUser();
 
 			boolean isGuest = brandingService.isUserGuest();
 
 			if (isGuest) {
 				retData.put("text", "ACCESS_DENIED");
+				return new ResponseEntity<>(retData, HttpStatus.FORBIDDEN);
+			}
+
+			if (!this.permissionService.isOperationPermissible(BUGHUNTR, ADMIN, "View", emp_id, 0, 0)) {
+				LOG.info("AdminController | Access Denied in getMenus");
+				retData.put("text", ACCESS_DENIED);
 				return new ResponseEntity<>(retData, HttpStatus.FORBIDDEN);
 			}
 

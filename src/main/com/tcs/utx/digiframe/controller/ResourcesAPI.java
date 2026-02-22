@@ -68,8 +68,25 @@ public class ResourcesAPI {
 	@RequestMapping(value = "resources", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
 	public ResponseEntity<List<Map<String, Object>>> getResources() {
 		List<Map<String, Object>> data = new ArrayList<>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		LOG.info("PermissionHelperController | GetResources Begin");
 		try {
+			int emp_id = BrandingDetailsController.getUser();
+
+			boolean isGuest = brandingService.isUserGuest();
+			if (isGuest) {
+				map.put(TEXT_ACCESS_DENIED, ACCESS_DENIED_JSON);
+				data.add(map);
+				return new ResponseEntity<>(data, HttpStatus.FORBIDDEN);
+			}
+
+			if (this.service.isOperationPermissible(TEXT_BUGHUNTR, GUEST, "View", emp_id, 0, 0)) {
+				LOG.info("ResourcesAPIController | Access Denied in getResources");
+				map.put(TEXT_ACCESS_DENIED, ACCESS_DENIED_JSON);
+				data.add(map);
+				return new ResponseEntity<>(data, HttpStatus.FORBIDDEN);
+			}
+
 			data = this.resourcesservice.getResources();
 			LOG.info(ACCESS_DENIED_RESOURCES);
 		} catch (DataAccessException e) {
@@ -155,8 +172,24 @@ public class ResourcesAPI {
 	@RequestMapping(value = "getresources/{id}", method = RequestMethod.GET,produces = "application/json; charset=utf-8")
 	public ResponseEntity<List<Map<String, Object>>> getresourcesbyid(@PathVariable int id) {
 		List<Map<String, Object>> data = new ArrayList<>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		LOG.info("PermissionHelperController | GetResourcesById Begin");
 		try {
+			int emp_id = BrandingDetailsController.getUser();
+
+			boolean isGuest = brandingService.isUserGuest();
+			if (isGuest) {
+				map.put(TEXT_ACCESS_DENIED, ACCESS_DENIED_JSON);
+				data.add(map);
+				return new ResponseEntity<>(data, HttpStatus.FORBIDDEN);
+			}
+
+			if (this.service.isOperationPermissible(TEXT_BUGHUNTR, GUEST, "View", emp_id, 0, 0)) {
+				LOG.info("ResourcesAPIController | Access Denied in getresourcesbyid");
+				map.put(TEXT_ACCESS_DENIED, ACCESS_DENIED_JSON);
+				data.add(map);
+				return new ResponseEntity<>(data, HttpStatus.FORBIDDEN);
+			}
 
 			data = this.resourcesservice.getresourcesbyid(id);
 			LOG.info((ACCESS_DENIED_RESOURCES));
@@ -174,6 +207,18 @@ public class ResourcesAPI {
 	public ResponseEntity<String> deleteResources(@PathVariable int id) {
 		LOG.info("PermissionHelperController | DeleteResources Begin");
 		try {
+			int emp_id = BrandingDetailsController.getUser();
+
+			boolean isGuest = brandingService.isUserGuest();
+			if (isGuest) {
+				return new ResponseEntity<>(TEXT_ACCESS_DENIED, HttpStatus.FORBIDDEN);
+			}
+
+			if (!this.service.isOperationPermissible(TEXT_BUGHUNTR, TEXT_ADMIN, "View", emp_id, 0, 0)) {
+				LOG.info("PermissionHelperController | Access Denied in deleteResources");
+				return new ResponseEntity<>(TEXT_NOTADMIN, HttpStatus.FORBIDDEN);
+			}
+
 			this.resourcesservice.deleteResources(id);
 			LOG.info("PermissionHelperController | DeleteResources Exit");
 		} catch (DataAccessException e) {
@@ -268,16 +313,17 @@ public class ResourcesAPI {
 				return new ResponseEntity<>(TEXT_ACCESS_DENIED, HttpStatus.FORBIDDEN);
 			}
 
-			if (!this.resourcesservice.validateResources(editresources)) {	
+			if (!this.service.isOperationPermissible(TEXT_BUGHUNTR, TEXT_ADMIN, "View", emp_id, 0, 0)) {
+				LOG.info("PermissionHelperController | Access Denied in updateresources");
+				return new ResponseEntity<>(TEXT_NOTADMIN, HttpStatus.FORBIDDEN);
+			}
+
+			if (!this.resourcesservice.validateResources(editresources)) {
 				LOG.info("PermissionHelperController | Validation Failed in addcategoryitem");
 				return new ResponseEntity<>(TEXT_VALIDATION, HttpStatus.BAD_REQUEST);
 			}
 			if (!this.resourcesservice.updateresourcesbyid(editresources)) {
 				return new ResponseEntity<>(TEXT_VALIDATION, HttpStatus.BAD_REQUEST);
-			}
-			if (!this.service.isOperationPermissible(TEXT_BUGHUNTR, TEXT_ADMIN, "View", emp_id, 0, 0)) {
-				LOG.info("PermissionHelperController | Access Denied in updateresources");
-				return new ResponseEntity<>(TEXT_NOTADMIN, HttpStatus.FORBIDDEN);
 			}
 			this.resourcesservice.updateresources(id, editresources);
 			LOG.info("PermissionHelperController | updateresources Exit");

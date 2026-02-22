@@ -92,10 +92,23 @@ public class QueryController {
 		List<Map<String, Object>> data = new ArrayList<>();
 		try {
 			LOG.info("QueryController | AllQuery Begin");
-			data = this.QueryService.MYQuery(emp_id); 
+			int authenticated_emp_id = BrandingDetailsController.getUser();
+
+			boolean isGuest = brandingService.isUserGuest();
+			if (isGuest) {
+				return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+			}
+
+			// Users can only view their own queries unless they are admin
+			if (authenticated_emp_id != emp_id &&
+				!this.service.isOperationPermissible(TEXT_BUGHUNTR, TEXT_ADMIN, "View", authenticated_emp_id, 0, 0)) {
+				LOG.info("QueryController | Access Denied in MYQuery - user attempted to view another user's queries");
+				return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+			}
+
+			data = this.QueryService.MYQuery(emp_id);
 			LOG.info(ACCESS_DENIED_ADDBOUNTYROL_EXIT);
 		} catch (DataAccessException e) {
-			e.printStackTrace();
 			LOG.error("QueryController | Exception in MYQuery - ", e);
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (Exception e) {
@@ -112,6 +125,18 @@ public class QueryController {
 		List<Map<String, Object>> data = new ArrayList<>();
 
 		try {
+			int emp_id = BrandingDetailsController.getUser();
+
+			boolean isGuest = brandingService.isUserGuest();
+			if (isGuest) {
+				return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+			}
+
+			if (this.service.isOperationPermissible(TEXT_BUGHUNTR, GUEST, "View", emp_id, 0, 0)) {
+				LOG.info("QueryController | Access Denied in AllQuery");
+				return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+			}
+
 			data = this.QueryService.AllQuery();
 			LOG.info(ACCESS_DENIED_ADDBOUNTYROL_EXIT);
 		} catch (DataAccessException e) {

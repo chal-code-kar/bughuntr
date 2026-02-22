@@ -140,6 +140,17 @@ public class FAQController {
 	public ResponseEntity<String> deleteFAQ(@PathVariable int id) {
 		try {
 			LOG.info("FAQController | deleteFAQ Begin");
+			int emp_id = BrandingDetailsController.getUser();
+
+			boolean isGuest = brandingService.isUserGuest();
+			if (isGuest) {
+				return new ResponseEntity<>(ACCESS_DENIED, HttpStatus.FORBIDDEN);
+			}
+
+			if (!this.service.isOperationPermissible(TEXT_BUGHUNTR, TEXT_ADMIN, "View", emp_id, 0, 0)) {
+				LOG.info("FAQController | Access Denied in deleteFAQ");
+				return new ResponseEntity<>(TEXT_NOTADMIN, HttpStatus.FORBIDDEN);
+			}
 
 			this.FAQService.deleteFAQ(id);
 			LOG.info("PermissionHelperController | deleteFAQ Exit");
