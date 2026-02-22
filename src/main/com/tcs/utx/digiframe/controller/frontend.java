@@ -32,9 +32,9 @@ public class frontend {
 	@RequestMapping(value = {"/{path:[^\\.]*}"})
     public String redirectToIndex(HttpServletRequest request) {
         String path = request.getRequestURI();
-        System.out.println(path);
 
-        if (path.startsWith("BugHuntr/api")) {
+        // Path Traversal fix: Use case-insensitive check to prevent bypass via case manipulation
+        if (path.toLowerCase().startsWith("/bughuntr/api") || path.toLowerCase().contains("/bughuntr/api")) {
             return null;
         }
         return "forward:/index.html";

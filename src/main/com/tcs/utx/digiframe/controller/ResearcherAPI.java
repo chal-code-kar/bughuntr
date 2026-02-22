@@ -294,6 +294,12 @@ public class ResearcherAPI {
 		LOG.info("ResearcherController | IsAvatarAvailable Begin");
 		boolean result = false;
 		try {
+			// Path Traversal fix: Validate avatarName is strictly alphanumeric (no path traversal chars like ../ or /)
+			if (avatarName == null || !avatarName.matches("^[a-zA-Z0-9_-]{1,50}$")) {
+				LOG.info("ResearcherController | Invalid avatar name rejected");
+				return "false";
+			}
+
 			boolean isGuest = brandingService.isUserGuest();
 			if (isGuest) {
 				LOG.info("ResearcherController | Access Denied in IsAvatarAvailable");
