@@ -138,7 +138,6 @@ public class ProgramAPI {
 			}
 			LOG.info("ProgramAPI | createProject Exit");
 		} catch (DataAccessException e) {
-			e.printStackTrace();
 			LOG.error("ProgramAPI | Exception in createProject - ", e);
 			return new ResponseEntity<>(GLB_ERROR_MSG, HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (Exception e) {
@@ -202,7 +201,6 @@ public class ProgramAPI {
 			return new ResponseEntity<>(GLB_ERROR_MSG, HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (Exception e) {
 			LOG.error("ProgramAPI | Exception in joinProgram ", e);
-			e.printStackTrace();
 			return new ResponseEntity<>(GLB_ERROR_MSG, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<>("You have joined Program Successfully", HttpStatus.OK);
@@ -289,7 +287,6 @@ public class ProgramAPI {
 			LOG.info("ProgramAPI | joinProject Exit");
 		} catch (DataAccessException e) {
 			LOG.error("ProgramAPI | Exception in updateJoinProgram - ", e);
-			e.printStackTrace();
 			return new ResponseEntity<>(GLB_ERROR_MSG, HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (Exception e) {
 			LOG.error("ProgramAPI | Exception in updateJoinProgram ", e);

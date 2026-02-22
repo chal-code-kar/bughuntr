@@ -79,7 +79,6 @@ public class WorklistAPI {
 
             LOG.info("WorkListController | getWorkList | leaving");
         } catch (DataAccessException e) {
-			e.printStackTrace();
 			LOG.error("WorkListController | DataAccessexception in getWorkList - ", e);
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (Exception e) {
@@ -113,7 +112,6 @@ public class WorklistAPI {
             }
             LOG.info("WorkListController | reports | leaving");
             } catch (DataAccessException e) {
-    			e.printStackTrace();
     			LOG.error("PermissionHelperController | DataAccessexception in getChild - ", e);
     			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
     		} catch (Exception e) {

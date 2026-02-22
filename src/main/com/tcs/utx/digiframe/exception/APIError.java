@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class APIError implements Serializable {
 
@@ -18,6 +19,7 @@ public class APIError implements Serializable {
 	   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
 	   private LocalDateTime timestamp;
 	   private String message;
+	   @JsonIgnore
 	   private String debugMessage;
 	   private List<APISubError> subErrors;
 	   private List<FieldError> fieldErrors = new ArrayList<>();

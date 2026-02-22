@@ -37,7 +37,10 @@ public class SecurityConfig {
 				.authenticationEntryPoint(customEntryPoint)
 				.accessDeniedHandler(accessDeniedHandler()))
 		    .headers(headers -> headers
-	            .frameOptions(frame -> frame.sameOrigin())); 
+	            .frameOptions(frame -> frame.deny())
+	            .contentTypeOptions(contentType -> {})
+	            .httpStrictTransportSecurity(hsts -> hsts.maxAgeInSeconds(31536000).includeSubDomains(true))
+	            .contentSecurityPolicy(csp -> csp.policyDirectives("default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'")));
 		return http.build();
 	}
 
@@ -46,9 +49,6 @@ public class SecurityConfig {
 	 * js,css,images
 	 *
 	 */
-
-	int a1 = 0;
-
 
 	/**
 	 * This will create bean of Http403ForbiddenEntryPoint

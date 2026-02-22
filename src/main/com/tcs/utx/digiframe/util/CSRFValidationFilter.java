@@ -51,7 +51,7 @@ public class CSRFValidationFilter implements Filter {
     	String requestURI = httpReq.getRequestURI();
     	String httpMethod = httpReq.getMethod();
     	String ipAddress = getSourceIP(httpReq);
-    	LOG.info(ipAddress + " " + httpReq.getServerPort()+ " "  + requestURI + " " + httpMethod);
+    	LOG.debug("CSRF filter request: {} {} {} {}", ipAddress, httpReq.getServerPort(), requestURI, httpMethod);
 
         // Check exempt paths using exact match
         if (isExemptPath(requestURI)) {
@@ -152,7 +152,7 @@ public class CSRFValidationFilter implements Filter {
                 try {
                     this.targetOrigins.add(new URL(url));
                 } catch (MalformedURLException e) {
-                     LOG.error("Cannot init the filter !", e.getMessage());
+                     LOG.error("Cannot init the filter!", e);
                 }
             });
         LOG.info("CSRFValidationFilter: Filter init, set expected target origin to '{}'.", this.targetOrigins);
@@ -176,7 +176,7 @@ public class CSRFValidationFilter implements Filter {
         try {
             jsonObj.put("text", message);
         } catch (JSONException e) {
-            LOG.error("JSON exception in "+message,e.getMessage());
+            LOG.error("JSON exception in sendResponseText", e);
         }
         return jsonObj.toString();
     }

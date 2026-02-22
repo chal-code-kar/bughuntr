@@ -20,11 +20,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException authException) throws IOException, ServletException {
-		System.out.print(request.getRequestURI());
-		System.out.print(request.getRequestURL());
-
-		
-			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); 
+		response.setStatus(HttpServletResponse.SC_UNAUTHORIZED); 
 		    response.setContentType("application/json");
 		    response.getWriter().write("ACCESS DENIED");
 	}

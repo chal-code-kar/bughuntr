@@ -157,7 +157,7 @@ public class BrandingDetailsController {
 	}
 	
 	private void setCustomAttributes(String principal, HttpServletRequest request) {
-		LOG.info("LoginController | setCustomAttributes action initiated - principal -> " + principal);
+		LOG.debug("LoginController | setCustomAttributes action initiated");
 		if (SecurityContextHolder.getContext().getAuthentication() != null) {
 			
 			 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
