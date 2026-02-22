@@ -2,6 +2,7 @@ package com.tcs.utx.digiframe.util;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -84,6 +85,27 @@ public class CSRFValidationFilter implements Filter {
             return;
         }
 
+        // Validate Origin/Referer header as secondary CSRF defense
+        if (this.targetOrigins != null && !this.targetOrigins.isEmpty()) {
+            String origin = httpReq.getHeader("Origin");
+            String referer = httpReq.getHeader("Referer");
+            if (origin != null && !origin.isEmpty()) {
+                if (!isAllowedOrigin(origin)) {
+                    LOG.warn("CSRFValidationFilter: Rejected request with untrusted Origin: {}", origin);
+                    httpResp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    httpResp.getWriter().write(sendResponseText(httpResp, "ACCESS_DENIED"));
+                    return;
+                }
+            } else if (referer != null && !referer.isEmpty()) {
+                if (!isAllowedOrigin(referer)) {
+                    LOG.warn("CSRFValidationFilter: Rejected request with untrusted Referer: {}", referer);
+                    httpResp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    httpResp.getWriter().write(sendResponseText(httpResp, "ACCESS_DENIED"));
+                    return;
+                }
+            }
+        }
+
         // For state-changing methods (POST, PUT, DELETE, PATCH), enforce CSRF token validation
         // Validate using the request HEADER (set by JavaScript), not the cookie (auto-sent by browser)
         String tokenFromHeader = httpReq.getHeader(CSRF_TOKEN_NAME);
@@ -111,10 +133,10 @@ public class CSRFValidationFilter implements Filter {
             return;
         }
 
-        if (!tokenFromSession.equals(tokenFromHeader)) {
+        if (!MessageDigest.isEqual(tokenFromSession.getBytes(), tokenFromHeader.getBytes())) {
             LOG.warn("CSRFValidationFilter: Token from request header does not match session token!");
             httpResp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            httpResp.getWriter().write(sendResponseText(httpResp, "ACESS_DENIED"));
+            httpResp.getWriter().write(sendResponseText(httpResp, "ACCESS_DENIED"));
             return;
         }
 
@@ -186,6 +208,22 @@ public class CSRFValidationFilter implements Filter {
       {
         return !this.allowedMethods.contains(request.getMethod());
       }
+    }
+
+    private boolean isAllowedOrigin(String originOrReferer) {
+        try {
+            URL url = new URL(originOrReferer);
+            for (URL allowed : this.targetOrigins) {
+                if (allowed.getHost().equalsIgnoreCase(url.getHost())
+                        && allowed.getPort() == url.getPort()
+                        && allowed.getProtocol().equalsIgnoreCase(url.getProtocol())) {
+                    return true;
+                }
+            }
+        } catch (MalformedURLException e) {
+            LOG.warn("CSRFValidationFilter: Malformed origin/referer URL: {}", originOrReferer);
+        }
+        return false;
     }
 
     private String getSourceIP(HttpServletRequest request) {

@@ -28,8 +28,11 @@ public class SecurityConfig {
 		// Disable Spring's built-in CSRF — custom CSRFValidationFilter handles CSRF protection
 		http.csrf(csrf -> csrf.disable())
 			.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/Bughuntr/isAuthUser","/","/Bughuntr/**","/Bughuntr/login", "/index.html", "/**/index.html*", "/**/*.js*",
-						"/**/*.css*","/BugHuntr/api/dologin/**", "/BugHuntr/api/menu", "/Bughuntr/login"
+				.requestMatchers(
+						"/Bughuntr/isAuthUser", "/", "/Bughuntr/login",
+						"/index.html", "/favicon.ico",
+						"/**/*.js", "/**/*.css", "/**/*.woff2", "/**/*.woff", "/**/*.ttf", "/**/*.ico", "/**/*.png", "/**/*.jpg", "/**/*.svg",
+						"/BugHuntr/api/dologin", "/BugHuntr/api/menu"
 						)
 				.permitAll()
 				.anyRequest().authenticated())

@@ -125,6 +125,15 @@ public class ResourcesAPI {
 				return new ResponseEntity<>(data, HttpStatus.FORBIDDEN);
 
 			}
+
+			// IDOR fix: Verify user has admin access or is resource owner before returning child data
+			if (!this.service.isOperationPermissible(TEXT_BUGHUNTR, TEXT_ADMIN, "View", emp_id, 0, 0)) {
+				List<Map<String, Object>> parentResource = this.resourcesservice.getresourcesbyid(id);
+				if (parentResource == null || parentResource.isEmpty()) {
+					return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
+				}
+			}
+
 			data = this.resourcesservice.getChild(id);
 			LOG.info(ACCESS_DENIED_RESOURCES);
 		} catch (DataAccessException e) {
@@ -195,7 +204,11 @@ public class ResourcesAPI {
 				return new ResponseEntity<>(data, HttpStatus.FORBIDDEN);
 			}
 
+			// IDOR fix: Verify resource exists before returning; non-admins get filtered view
 			data = this.resourcesservice.getresourcesbyid(id);
+			if (data == null || data.isEmpty()) {
+				return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
+			}
 			LOG.info((ACCESS_DENIED_RESOURCES));
 		} catch (DataAccessException e) {
 			LOG.error("PermissionHelperController | DataAccessexception in getresourcesbyid - ", e);
@@ -320,6 +333,12 @@ public class ResourcesAPI {
 			if (!this.service.isOperationPermissible(TEXT_BUGHUNTR, TEXT_ADMIN, "View", emp_id, 0, 0)) {
 				LOG.info("PermissionHelperController | Access Denied in updateresources");
 				return new ResponseEntity<>(TEXT_NOTADMIN, HttpStatus.FORBIDDEN);
+			}
+
+			// IDOR fix: Verify path variable ID matches request body ID to prevent ID tampering
+			if (editresources.getSrno() != 0 && editresources.getSrno() != id) {
+				LOG.info("ResourcesAPIController | ID mismatch in updateresources");
+				return new ResponseEntity<>("ID mismatch", HttpStatus.BAD_REQUEST);
 			}
 
 			if (!this.resourcesservice.validateResources(editresources)) {

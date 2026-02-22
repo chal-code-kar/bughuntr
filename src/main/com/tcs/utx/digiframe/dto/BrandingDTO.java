@@ -1,13 +1,34 @@
 package com.tcs.utx.digiframe.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Pattern;
+
 public class BrandingDTO {
+	@NotBlank @Size(max = 50)
+	@Pattern(regexp = "^[a-zA-Z0-9_.-]+$")
 	private String userId;
+
+	@NotBlank @Size(max = 100)
+	@Pattern(regexp = "^[a-zA-Z .'-]+$")
 	private String firstName;
+
+	@NotBlank @Size(max = 100)
+	@Pattern(regexp = "^[a-zA-Z .'-]+$")
 	private String lastName;
+
+	@Size(max = 100)
 	private String icalmsRole;
+
+	@Size(max = 200)
 	private String projectName;
+
+	@Size(max = 200)
 	private String supervisorName;
+
+	@Size(max = 50)
 	private String lastLogin;
+
 	public String getUserId() {
 		return userId;
 	}
@@ -50,5 +71,5 @@ public class BrandingDTO {
 	public void setLastLogin(String lastLogin) {
 		this.lastLogin = lastLogin;
 	}
-	
+
 }

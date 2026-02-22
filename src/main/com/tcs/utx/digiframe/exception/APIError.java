@@ -9,15 +9,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class APIError {
 	private HttpStatus status;
 	   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
 	   private LocalDateTime timestamp;
 	   private String message;
-	   @JsonIgnore
-	   private String debugMessage;
 	   private List<APISubError> subErrors;
 	   private List<FieldError> fieldErrors = new ArrayList<>();
 
@@ -64,14 +61,6 @@ public class APIError {
 
 	public void setMessage(String message) {
 		this.message = message;
-	}
-
-	public String getDebugMessage() {
-		return debugMessage;
-	}
-
-	public void setDebugMessage(String debugMessage) {
-		this.debugMessage = debugMessage;
 	}
 
 	public List<APISubError> getSubErrors() {

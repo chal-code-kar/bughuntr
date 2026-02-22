@@ -348,7 +348,7 @@ public class PermissionHelperAPI {
 
 
 	@RequestMapping(value = "employee/{employeeid}", method = RequestMethod.GET,produces = "application/json; charset=utf-8")
-	public ResponseEntity<List<Map<String, Object>>> getEmployeeDetail(@Size(max = 20) @PathVariable String employeeid) {
+	public ResponseEntity<List<Map<String, Object>>> getEmployeeDetail(@Pattern(regexp = "^[a-zA-Z0-9]{3,20}$") @Size(max = 20) @PathVariable String employeeid) {
 		LOG.info("PermissionHelperController | getEmployeeDetail Begin");
 		int emp_id = BrandingDetailsController.getUser();
 

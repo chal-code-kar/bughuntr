@@ -142,7 +142,13 @@ public class QueryController {
 				return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
 			}
 
-			data = this.QueryService.AllQuery();
+			// IDOR fix: Non-admin users should only see their own queries
+			boolean isAdmin = this.service.isOperationPermissible(TEXT_BUGHUNTR, TEXT_ADMIN, "View", emp_id, 0, 0);
+			if (isAdmin) {
+				data = this.QueryService.AllQuery();
+			} else {
+				data = this.QueryService.MYQuery(emp_id);
+			}
 			LOG.info(ACCESS_DENIED_ADDBOUNTYROL_EXIT);
 		} catch (DataAccessException e) {
 			LOG.error("QueryController | Exception in AllQuery - ", e);

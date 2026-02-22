@@ -108,7 +108,7 @@ public class DynamicDropdownController {
 				}
 			}
 		} catch (UserDefinedException e) {
-			LOG.info("getAllOptions | getAllOptions | Exception ", e);
+			LOG.info("getAllOptions | getAllOptions | Exception ");
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 
 		}
@@ -145,17 +145,17 @@ public class DynamicDropdownController {
 		data = this.optionService.GetAllDropdown();
 				
 	}catch(DataAccessException e) {
-		LOG.info("DropdownController | Exception in GetAllDropdown", e);
+		LOG.info("DropdownController | Exception in GetAllDropdown");
 		return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 
 	}catch(Exception e) {
-		LOG.info("DropdownController |  Exception in GetAllDropdown", e);
+		LOG.info("DropdownController |  Exception in GetAllDropdown");
 		return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 
 	}
 		return new ResponseEntity<>(data, HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "GetDropdown", method = RequestMethod.GET,produces = "application/json; charset=utf-8")
 	public ResponseEntity<List<Map<String, Object>>> GetAllDropdownURL() {
 		List<Map<String, Object>> data = new ArrayList<>();
@@ -179,11 +179,11 @@ public class DynamicDropdownController {
 
 		
 	}catch(DataAccessException e) {
-		LOG.info("DropdownController | Exception in GetAllDropdown", e);
+		LOG.info("DropdownController | Exception in GetAllDropdown");
 		return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 
 	}catch(Exception e) {
-		LOG.info("DropdownController |  Exception in GetAllDropdown", e);
+		LOG.info("DropdownController |  Exception in GetAllDropdown");
 		return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 
 	}
@@ -237,7 +237,7 @@ public class DynamicDropdownController {
 			}
 
 		} catch (Exception e) {
-			LOG.error("DynamicDropdownController | addOption UserDefinedException - ", e);
+			LOG.error("DynamicDropdownController | addOption UserDefinedException - ");
 			return new ResponseEntity<>(GLB_ERROR_MSG, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		LOG.debug("DynamicDropdownController |Add Dropdown Exit");
@@ -263,11 +263,11 @@ public class DynamicDropdownController {
 		this.optionService.deleteDropdown(id);
 		LOG.info("DropdownController | DeleteRole Exit");
 		}catch(DataAccessException e) {
-			LOG.error("DropdownController | Eception in DeleteRole ", e);
+			LOG.error("DropdownController | Eception in DeleteRole ");
 			return new ResponseEntity<>(GLB_ERROR_MSG, HttpStatus.INTERNAL_SERVER_ERROR);
 
 		}catch(Exception e) {
-			LOG.error("DropdownController | Exception in DeleteRole", e);
+			LOG.error("DropdownController | Exception in DeleteRole");
 			return new ResponseEntity<>(GLB_ERROR_MSG, HttpStatus.INTERNAL_SERVER_ERROR);
 
 		}
@@ -308,10 +308,10 @@ public class DynamicDropdownController {
 			}
 		} 
 		catch (UserDefinedException e) {
-			LOG.error("DynamicDropdownController | update Option UserDefinedException - ", e);
+			LOG.error("DynamicDropdownController | update Option UserDefinedException - ");
 			return new ResponseEntity<>(GLB_ERROR_MSG, HttpStatus.INTERNAL_SERVER_ERROR);
 		}catch (Exception e) {
-			LOG.error("DynamicDropdownController | update Option Exception - ", e);
+			LOG.error("DynamicDropdownController | update Option Exception - ");
 			return new ResponseEntity<>(GLB_ERROR_MSG, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		

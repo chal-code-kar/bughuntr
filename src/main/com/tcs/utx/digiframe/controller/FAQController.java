@@ -182,9 +182,13 @@ public class FAQController {
 			if (!this.FAQService.validateFAQUpdate(editFaq)) {
 				return new ResponseEntity<>(TEXT_VALIDATION, HttpStatus.BAD_REQUEST);
 			}
-			if (!this.service.isOperationPermissible(TEXT_BUGHUNTR, TEXT_ADMIN, "View", emp_id, 0, 0)) {
-				LOG.info("FAQController | Access Denied in updateFAQ");
-				return new ResponseEntity<>(TEXT_NOTADMIN, HttpStatus.FORBIDDEN);
+			boolean isAdmin = this.service.isOperationPermissible(TEXT_BUGHUNTR, TEXT_ADMIN, "View", emp_id, 0, 0);
+
+			// IDOR fix: If user is NOT admin AND the FAQ was not created by them, deny access
+			if (!isAdmin) {
+				// FAQ table does not track ownership; only admins can update FAQs
+				LOG.info("FAQController | Access Denied in updateFAQ - non-admin user cannot update FAQ");
+				return new ResponseEntity<>(ACCESS_DENIED, HttpStatus.FORBIDDEN);
 			}
 			this.FAQService.updateFAQ(id, editFaq);
 			LOG.info("PermissionHelperController | updateFAQ Exit");

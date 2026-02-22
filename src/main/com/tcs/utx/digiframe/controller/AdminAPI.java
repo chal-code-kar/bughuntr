@@ -100,12 +100,12 @@ public class AdminAPI {
 			boolean isGuest = brandingService.isUserGuest();
 
 			if (isGuest) {
-				return new ResponseEntity<>(ACCESS_DENIED, HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(ACCESS_DENIED, HttpStatus.FORBIDDEN);
 			}
 
 			if (!this.permissionService.isOperationPermissible(BUGHUNTR, ADMIN, "View", emp_id, 0, 0)) {
 				LOG.info("AdminController | Access Denied in addMenu");
-				return new ResponseEntity<>(ERROR_MSG, HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(ERROR_MSG, HttpStatus.FORBIDDEN);
 			}
 
 			if (!this.service.validateMenu(data)) {
@@ -140,7 +140,7 @@ public class AdminAPI {
 
 			if (!this.permissionService.isOperationPermissible(BUGHUNTR, ADMIN, "View", emp_id, 0, 0)) {
 				LOG.info("AdminController | Access Denied in DeleteMenu");
-				return new ResponseEntity<>(ERROR_MSG, HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(ERROR_MSG, HttpStatus.FORBIDDEN);
 			}
 			this.service.deleteMenu(srno);
 
@@ -167,7 +167,7 @@ public class AdminAPI {
 			int emp_id = BrandingDetailsController.getUser();
 			if (!this.permissionService.isOperationPermissible(BUGHUNTR, ADMIN, "View", emp_id, 0, 0)) {
 				LOG.info("AdminController | Access Denied in UpdateMenu");
-				return new ResponseEntity<>(ERROR_MSG, HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(ERROR_MSG, HttpStatus.FORBIDDEN);
 			}
 			if (!this.service.validateMenu(data)) {
 				LOG.info("AdminController | Validation Failed in addMenu");

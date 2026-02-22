@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import org.springframework.validation.annotation.Validated;
 
@@ -46,7 +47,7 @@ public class WorklistAPI {
 	private BrandingDetailsService brandingService;
 
     @RequestMapping(value = "worklists", method = RequestMethod.GET,produces = "application/json; charset=utf-8")
-    public ResponseEntity<Map<String, Object>> viewTodo(HttpServletRequest request, @Min(1) @RequestParam(required=false) Integer user_id) {
+    public ResponseEntity<Map<String, Object>> viewTodo(HttpServletRequest request, @Min(1) @Max(999999) @RequestParam(required=false) Integer user_id) {
         Map<String, Object> workList = new HashMap<>();
         try {
             LOG.info("WorkListController | getWorkList | invoked");

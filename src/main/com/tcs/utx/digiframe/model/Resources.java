@@ -2,6 +2,7 @@ package com.tcs.utx.digiframe.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 @JsonIgnoreProperties(ignoreUnknown = false)
@@ -17,6 +18,7 @@ public class Resources {
 	private String entries;
 	@Size(max = 5000)
 	private String guidelines;
+	@Min(1)
 	private int masterid;
 	
 	public int getSrno() {

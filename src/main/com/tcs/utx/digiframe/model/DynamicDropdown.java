@@ -18,7 +18,7 @@ public class DynamicDropdown {
 	private String lookupcode;
 	@NotBlank @Size(max = 255)
 	private String lookupvalue;
-	@Size(max = 1000)
+	@NotBlank @Size(max = 1000)
 	private String lookupdescription;
 	private String createdby;
 	private Date createddt;
