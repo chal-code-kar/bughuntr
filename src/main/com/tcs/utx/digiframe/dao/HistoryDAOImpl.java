@@ -41,8 +41,8 @@ public class HistoryDAOImpl implements HistoryDAO {
 	@Override
 	public void Posthistory(History posthistory) {
 		try {
-			jdbcTemplate.update("INSERT INTO b_bughuntr_announcement(fontname,releaseverinfo,releaseitemname)"
-					+ " VALUES('"+posthistory.getFontname()+"','"+posthistory.getReleaseverinfo()+"','"+posthistory.getReleaseitemname()+"')");
+			jdbcTemplate.update("INSERT INTO b_bughuntr_announcement(fontname, releaseverinfo, releaseitemname) VALUES(?, ?, ?)",
+					posthistory.getFontname(), posthistory.getReleaseverinfo(), posthistory.getReleaseitemname());
 		} catch (DataAccessException e) {
 			LOG.error(ERROR_MSG_2, e);
 
@@ -52,9 +52,8 @@ public class HistoryDAOImpl implements HistoryDAO {
 	@Override
 	public void updateHistory(int srno, History edithistory) {
 		try {
-			jdbcTemplate.update("UPDATE b_bughuntr_announcement "
-					+ "SET fontname='"+edithistory.getFontname()+"', releaseverinfo='"+edithistory.getReleaseverinfo()+"', releaseitemname='"+edithistory.getReleaseitemname()+"'"
-							+ " WHERE srno='"+srno+"'");
+			jdbcTemplate.update("UPDATE b_bughuntr_announcement SET fontname = ?, releaseverinfo = ?, releaseitemname = ? WHERE srno = ?",
+					edithistory.getFontname(), edithistory.getReleaseverinfo(), edithistory.getReleaseitemname(), srno);
 		} catch (DataAccessException e) {
 			LOG.error(ERROR_MSG_3, e);
 		}
