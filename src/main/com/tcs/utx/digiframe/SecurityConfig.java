@@ -1,18 +1,12 @@
 package com.tcs.utx.digiframe;
 
-import java.util.ResourceBundle;
-
-import javax.servlet.Filter;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
-import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 
 
 @Configuration
@@ -33,19 +27,20 @@ public class SecurityConfig {
 	public SecurityFilterChain filterChain(HttpSecurity http, CustomAuthenticationEntryPoint customEntryPoint)
 			throws Exception {
 
-
-		http.csrf().disable() 
-				.authorizeRequests()
-				.antMatchers("/Bughuntr/isAuthUser","/","/Bughuntr/**","/Bughuntr/login","/BugHuntr/api/v1/help", "/index.html", "/**/index.html*", "/**/*.js*",
+		http.csrf(csrf -> csrf
+				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+				.ignoringRequestMatchers("/h2-console/**", "/BugHuntr/api/dologin"))
+			.authorizeHttpRequests(auth -> auth
+				.requestMatchers("/Bughuntr/isAuthUser","/","/Bughuntr/**","/Bughuntr/login","/BugHuntr/api/v1/help", "/index.html", "/**/index.html*", "/**/*.js*",
 						"/**/*.css*","/BugHuntr/api/dologin/**", "/BugHuntr/api/menu", "/Bughuntr/login","/h2-console/**"
 						)
-				.permitAll().
-				anyRequest().authenticated()
-				.and().exceptionHandling().authenticationEntryPoint(customEntryPoint)
-				.accessDeniedHandler(accessDeniedHandler())
-				.and()
-		        .headers()
-	            .frameOptions().sameOrigin(); 
+				.permitAll()
+				.anyRequest().authenticated())
+			.exceptionHandling(ex -> ex
+				.authenticationEntryPoint(customEntryPoint)
+				.accessDeniedHandler(accessDeniedHandler()))
+		    .headers(headers -> headers
+	            .frameOptions(frame -> frame.sameOrigin())); 
 		return http.build();
 	}
 

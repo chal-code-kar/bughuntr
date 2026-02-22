@@ -28,8 +28,8 @@ public class QueryDAOImpl implements QueryDAO{
 	  @Override
 	    public void PostQuery(Query query) {
 	        try {
-	        	jdbcTemplate.update("INSERT INTO b_query(createdby, query, publish, active) " +
-	                    "VALUES('" + query.getCreatedby() + "', '" + query.getQuery() + "', '" + query.isPublish() + "', '" + true + "')");
+	        	jdbcTemplate.update("INSERT INTO b_query(createdby, query, publish, active) VALUES(?, ?, ?, ?)",
+	        			query.getCreatedby(), query.getQuery(), query.isPublish(), true);
 	        }
 	        catch(DataAccessException e) {
 	        	LOG.error(ERROR_MSG_1, e);

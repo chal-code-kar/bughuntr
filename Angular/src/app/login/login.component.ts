@@ -49,17 +49,17 @@ onSubmit() {
       }
 
 
-    this.http.get(this.apiUrl+'/dologin/'+this.userId+"/"+this.password).subscribe({
+    this.http.post(this.apiUrl+'/dologin', payload).subscribe({
       next: async (response) => {
           await this.router.navigateByUrl('', { replaceUrl: true });
           window.location.reload();
           this.messageService.add({ severity: 'success', detail: 'Logged In Successfully' });
- 
+
       },
       error: (err) => {
-        if(err.status==404){
+        if(err.status==401){
         this.messageService.add({ severity: 'error', detail: 'Wrong credentials' });
-      }     
+      }
     }
     });
   }

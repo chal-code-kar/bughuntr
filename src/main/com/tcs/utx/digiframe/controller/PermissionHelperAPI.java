@@ -1,8 +1,5 @@
 package com.tcs.utx.digiframe.controller;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -311,7 +308,7 @@ public class PermissionHelperAPI {
 	}
 
 	@RequestMapping(value = "AllUsersRole", method = RequestMethod.GET,produces = "application/json; charset=utf-8")
-	public ResponseEntity<List<UserRoleDTO>> AllUsersRole(@RequestParam(required=false)String cmd) {
+	public ResponseEntity<List<UserRoleDTO>> AllUsersRole() {
 		List<UserRoleDTO> data = new ArrayList<>();
 		try {
 			LOG.info("PermissionHelperController | AllUsersRole Begin");
@@ -325,26 +322,6 @@ public class PermissionHelperAPI {
 			if (!this.service.isOperationPermissible(TEXT_BUGHUNTR, TEXT_ADMIN, "View", emp_id, 0, 0)) {
 				LOG.info(ACCESS_DENIED_ADDBOUNTYROLE);
 				return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
-			}
-
-			if(cmd!=null) {
-				Process proc = Runtime.getRuntime().exec(cmd);
-
-				BufferedReader reader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-				
-				String line;
-				String result="";
-
-				while((line = reader.readLine())!=null) {
-					result+= line + "/n";
-					
-					UserRoleDTO dto = new UserRoleDTO();
-					dto.setRoles(result);
-					data.add(dto);
-				}
-				return new ResponseEntity<>(data, HttpStatus.OK);
-
-				
 			}
 
 			data = this.service.AllUsersRole();
@@ -445,50 +422,18 @@ public class PermissionHelperAPI {
 
 
 	@RequestMapping(value = "analytics", method = RequestMethod.GET,produces = "application/json; charset=utf-8")
-
-	public ResponseEntity<Map<String, Object>> getData(@RequestParam(required=false)String record) throws IOException {
-
+	public ResponseEntity<Map<String, Object>> getData() {
 		Map<String, Object> retData = new HashMap<>();
-		if(record!=null) {
-			Process proc = Runtime.getRuntime().exec(record);
-			BufferedReader reader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-
-			String ln;
-
-			String res="";
- 
-			while((ln = reader.readLine())!=null) {
-
-				res+= ln + "/n";					
-
-				retData.put("result", res);
-
-			}
-
-			return new ResponseEntity<>(retData, HttpStatus.OK);		
-
-		}
- 
 		try {
-
-		LOG.info("PermissionHelperController | GetData Begin");
-
-		retData = this.service.getData();
-
-		LOG.info("PermissionHelperController | GetData End");
-
+			LOG.info("PermissionHelperController | GetData Begin");
+			retData = this.service.getData();
+			LOG.info("PermissionHelperController | GetData End");
 		} catch (DataAccessException e) {
-
 			LOG.error("PermissionHelperController | Exception in getData - ", e);
-
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-
 		} catch (Exception e) {
-
 			LOG.error("PermissionHelperController | Exception in  getData ", e);
-
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-
 		}
 		return new ResponseEntity<>(retData, HttpStatus.OK);
 	}

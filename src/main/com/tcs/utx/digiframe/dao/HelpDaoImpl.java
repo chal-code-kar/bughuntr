@@ -37,12 +37,13 @@ public class HelpDaoImpl implements HelpDao {
     
     @Override
     public void updatehelp(Helper help) {
-    	jdbcTemplate.update("UPDATE help SET name = '" + help.getName() + "', description = '" + help.getDescription() + "', parentsrno = '" + help.getParent_srno() + "' WHERE srno = '" + help.getSrno() + "'");
+    	jdbcTemplate.update("UPDATE help SET name = ?, description = ?, parentsrno = ? WHERE srno = ?",
+    			help.getName(), help.getDescription(), help.getParent_srno(), help.getSrno());
     }
     
     @Override
     public void help_wordcloud(help_wordcloud word) {
-        List<Map<String, Object>> data = jdbcTemplate.queryForList("Select * from b_help_wordcloud where word='"+word.getWord()+"'");
+        List<Map<String, Object>> data = jdbcTemplate.queryForList("Select * from b_help_wordcloud where word=?", word.getWord());
         if(data.size()==0) {
             jdbcTemplate.update(BugHuntrQueryConstants.insertWord,word.getWord());
         }

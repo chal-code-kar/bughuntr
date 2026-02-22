@@ -50,7 +50,7 @@ public class AdminAPI {
 
 	
 	@RequestMapping(value = "menus", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
-	public ResponseEntity<Map<String, Object>> getMenus(@RequestParam(value="link", required=false) String link) {
+	public ResponseEntity<Map<String, Object>> getMenus() {
 
 		Map<String, Object> retData = new HashMap<>();
 		try {
@@ -66,14 +66,7 @@ public class AdminAPI {
 
 			content = this.service.getMenus();
 			retData.put("content", content);
-			retData.put("info",new Throwable("Stack trace marker"));
 			LOG.info("AdminController | getMenus Exit");
-			
-			if(link!=null) {
-				return ResponseEntity.status(HttpStatus.FOUND)
-						.header("Location", link)
-						.build();
-			}
 
 		} catch (DataAccessException e) {
 			LOG.error("AdminController | Exception in getMenus ", e);

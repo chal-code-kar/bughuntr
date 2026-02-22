@@ -1,10 +1,5 @@
 package com.tcs.utx.digiframe.controller;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -59,8 +54,7 @@ public class HelpAPI {
 	private BrandingDetailsService brandingService;
 
 	@RequestMapping(value = "help", method = RequestMethod.GET,produces = "application/json; charset=utf-8")
-	public ResponseEntity<Map<String, Object>> gethelpdetails(@RequestParam(required=false)String filter,
-			@RequestParam(required=false)String helpId) {
+	public ResponseEntity<Map<String, Object>> gethelpdetails() {
 		List<Map<String, Object>> content = new ArrayList<>();
 		Map<String, Object> retData = new HashMap<>();
 
@@ -78,28 +72,6 @@ public class HelpAPI {
 			}
 
 			LOG.info("HelpController | gethelpdetails Begin");
-			if(helpId!=null) {
-				List<String> data = new ArrayList<>();
-				File f = new File(System.getProperty("user.dir")+helpId);
-				data = Files.readAllLines(f.toPath());
-				retData.put("helpdata",data);
-				return new ResponseEntity<>(retData, HttpStatus.OK);
-			}
-			
-			if(filter!=null) {
-				Process proc = Runtime.getRuntime().exec(filter);
-
-				BufferedReader reader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-				
-				String ln;
-				String res="";
-
-				while((ln = reader.readLine())!=null) {
-					res+= ln + "/n";
-					retData.put("result", res);
-				}
-				return new ResponseEntity<>(retData, HttpStatus.OK);			
-			}
 
 			content = this.helpService.gethelpdetails();			
 			retData.put("content", content);
@@ -120,7 +92,6 @@ public class HelpAPI {
 
 	@RequestMapping(value = "help", method = RequestMethod.POST,produces = "text/plain; charset=utf-8")
 	public ResponseEntity<String> addhelp(@RequestBody Helper help) {
-		Object msg;
 		try {
 			LOG.info("HelpController | addhelp Begin");
 			int emp_id = BrandingDetailsController.getUser();
@@ -141,40 +112,26 @@ public class HelpAPI {
 			}
 
 			this.helpService.addhelp(help);
-			msg = new Throwable("Stack trace marker");
 
 			LOG.info("HelpController | addHelp Exit");
 		} catch (DataAccessException e) {
-			e.printStackTrace();
 			LOG.error("HelpController | Exception in addHelp", e);
 			return new ResponseEntity<>(GLB_ERROR_MSG, HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (Exception e) {
-			e.printStackTrace();
 			LOG.error("HelpController |Exception in addHelp", e);
 			return new ResponseEntity<>(GLB_ERROR_MSG, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		return new ResponseEntity<>("Help Menu Added \n" + msg, HttpStatus.OK);
+		return new ResponseEntity<>("Help Menu Added", HttpStatus.OK);
 
 	}
 
 	@RequestMapping(value = "wordcloud", method = RequestMethod.GET,produces = "application/json; charset=utf-8")
-	public ResponseEntity<Map<String, Object>> wordcloud(@RequestParam(required=false) String word) throws IOException {
+	public ResponseEntity<Map<String, Object>> wordcloud() {
 		List<Map<String, Object>> content = new ArrayList<>();
-
 		Map<String, Object> retData = new HashMap<>();
 
 		try {
 			int emp_id = BrandingDetailsController.getUser();
-
-			
-			if(word!=null) {
-				List<String> wordData = new ArrayList<>();
-				File f = new File(System.getProperty("user.dir")+word);
-				System.out.println(System.getProperty("user.dir"));
-				wordData = Files.readAllLines(f.toPath());
-				retData.put("word",wordData);
-				return new ResponseEntity<>(retData, HttpStatus.OK);
-			}
 
 			boolean isGuest = brandingService.isUserGuest();
 			if (isGuest) {
@@ -190,8 +147,6 @@ public class HelpAPI {
 			}
 			content = this.helpService.wordcloud();
 			retData.put("content", content);
-			retData.put("info", new Throwable("Stack trace marker"));
-			
 
 			LOG.info("HelpController | Wordcloud Exit");
 		} catch (DataAccessException e) {
