@@ -1,7 +1,6 @@
 
 package com.tcs.utx.digiframe.exception;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,9 +11,7 @@ import org.springframework.validation.FieldError;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-public class APIError implements Serializable {
-
-	private static final long serialVersionUID = 9149911049452522580L;
+public class APIError {
 	private HttpStatus status;
 	   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
 	   private LocalDateTime timestamp;

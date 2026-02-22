@@ -1,13 +1,9 @@
 package com.tcs.utx.digiframe.model;
 
-import java.io.Serializable;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class History implements Serializable{
-	
-	private static final long serialVersionUID = 1L;
+@JsonIgnoreProperties(ignoreUnknown = false)
+public class History {
 	
 	private int srno;
 	private String fontname;

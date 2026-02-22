@@ -1,10 +1,6 @@
 package com.tcs.utx.digiframe.dto;
 
-import java.io.Serializable;
-
-public class BrandingDTO implements Serializable{
-
-	private static final long serialVersionUID = 1L;
+public class BrandingDTO {
 	private String userId;
 	private String firstName;
 	private String lastName;

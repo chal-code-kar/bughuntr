@@ -20,6 +20,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tcs.utx.digiframe.model.Researcher;
 import com.tcs.utx.digiframe.service.BrandingDetailsService;
 import com.tcs.utx.digiframe.service.PermissionHelperService;
@@ -60,6 +61,9 @@ public class ResearcherAPI {
 	@Autowired
 	private BrandingDetailsService brandingService;
 
+	@Autowired
+	private ObjectMapper objectMapper;
+
 	@RequestMapping(value = "researchers", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
 	public ResponseEntity<String> addResearchers(MultipartHttpServletRequest request) {
 
@@ -74,7 +78,7 @@ public class ResearcherAPI {
 				return new ResponseEntity<>(ACCESS_DENIED, HttpStatus.FORBIDDEN);
 			}
 
-			user = new com.fasterxml.jackson.databind.ObjectMapper().readValue(request.getParameter("data"),
+			user = objectMapper.readValue(request.getParameter("data"),
 					Researcher.class);
 			user.setId(emp_id);
 			for (int i = 0; i < data.size(); i++) {
