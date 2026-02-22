@@ -19,6 +19,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Size;
+import org.springframework.validation.annotation.Validated;
+
 import com.tcs.utx.digiframe.exception.UserDefinedException;
 import com.tcs.utx.digiframe.model.DynamicDropdown;
 import com.tcs.utx.digiframe.service.BrandingDetailsService;
@@ -31,6 +36,7 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/BugHuntr/api/v1/")
+@Validated
 public class DynamicDropdownController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(HelpAPI.class);
@@ -71,7 +77,7 @@ public class DynamicDropdownController {
 	}
 
 	@RequestMapping(value = "getAllOptions", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
-	public ResponseEntity<Map<String, Object>> getAllOptions(@RequestBody String type) {
+	public ResponseEntity<Map<String, Object>> getAllOptions(@RequestBody @Size(max = 100) String type) {
 		Map<String, Object> retData = new HashMap<>();
 		int emp_id = BrandingDetailsController.getUser();
 
@@ -186,7 +192,7 @@ public class DynamicDropdownController {
 
 
 	@RequestMapping(value = "AddDropdown", method = RequestMethod.POST,produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> AddDropdown(@RequestBody DynamicDropdown Adddropdown) {
+	public ResponseEntity<String> AddDropdown(@Valid @RequestBody DynamicDropdown Adddropdown) {
 		LOG.debug("DynamicDropdownController | addOption Begin");
 		
 
@@ -240,7 +246,7 @@ public class DynamicDropdownController {
 	}
 
 	@RequestMapping(value = "deleteDropdown/{id}", method = RequestMethod.DELETE,produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> deleteDropdown(@PathVariable int id) {
+	public ResponseEntity<String> deleteDropdown(@Min(1) @PathVariable int id) {
 		LOG.info("DropdownController | deleteDropdown Begin");
 		try {
 		int emp_id = BrandingDetailsController.getUser();
@@ -269,7 +275,7 @@ public class DynamicDropdownController {
 	}
 
 	@RequestMapping(value = "updateDropdown/{id}", method = RequestMethod.POST,produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> updateDropdown(@PathVariable int id, @RequestBody DynamicDropdown updateDropdown) {
+	public ResponseEntity<String> updateDropdown(@Min(1) @PathVariable int id, @Valid @RequestBody DynamicDropdown updateDropdown) {
 		
 		LOG.info("DropdownController | updateresources Begin");
 		try {

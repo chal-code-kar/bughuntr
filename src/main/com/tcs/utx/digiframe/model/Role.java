@@ -2,11 +2,14 @@ package com.tcs.utx.digiframe.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 @JsonIgnoreProperties(ignoreUnknown = false)
 public class Role {
 
-	
-	
+
+
+    @NotBlank @Size(max = 100)
     private String roleName;
     private int role_bounty_id;
     public int getRole_bounty_id() {
@@ -15,9 +18,13 @@ public class Role {
     public void setRole_bounty_id(int role_bounty_id) {
         this.role_bounty_id = role_bounty_id;
     }
+    @Size(max = 500)
     private String roleDescription;
+    @NotBlank @Size(max = 100)
     private String module;
+    @NotBlank @Size(max = 100)
     private String submodule;
+    @NotBlank @Size(max = 50)
     private String permission;
     private boolean status;
 

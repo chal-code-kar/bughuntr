@@ -35,6 +35,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import jakarta.validation.Valid;
+
 import com.tcs.utx.digiframe.model.LoginRequest;
 
 import com.tcs.utx.digiframe.dto.UtxMenuItemServiceVo;
@@ -79,7 +81,7 @@ public class BrandingDetailsController {
 	
 	
 	@RequestMapping(value = "/dologin", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
-	public ResponseEntity<Map<String, Object>> setAuthoization(@RequestBody LoginRequest loginRequest, HttpServletRequest request) {
+	public ResponseEntity<Map<String, Object>> setAuthoization(@Valid @RequestBody LoginRequest loginRequest, HttpServletRequest request) {
 		LOG.info("BrandingDetailsController | setAuthoization | invoked");
 		Map<String, Object> response = new HashMap<>();
 		

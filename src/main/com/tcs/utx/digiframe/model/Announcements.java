@@ -2,13 +2,17 @@ package com.tcs.utx.digiframe.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @JsonIgnoreProperties(ignoreUnknown = false)
 public class Announcements {
-	 
+
 	public int srno;
 	public int masterannouncementid;
+    @NotBlank @Size(max = 100)
     public String announcement_category;
+    @NotBlank @Size(max = 5000)
     public String announcement_details;
     
     public int getSrno() {

@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
+
 import com.tcs.utx.digiframe.model.Etldata;
 import com.tcs.utx.digiframe.service.BrandingDetailsService;
 import com.tcs.utx.digiframe.service.ETLService;
@@ -69,7 +71,7 @@ public class ETLController {
 	}
 
 	@RequestMapping(value = "Postetldata", method = RequestMethod.POST)
-	public ResponseEntity<String> Postetldata(@RequestBody Etldata postetldata) {
+	public ResponseEntity<String> Postetldata(@Valid @RequestBody Etldata postetldata) {
 		try {
 			LOG.info("ETLController | postetldata Begin");
 			int emp_id = BrandingDetailsController.getUser();

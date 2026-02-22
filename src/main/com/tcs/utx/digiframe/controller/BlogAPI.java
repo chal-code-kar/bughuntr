@@ -16,6 +16,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import org.springframework.validation.annotation.Validated;
+
 import com.tcs.utx.digiframe.model.Blog;
 import com.tcs.utx.digiframe.service.BlogService;
 import com.tcs.utx.digiframe.service.BrandingDetailsService;
@@ -25,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/BugHuntr/api/v1/")
+@Validated
 public class BlogAPI {
 
 	private static final Logger LOG = LoggerFactory.getLogger(BlogAPI.class);
@@ -90,7 +95,7 @@ public class BlogAPI {
 	}
 
 	@RequestMapping(value = "addBlog", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> addBlog(@RequestBody Blog blog) {
+	public ResponseEntity<String> addBlog(@Valid @RequestBody Blog blog) {
 		try {
 			LOG.info("BlogController | addBlog Begin");
 			int emp_id = BrandingDetailsController.getUser();
@@ -125,7 +130,7 @@ public class BlogAPI {
 	}
 
 	@RequestMapping(value = "deleteBlog/{srno}", method = RequestMethod.DELETE, produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> deleteBlog(@PathVariable int srno) {
+	public ResponseEntity<String> deleteBlog(@Min(1) @PathVariable int srno) {
 		try {
 			LOG.info("BlogController | DeleteBlog Begin");
 			int emp_id = BrandingDetailsController.getUser();
@@ -152,7 +157,7 @@ public class BlogAPI {
 	}
 
 	@RequestMapping(value = "updateBlog", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> updateBlog(@RequestBody Blog blog) {
+	public ResponseEntity<String> updateBlog(@Valid @RequestBody Blog blog) {
 		try {
 			LOG.info("BlogController | UpdateBlog Begin");
 			int emp_id = BrandingDetailsController.getUser();

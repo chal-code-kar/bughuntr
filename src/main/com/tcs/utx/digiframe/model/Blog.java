@@ -1,12 +1,17 @@
 package com.tcs.utx.digiframe.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 @JsonIgnoreProperties(ignoreUnknown = false)
 public class Blog{
-	
+
 	int srno;
+	@NotBlank @Size(max = 500)
 	private String title;
+	@NotBlank @Size(max = 5000)
 	private String brief;
+	@NotBlank @Size(max = 100)
 	private String category;
 	
 	public int getSrno() {

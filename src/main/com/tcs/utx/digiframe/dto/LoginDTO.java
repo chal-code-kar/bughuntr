@@ -1,8 +1,13 @@
 package com.tcs.utx.digiframe.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 public class LoginDTO {
 
+	@NotBlank @Size(max = 50)
 	String empID;
+	@NotBlank @Size(max = 255)
 	String password;
 	
 	public String getEmpID() {

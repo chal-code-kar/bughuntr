@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.constraints.Min;
+import org.springframework.validation.annotation.Validated;
+
 import com.tcs.utx.digiframe.service.BrandingDetailsService;
 import com.tcs.utx.digiframe.service.PermissionHelperService;
 import com.tcs.utx.digiframe.service.WorkListService;
@@ -24,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/BugHuntr/api/v1/")
+@Validated
 public class WorklistAPI {
 
     private static final Logger LOG = LoggerFactory.getLogger(WorklistAPI.class);
@@ -42,7 +46,7 @@ public class WorklistAPI {
 	private BrandingDetailsService brandingService;
 
     @RequestMapping(value = "worklists", method = RequestMethod.GET,produces = "application/json; charset=utf-8")
-    public ResponseEntity<Map<String, Object>> viewTodo(HttpServletRequest request, @RequestParam(required=false) Integer user_id) {
+    public ResponseEntity<Map<String, Object>> viewTodo(HttpServletRequest request, @Min(1) @RequestParam(required=false) Integer user_id) {
         Map<String, Object> workList = new HashMap<>();
         try {
             LOG.info("WorkListController | getWorkList | invoked");

@@ -1,13 +1,18 @@
 package com.tcs.utx.digiframe.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @JsonIgnoreProperties(ignoreUnknown = false)
 public class History {
-	
+
 	private int srno;
+	@NotBlank @Size(max = 255)
 	private String fontname;
+	@NotBlank @Size(max = 500)
 	private String releaseverinfo;
+	@NotBlank @Size(max = 1000)
 	private String releaseitemname;
 
 	public int getSrno() {

@@ -6,33 +6,53 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 @JsonIgnoreProperties(ignoreUnknown = false)
 public class Employee {
 
-	private String apm_id;
+	@Size(max = 50)
+    private String apm_id;
+    @NotBlank @Size(max = 255)
     private String program_name;
     private int owner_empid;
     private int srno;
+    @Size(max = 5000)
     private String overview;
+    @Size(max = 255)
     private String owner_name;
     private Date startdate;
     private Date enddate;
-    private int api;			
+    private int api;
+    @Size(max = 500)
     private String technology;
+    @Size(max = 5000)
     private String description;
+    @Size(max = 50)
     private String criticality;
+    @Size(max = 255)
     private String unit;
-    private int staticpage;		
+    private int staticpage;
+    @Size(max = 50)
     private String ptype;
+    @Size(max = 50)
     private String status;
     private int dynamicpage;
     private int roles;
+    @Size(max = 5000)
     private String access;
+    @Size(max = 5000)
     private String resources;
+    @Valid
     private List<Jobs> jobs;
+    @Valid
     private List<Rules> rules;
+    @Size(max = 5000)
     private String inScope;
+    @Valid
     private List<Announcements> announcements;
+    @Size(max = 5000)
     private String outScope;
     private List<Integer> researcherList = new ArrayList<>();
 

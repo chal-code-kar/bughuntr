@@ -16,6 +16,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import org.springframework.validation.annotation.Validated;
+
 import com.tcs.utx.digiframe.model.Menu;
 import com.tcs.utx.digiframe.service.AdminService;
 import com.tcs.utx.digiframe.service.BrandingDetailsService;
@@ -25,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/BugHuntr/api/v1/")
+@Validated
 public class AdminAPI {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ResearcherAPI.class);
@@ -86,7 +91,7 @@ public class AdminAPI {
 	}
 
 	@RequestMapping(value = "addMenu", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> addMenu(@RequestBody Menu data) {
+	public ResponseEntity<String> addMenu(@Valid @RequestBody Menu data) {
 		LOG.info("AdminController | addMenu Begin");
 
 		try {
@@ -123,7 +128,7 @@ public class AdminAPI {
 	}
 
 	@RequestMapping(value = "deleteMenu/{srno}", method = RequestMethod.DELETE, produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> deleteMenu(@PathVariable int srno) {
+	public ResponseEntity<String> deleteMenu(@Min(1) @PathVariable int srno) {
 		try {
 			LOG.info("BlogController | DeleteBlog Begin");
 			int emp_id = BrandingDetailsController.getUser();
@@ -150,7 +155,7 @@ public class AdminAPI {
 	}
 
 	@RequestMapping(value = "updateMenu", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> updateMenu(@RequestBody Menu data) {
+	public ResponseEntity<String> updateMenu(@Valid @RequestBody Menu data) {
 		try {
 			LOG.info("AdminController | UpdateMenu Begin");
 

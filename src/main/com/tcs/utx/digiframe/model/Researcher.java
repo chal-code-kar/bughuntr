@@ -2,19 +2,28 @@ package com.tcs.utx.digiframe.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 @JsonIgnoreProperties(ignoreUnknown = false)
 public class Researcher {
-	
+
     int id;
+    @NotBlank @Size(max = 255)
     String Name;
+    @Size(max = 2000)
     String Bio;
+    @Size(max = 500)
     String Avatar_blob;
+    @Size(max = 1000)
     String Skills;
+    @Size(max = 500)
     String avatar;
+    @Size(max = 500)
     String teams;
     int Srno;
     long points;
     long total_bounty_earned;
+    @Size(max = 500)
     String profile_pic;
     
     

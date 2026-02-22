@@ -2,13 +2,17 @@ package com.tcs.utx.digiframe.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 @JsonIgnoreProperties(ignoreUnknown = false)
 public class Query {
-	
-	
+
+
 	private int srno;
 	private int createdby;
+	@NotBlank @Size(max = 5000)
 	private String query;
+	@Size(max = 5000)
 	private String answer;
 	private int answerby;
 	private boolean publish;

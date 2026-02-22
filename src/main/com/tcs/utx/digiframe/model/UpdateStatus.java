@@ -2,12 +2,20 @@ package com.tcs.utx.digiframe.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 @JsonIgnoreProperties(ignoreUnknown = false)
 public class UpdateStatus {
-	
+
+    @Size(max = 100)
     private String approver;
+    @NotBlank @Size(max = 50)
     private String status;
+    @Min(0) @Max(1000000)
     private int approved_amount;
+    @Size(max = 2000)
     private String rejectRemarks;
     
     public String getApprover() {

@@ -6,13 +6,19 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 @JsonIgnoreProperties(ignoreUnknown = false)
 public class DynamicDropdown {
 
 	private int id;
+	@NotBlank @Size(max = 100)
 	private String lookupgroup;
+	@NotBlank @Size(max = 100)
 	private String lookupcode;
+	@NotBlank @Size(max = 255)
 	private String lookupvalue;
+	@Size(max = 1000)
 	private String lookupdescription;
 	private String createdby;
 	private Date createddt;

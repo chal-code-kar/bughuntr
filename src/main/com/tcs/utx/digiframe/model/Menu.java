@@ -2,14 +2,19 @@ package com.tcs.utx.digiframe.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 @JsonIgnoreProperties(ignoreUnknown = false)
 public class Menu {
-	
+
 	private int srno;
+	@NotBlank @Size(max = 255)
 	private String menuname;
 	private int sequenceorder;
 	private int parentsrno;
+	@Size(max = 500)
 	private String link;
+	@NotBlank @Size(max = 255)
 	private String role;
 	
 	public int getSrno() {

@@ -2,14 +2,20 @@ package com.tcs.utx.digiframe.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 @JsonIgnoreProperties(ignoreUnknown = false)
-public class Resources {	
-	
-	
+public class Resources {
+
+
 	private int srno;
+	@NotBlank @Size(max = 500)
 	private String paneltitle;
+	@Size(max = 5000)
 	private String paneldescription ;
+	@Size(max = 5000)
 	private String entries;
+	@Size(max = 5000)
 	private String guidelines;
 	private int masterid;
 	

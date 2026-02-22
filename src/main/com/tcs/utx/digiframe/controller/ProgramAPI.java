@@ -20,6 +20,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import org.springframework.validation.annotation.Validated;
+
 import com.tcs.utx.digiframe.model.Employee;
 import com.tcs.utx.digiframe.model.joinedEmploye;
 import com.tcs.utx.digiframe.service.BrandingDetailsService;
@@ -30,6 +34,7 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/BugHuntr/api/v1/")
+@Validated
 public class ProgramAPI {
 
 	private String TEXT_ACCESS_DENIED = "Access Denied";
@@ -90,7 +95,7 @@ public class ProgramAPI {
 	private BrandingDetailsService brandingService;
 
 	@RequestMapping(value = "programs", method = RequestMethod.POST,produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> createProject(@RequestBody Employee detail) {
+	public ResponseEntity<String> createProject(@Valid @RequestBody Employee detail) {
 		try {
 			LOG.info("ProgramAPI | createProject Begin");
 			int emp_id = BrandingDetailsController.getUser();
@@ -150,7 +155,7 @@ public class ProgramAPI {
 	}
 
 	@RequestMapping(value = "joinProgram", method = RequestMethod.POST,produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> joinProgram(@RequestBody joinedEmploye data) {
+	public ResponseEntity<String> joinProgram(@Valid @RequestBody joinedEmploye data) {
 		try {
 			LOG.info("ProgramAPI | joinProject Begin");
 			int emp_id = BrandingDetailsController.getUser();
@@ -208,7 +213,7 @@ public class ProgramAPI {
 	}
 
 	@RequestMapping(value = "updatejoinProgram", method = RequestMethod.POST,produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> updateJoinProgram(@RequestBody joinedEmploye data) {
+	public ResponseEntity<String> updateJoinProgram(@Valid @RequestBody joinedEmploye data) {
 		try {
 
 			LOG.info("ProgramAPI | updateJoinProgram Begin");
@@ -407,7 +412,7 @@ public class ProgramAPI {
 	}
 
 	@RequestMapping(value = "/programs/{id}", method = RequestMethod.GET,produces = "application/json; charset=utf-8")
-	public ResponseEntity<Map<String, Object>> getProjectById(@PathVariable int id) {
+	public ResponseEntity<Map<String, Object>> getProjectById(@Min(1) @PathVariable int id) {
 		Map<String, Object> error = new HashMap<>();
 		Map<String, Object> tempData = new HashMap<>();
 		try {
@@ -509,7 +514,7 @@ public class ProgramAPI {
 	}
 
 	@RequestMapping(value = "updateprograms/{id}", method = RequestMethod.POST,produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> updateProgram(@PathVariable int id, @RequestBody Employee detail) {
+	public ResponseEntity<String> updateProgram(@Min(1) @PathVariable int id, @Valid @RequestBody Employee detail) {
 		try {
 			detail.setSrno(id);
 			LOG.info("ProgramAPI | updateProgram Begin");
@@ -577,7 +582,7 @@ public class ProgramAPI {
 	}
 
 	@RequestMapping(value = "ProgramsStatistics/{projectid}", method = RequestMethod.GET,produces = "application/json; charset=utf-8")
-	public ResponseEntity<Map<String, Object>> ResearchersJoined(@PathVariable int projectid) {
+	public ResponseEntity<Map<String, Object>> ResearchersJoined(@Min(1) @PathVariable int projectid) {
 		Map<String, Object> retData = new HashMap<>();
 
 		try {
@@ -715,7 +720,7 @@ public class ProgramAPI {
 	}
 	
 	@RequestMapping(value = "dAnnoucement/{id}", method = RequestMethod.DELETE,produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> deleteAnnouncements(@PathVariable int id) {
+	public ResponseEntity<String> deleteAnnouncements(@Min(1) @PathVariable int id) {
 		LOG.info("ProgramAPI | deleteAnnoucements Begin");
 		try {
 			int emp_id = BrandingDetailsController.getUser();

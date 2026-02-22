@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import org.springframework.validation.annotation.Validated;
+
 import com.tcs.utx.digiframe.model.History;
 import com.tcs.utx.digiframe.service.BrandingDetailsService;
 import com.tcs.utx.digiframe.service.HistoryService;
@@ -26,7 +30,7 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/BugHuntr/api/v1/")
-
+@Validated
 public class HistoryController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(HelpAPI.class);
@@ -96,7 +100,7 @@ public class HistoryController {
 	}
 
 	@RequestMapping(value = "Posthistory", method = RequestMethod.POST,produces = "application/json; charset=utf-8")
-	public ResponseEntity<Map<String, Object>> Posthistory(@RequestBody History posthistory) {
+	public ResponseEntity<Map<String, Object>> Posthistory(@Valid @RequestBody History posthistory) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		try {
 			LOG.info("HistoryController | FAQQuery Begin");
@@ -132,7 +136,7 @@ public class HistoryController {
 	}
 
 	@RequestMapping(value = "updateHistory/{srno}", method = RequestMethod.POST,produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> updateHistory(@PathVariable int srno, @RequestBody History edithistory) {
+	public ResponseEntity<String> updateHistory(@Min(1) @PathVariable int srno, @Valid @RequestBody History edithistory) {
 
 		LOG.info("AdminController | updateHistory Begin");
 		try {
@@ -161,7 +165,7 @@ public class HistoryController {
 	}
 
 	@RequestMapping(value = "deleteHistory/{srno}", method = RequestMethod.DELETE,produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> deleteHistory(@PathVariable int srno) {
+	public ResponseEntity<String> deleteHistory(@Min(1) @PathVariable int srno) {
 		LOG.info("HistoryController | deleteHistory Begin");
 		try {
 			int emp_id = BrandingDetailsController.getUser();

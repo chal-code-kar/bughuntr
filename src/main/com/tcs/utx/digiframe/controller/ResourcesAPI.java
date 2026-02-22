@@ -15,6 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import org.springframework.validation.annotation.Validated;
+
 import com.tcs.utx.digiframe.model.Resources;
 import com.tcs.utx.digiframe.service.BrandingDetailsService;
 import com.tcs.utx.digiframe.service.PermissionHelperService;
@@ -24,7 +28,7 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/BugHuntr/api/v1/")
-
+@Validated
 public class ResourcesAPI {
 
 	private static final Logger LOG = LoggerFactory.getLogger(HelpAPI.class);
@@ -100,7 +104,7 @@ public class ResourcesAPI {
 	}
 
 	@RequestMapping(value = "getchild/{id}", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
-	public ResponseEntity<List<Map<String, Object>>> getChild(@PathVariable int id) {
+	public ResponseEntity<List<Map<String, Object>>> getChild(@Min(1) @PathVariable int id) {
 		List<Map<String, Object>> data = new ArrayList<>();
 		Map<String, Object> map = new HashMap<String, Object>();
 		LOG.info("PermissionHelperController | GetChild Begin");
@@ -170,7 +174,7 @@ public class ResourcesAPI {
 	}
 
 	@RequestMapping(value = "getresources/{id}", method = RequestMethod.GET,produces = "application/json; charset=utf-8")
-	public ResponseEntity<List<Map<String, Object>>> getresourcesbyid(@PathVariable int id) {
+	public ResponseEntity<List<Map<String, Object>>> getresourcesbyid(@Min(1) @PathVariable int id) {
 		List<Map<String, Object>> data = new ArrayList<>();
 		Map<String, Object> map = new HashMap<String, Object>();
 		LOG.info("PermissionHelperController | GetResourcesById Begin");
@@ -204,7 +208,7 @@ public class ResourcesAPI {
 	}
 
 	@RequestMapping(value = "deleteResources/{id}", method = RequestMethod.DELETE, produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> deleteResources(@PathVariable int id) {
+	public ResponseEntity<String> deleteResources(@Min(1) @PathVariable int id) {
 		LOG.info("PermissionHelperController | DeleteResources Begin");
 		try {
 			int emp_id = BrandingDetailsController.getUser();
@@ -232,7 +236,7 @@ public class ResourcesAPI {
 	}
 
 	@RequestMapping(value = "addcategory", method = RequestMethod.POST,produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> addcategory(@RequestBody Resources resource) {
+	public ResponseEntity<String> addcategory(@Valid @RequestBody Resources resource) {
 		try {
 			LOG.info("PermissionHelperController | AddCategory Begin");
 			int emp_id = BrandingDetailsController.getUser();
@@ -266,7 +270,7 @@ public class ResourcesAPI {
 	}
 
 	@RequestMapping(value = "addcategoryitem", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> addcategoryitem(@RequestBody Resources resources) {
+	public ResponseEntity<String> addcategoryitem(@Valid @RequestBody Resources resources) {
 
 		LOG.info("PermissionHelperController | AddCategoryItem Begin");
 		try {
@@ -302,7 +306,7 @@ public class ResourcesAPI {
 	}
 
 	@RequestMapping(value = "updateresources/{id}", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> updateresources(@PathVariable int id, @RequestBody Resources editresources) {
+	public ResponseEntity<String> updateresources(@Min(1) @PathVariable int id, @Valid @RequestBody Resources editresources) {
 
 		LOG.info("PermissionHelperController | updateresources Begin");
 		try {

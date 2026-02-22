@@ -4,14 +4,21 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 @JsonIgnoreProperties(ignoreUnknown = false)
 public class joinedEmploye {
-	
-	
+
+
     private int srno;
+    @Size(max = 50)
     private String status;
+    @Size(max = 50)
     private String old_status;
+    @Min(1)
     private int reseacher_id;
+    @NotNull
     private Integer project_id;
     private Integer researcher_profile_id;
     private Date suspendTill;

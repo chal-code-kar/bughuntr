@@ -2,12 +2,19 @@ package com.tcs.utx.digiframe.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 @JsonIgnoreProperties(ignoreUnknown = false)
 public class Jobs {
-	
+
+    @NotBlank @Size(max = 100)
     public String jobtype;
+    @Min(0)
     public int pricing;
+    @Min(0)
     public int maxpricing;
+    @NotBlank @Size(max = 50)
     public String reward_type;
     public String getJobtype() {
         return jobtype;

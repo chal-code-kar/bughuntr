@@ -16,6 +16,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import org.springframework.validation.annotation.Validated;
+
 import com.tcs.utx.digiframe.model.Helper;
 import com.tcs.utx.digiframe.model.help_wordcloud;
 import com.tcs.utx.digiframe.service.BrandingDetailsService;
@@ -26,6 +30,7 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/BugHuntr/api/v1/")
+@Validated
 public class HelpAPI {
 
 	private static final Logger LOG = LoggerFactory.getLogger(HelpAPI.class);
@@ -91,7 +96,7 @@ public class HelpAPI {
 	}
 
 	@RequestMapping(value = "help", method = RequestMethod.POST,produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> addhelp(@RequestBody Helper help) {
+	public ResponseEntity<String> addhelp(@Valid @RequestBody Helper help) {
 		try {
 			LOG.info("HelpController | addhelp Begin");
 			int emp_id = BrandingDetailsController.getUser();
@@ -160,7 +165,7 @@ public class HelpAPI {
 	}
 
 	@RequestMapping(value = "deletehelp/{id}", method = RequestMethod.DELETE,produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> deletehelp(@PathVariable int id) {
+	public ResponseEntity<String> deletehelp(@Min(1) @PathVariable int id) {
 		try {
 			LOG.info("HelpController | DeleteHelp Begin");
 			int emp_id = BrandingDetailsController.getUser();
@@ -188,7 +193,7 @@ public class HelpAPI {
 	}
 
 	@RequestMapping(value = "updateHelp", method = RequestMethod.POST,produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> updatehelp(@RequestBody Helper help) {
+	public ResponseEntity<String> updatehelp(@Valid @RequestBody Helper help) {
 		try {
 		LOG.info("HelpController | UpdateHelp Begin");
 		int emp_id = BrandingDetailsController.getUser();
@@ -217,7 +222,7 @@ public class HelpAPI {
 	}
 
 	@RequestMapping(value = "search", method = RequestMethod.POST,produces = "application/json; charset=utf-8")
-	public ResponseEntity<Map<String, Object>> help_wordcloud(@RequestBody help_wordcloud word) {
+	public ResponseEntity<Map<String, Object>> help_wordcloud(@Valid @RequestBody help_wordcloud word) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		try {
 		int emp_id = BrandingDetailsController.getUser();

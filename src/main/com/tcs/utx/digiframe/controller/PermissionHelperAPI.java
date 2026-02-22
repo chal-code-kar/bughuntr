@@ -16,6 +16,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+import org.springframework.validation.annotation.Validated;
+
 import com.tcs.utx.digiframe.model.Role;
 import com.tcs.utx.digiframe.model.UserRoleDTO;
 import com.tcs.utx.digiframe.service.BrandingDetailsService;
@@ -26,6 +32,7 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/BugHuntr/api/v1/")
+@Validated
 public class PermissionHelperAPI {
 
 	private static final Logger LOG = LoggerFactory.getLogger(PermissionHelperAPI.class);
@@ -98,7 +105,7 @@ public class PermissionHelperAPI {
 	}
 
 	@RequestMapping(value = "roles", method = RequestMethod.POST,produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> AddRole(@RequestBody Role role) {
+	public ResponseEntity<String> AddRole(@Valid @RequestBody Role role) {
 		try {
 
 			LOG.info("PermissionHelperController | AddRole Begin");
@@ -160,7 +167,7 @@ public class PermissionHelperAPI {
 	}
 
 	@RequestMapping(value = "rolesAndPermission", method = RequestMethod.POST,produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> UpdatePermisions(@RequestBody List<Role> role) {
+	public ResponseEntity<String> UpdatePermisions(@Valid @RequestBody List<@Valid Role> role) {
 		try {
 			LOG.info("PermissionHelperController | UpdatePermisions Begin");
 			int emp_id = BrandingDetailsController.getUser();
@@ -189,7 +196,7 @@ public class PermissionHelperAPI {
 	}
 
 	@RequestMapping(value = "bugBountyRole/{role_bounty_id}", method = RequestMethod.POST,produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> AddBugBountyRole(@PathVariable int role_bounty_id) {
+	public ResponseEntity<String> AddBugBountyRole(@Min(1) @PathVariable int role_bounty_id) {
 		try {
 			LOG.info("PermissionHelperController | AddBugBountyRole Begin");
 			int emp_id = BrandingDetailsController.getUser();
@@ -246,7 +253,7 @@ public class PermissionHelperAPI {
 	}
 
 	@RequestMapping(value = "bugBountyAdminRole/{role_bounty_id}", method = RequestMethod.POST ,produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> AddBugBountyAdminRole(@PathVariable int role_bounty_id) {
+	public ResponseEntity<String> AddBugBountyAdminRole(@Min(1) @PathVariable int role_bounty_id) {
 		
 		List<Map<String, Object>> data = new ArrayList<>();
 		
@@ -341,7 +348,7 @@ public class PermissionHelperAPI {
 
 
 	@RequestMapping(value = "employee/{employeeid}", method = RequestMethod.GET,produces = "application/json; charset=utf-8")
-	public ResponseEntity<List<Map<String, Object>>> getEmployeeDetail(@PathVariable String employeeid) {
+	public ResponseEntity<List<Map<String, Object>>> getEmployeeDetail(@Size(max = 20) @PathVariable String employeeid) {
 		LOG.info("PermissionHelperController | getEmployeeDetail Begin");
 		int emp_id = BrandingDetailsController.getUser();
 
@@ -411,7 +418,7 @@ public class PermissionHelperAPI {
 	}
 
 	@RequestMapping(value = "deleterole/{id}", method = RequestMethod.DELETE,produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> deleterole(@PathVariable int id) {
+	public ResponseEntity<String> deleterole(@Min(1) @PathVariable int id) {
 		LOG.info("PermissionHelperController | DeleteRole Begin");
 		try {
 		int emp_id = BrandingDetailsController.getUser();

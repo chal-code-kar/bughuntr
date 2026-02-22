@@ -18,6 +18,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Valid;
+import jakarta.validation.Validator;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Pattern;
+import org.springframework.validation.annotation.Validated;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,6 +39,7 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/BugHuntr/api/v1/")
+@Validated
 public class ResearcherAPI {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ResearcherAPI.class);
@@ -64,6 +74,9 @@ public class ResearcherAPI {
 	@Autowired
 	private ObjectMapper objectMapper;
 
+	@Autowired
+	private Validator validator;
+
 	@RequestMapping(value = "researchers", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
 	public ResponseEntity<String> addResearchers(MultipartHttpServletRequest request) {
 
@@ -80,6 +93,13 @@ public class ResearcherAPI {
 
 			user = objectMapper.readValue(request.getParameter("data"),
 					Researcher.class);
+			Set<ConstraintViolation<Researcher>> violations = validator.validate(user);
+			if (!violations.isEmpty()) {
+				String errorMsg = violations.stream()
+					.map(ConstraintViolation::getMessage)
+					.collect(Collectors.joining(", "));
+				return new ResponseEntity<>(errorMsg, HttpStatus.BAD_REQUEST);
+			}
 			user.setId(emp_id);
 			for (int i = 0; i < data.size(); i++) {
 				if ((int) data.get(i).get(TEXT_EMP_ID) == emp_id) {
@@ -185,7 +205,7 @@ public class ResearcherAPI {
 	}
 
 	@RequestMapping(value = "researchers/{id}", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
-	public ResponseEntity<Map<String, Object>> getResearcherById(@PathVariable int id) {
+	public ResponseEntity<Map<String, Object>> getResearcherById(@Min(1) @PathVariable int id) {
 		Map<String, Object> data = new HashMap<>();
 		LOG.info("ResearcherController | getResearcherById Begin");
 		try {
@@ -227,7 +247,7 @@ public class ResearcherAPI {
 	}
 
 	@RequestMapping(value = "updateresearchers/{id}", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> updateResearcher(@PathVariable int id, @RequestBody Researcher user) {
+	public ResponseEntity<String> updateResearcher(@Min(1) @PathVariable int id, @Valid @RequestBody Researcher user) {
 		try {
 			int emp_id = BrandingDetailsController.getUser();
 			boolean isGuest = brandingService.isUserGuest();
@@ -294,7 +314,7 @@ public class ResearcherAPI {
 	}
 
 	@RequestMapping(value = "avatar/{avatarName}", method = RequestMethod.GET, produces = "text/plain; charset=utf-8")
-	public String IsAvatarAvailable(@PathVariable String avatarName) {
+	public String IsAvatarAvailable(@Pattern(regexp = "^[a-zA-Z0-9_-]{1,50}$") @PathVariable String avatarName) {
 		LOG.info("ResearcherController | IsAvatarAvailable Begin");
 		boolean result = false;
 		try {
@@ -324,7 +344,7 @@ public class ResearcherAPI {
 	}
 
 	@RequestMapping(value = "addDetail/{id}", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> addDetails(@PathVariable int id) {
+	public ResponseEntity<String> addDetails(@Min(1) @PathVariable int id) {
 		try {
 			int emp_id = BrandingDetailsController.getUser();
 
@@ -359,7 +379,7 @@ public class ResearcherAPI {
 	}
 
 	@RequestMapping(value = "isallowed/{id}", method = RequestMethod.GET, produces = "text/plain; charset=utf-8")
-	public String isActionallowed(@PathVariable int id) {
+	public String isActionallowed(@Min(1) @PathVariable int id) {
 		boolean result = false;
 		try {
 			LOG.info("ResearcherController | isActionallowed Begin");

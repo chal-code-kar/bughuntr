@@ -14,6 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import org.springframework.validation.annotation.Validated;
+
 import com.tcs.utx.digiframe.model.Query;
 import com.tcs.utx.digiframe.service.BrandingDetailsService;
 import com.tcs.utx.digiframe.service.PermissionHelperService;
@@ -23,6 +27,7 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/BugHuntr/api/v1/")
+@Validated
 public class QueryController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(HelpAPI.class);
@@ -58,7 +63,7 @@ public class QueryController {
 	}
 
 	@RequestMapping(value = "PostQuery", method = RequestMethod.POST,produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> PostQuery(@RequestBody Query query) {
+	public ResponseEntity<String> PostQuery(@Valid @RequestBody Query query) {
 		try {
 			LOG.info("QueryController | PostQuery Begin");
 			
@@ -88,7 +93,7 @@ public class QueryController {
 	}
 
 	@RequestMapping(value = "MyQuery/{emp_id}", method = RequestMethod.GET,produces = "application/json; charset=utf-8")
-	public ResponseEntity<List<Map<String, Object>>> MYQuery(@PathVariable int emp_id) {
+	public ResponseEntity<List<Map<String, Object>>> MYQuery(@Min(1) @PathVariable int emp_id) {
 		List<Map<String, Object>> data = new ArrayList<>();
 		try {
 			LOG.info("QueryController | AllQuery Begin");
@@ -151,7 +156,7 @@ public class QueryController {
 	
 
 	@RequestMapping(value = "updatequery", method = RequestMethod.POST,produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> updatequery(@RequestBody Query updatequery) {
+	public ResponseEntity<String> updatequery(@Valid @RequestBody Query updatequery) {
 
 		LOG.info("PermissionHelperController | UpdateQuery Begin");
 		try {

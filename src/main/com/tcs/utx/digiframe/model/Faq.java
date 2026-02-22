@@ -2,12 +2,16 @@ package com.tcs.utx.digiframe.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 @JsonIgnoreProperties(ignoreUnknown = false)
 public class Faq {
-	
-	
+
+
 	private int srno;
+	@NotBlank @Size(max = 500)
 	private String faqtitle;
+	@NotBlank @Size(max = 5000)
 	private String description;
 	
 	public int getSrno() {

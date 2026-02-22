@@ -4,14 +4,19 @@ import java.util.Date;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 @JsonIgnoreProperties(ignoreUnknown = false)
 public class hasAccess {
-	
+
+	@NotNull
 	private Date access_till;
+	@Min(1)
 	private int access_to;
 	private int createdby;
 	private Date createddt;
 	private int srno;
+	@Min(1)
 	private int vulnid;
 	
 	public Date getAccess_till() {
