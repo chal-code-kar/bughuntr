@@ -12,8 +12,6 @@ import $ from "jquery";
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   constructor(private router: Router, private globals: Globals, private cookieService: CookieService) { }
-  csrfToken: string = null;
-  csrfCookieName: string = null;
   httpHeaders;
   
   

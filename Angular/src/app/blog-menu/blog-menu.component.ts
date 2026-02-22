@@ -132,7 +132,7 @@ export class BlogMenuComponent implements OnInit {
     }
   }
   delete(e) {
-    this.http.get(environment.apiURL + 'deleteBlog/' + e, { responseType: 'text' }).subscribe(response => {
+    this.http.delete(environment.apiURL + 'deleteBlog/' + e, { responseType: 'text' }).subscribe(response => {
       this.getData()
       this.deleteDialog = false;
       this.messageService.add({ severity: 'success', detail: response });

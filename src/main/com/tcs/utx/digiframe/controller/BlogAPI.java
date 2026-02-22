@@ -124,7 +124,7 @@ public class BlogAPI {
 
 	}
 
-	@RequestMapping(value = "deleteBlog/{srno}", method = RequestMethod.GET, produces = "text/plain; charset=utf-8")
+	@RequestMapping(value = "deleteBlog/{srno}", method = RequestMethod.DELETE, produces = "text/plain; charset=utf-8")
 	public ResponseEntity<String> deleteBlog(@PathVariable int srno) {
 		try {
 			LOG.info("BlogController | DeleteBlog Begin");

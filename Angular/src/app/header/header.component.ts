@@ -75,7 +75,7 @@ export class HeaderComponent implements OnInit {
  
   LogoutApi(){
      
-  this.http.get(this.logout).subscribe({
+  this.http.post(this.logout, null).subscribe({
   next: async (response) => {
     await this.router.navigateByUrl('/login', { replaceUrl: true });
     window.location.reload();
@@ -119,7 +119,7 @@ export class HeaderComponent implements OnInit {
  
  
   signout () {
-    this.http.get(environment.url + '/signout', { responseType: "text" }).subscribe(response => {
+    this.http.post(environment.url + '/signout', null, { responseType: "text" }).subscribe(response => {
       this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Signed Out Successfully' });
       window.location.reload();
     }, error => {

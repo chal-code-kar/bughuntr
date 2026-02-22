@@ -43,7 +43,7 @@ export class EditResourcesComponent implements OnInit {
 
       accept: () => {
 
-        this.http.get(environment.apiURL + 'deleteResources/' + id, { responseType: 'text' })
+        this.http.delete(environment.apiURL + 'deleteResources/' + id, { responseType: 'text' })
           .subscribe(
             data => {
 

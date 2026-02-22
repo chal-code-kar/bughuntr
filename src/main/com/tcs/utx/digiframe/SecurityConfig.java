@@ -6,8 +6,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-
 
 @Configuration
 public class SecurityConfig {
@@ -27,9 +25,8 @@ public class SecurityConfig {
 	public SecurityFilterChain filterChain(HttpSecurity http, CustomAuthenticationEntryPoint customEntryPoint)
 			throws Exception {
 
-		http.csrf(csrf -> csrf
-				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-				.ignoringRequestMatchers("/BugHuntr/api/dologin"))
+		// Disable Spring's built-in CSRF — custom CSRFValidationFilter handles CSRF protection
+		http.csrf(csrf -> csrf.disable())
 			.authorizeHttpRequests(auth -> auth
 				.requestMatchers("/Bughuntr/isAuthUser","/","/Bughuntr/**","/Bughuntr/login", "/index.html", "/**/index.html*", "/**/*.js*",
 						"/**/*.css*","/BugHuntr/api/dologin/**", "/BugHuntr/api/menu", "/Bughuntr/login"

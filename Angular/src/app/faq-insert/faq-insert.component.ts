@@ -94,7 +94,7 @@ export class FaqInsertComponent implements OnInit {
 
       accept: () => {
 
-        this.http.get(environment.apiURL + 'deleteFAQ/' + srno, { responseType: 'text' })
+        this.http.delete(environment.apiURL + 'deleteFAQ/' + srno, { responseType: 'text' })
           .subscribe(
             data => {
               this.messageService.add({ severity: 'success', summary: 'Success', detail: "Deleted Succcessfully!" });

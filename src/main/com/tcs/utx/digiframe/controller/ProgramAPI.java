@@ -687,7 +687,7 @@ public class ProgramAPI {
 
 	}
 
-	@RequestMapping(value = "refreshJobs", method = RequestMethod.GET,produces = "text/plain; charset=utf-8")
+	@RequestMapping(value = "refreshJobs", method = RequestMethod.DELETE,produces = "text/plain; charset=utf-8")
 	public ResponseEntity<String> DeleteJobs() {
 		LOG.info("ProgramAPI | DeleteJobs Begin");
 		try {
@@ -717,7 +717,7 @@ public class ProgramAPI {
 
 	}
 	
-	@RequestMapping(value = "dAnnoucement/{id}", method = RequestMethod.GET,produces = "text/plain; charset=utf-8")
+	@RequestMapping(value = "dAnnoucement/{id}", method = RequestMethod.DELETE,produces = "text/plain; charset=utf-8")
 	public ResponseEntity<String> deleteAnnouncements(@PathVariable int id) {
 		LOG.info("ProgramAPI | deleteAnnoucements Begin");
 		try {

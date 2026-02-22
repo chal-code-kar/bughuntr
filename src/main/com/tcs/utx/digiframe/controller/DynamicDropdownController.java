@@ -239,7 +239,7 @@ public class DynamicDropdownController {
 
 	}
 
-	@RequestMapping(value = "deleteDropdown/{id}", method = RequestMethod.GET,produces = "text/plain; charset=utf-8")
+	@RequestMapping(value = "deleteDropdown/{id}", method = RequestMethod.DELETE,produces = "text/plain; charset=utf-8")
 	public ResponseEntity<String> deleteDropdown(@PathVariable int id) {
 		LOG.info("DropdownController | deleteDropdown Begin");
 		try {

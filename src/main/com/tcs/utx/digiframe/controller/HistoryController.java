@@ -160,7 +160,7 @@ public class HistoryController {
 
 	}
 
-	@RequestMapping(value = "deleteHistory/{srno}", method = RequestMethod.GET,produces = "text/plain; charset=utf-8")
+	@RequestMapping(value = "deleteHistory/{srno}", method = RequestMethod.DELETE,produces = "text/plain; charset=utf-8")
 	public ResponseEntity<String> deleteHistory(@PathVariable int srno) {
 		LOG.info("HistoryController | deleteHistory Begin");
 		try {

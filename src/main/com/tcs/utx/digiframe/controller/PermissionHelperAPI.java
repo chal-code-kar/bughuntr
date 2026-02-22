@@ -188,7 +188,7 @@ public class PermissionHelperAPI {
 
 	}
 
-	@RequestMapping(value = "bugBountyRole/{role_bounty_id}", method = RequestMethod.GET,produces = "text/plain; charset=utf-8")
+	@RequestMapping(value = "bugBountyRole/{role_bounty_id}", method = RequestMethod.POST,produces = "text/plain; charset=utf-8")
 	public ResponseEntity<String> AddBugBountyRole(@PathVariable int role_bounty_id) {
 		try {
 			LOG.info("PermissionHelperController | AddBugBountyRole Begin");
@@ -245,7 +245,7 @@ public class PermissionHelperAPI {
 
 	}
 
-	@RequestMapping(value = "bugBountyAdminRole/{role_bounty_id}", method = RequestMethod.GET ,produces = "text/plain; charset=utf-8")
+	@RequestMapping(value = "bugBountyAdminRole/{role_bounty_id}", method = RequestMethod.POST ,produces = "text/plain; charset=utf-8")
 	public ResponseEntity<String> AddBugBountyAdminRole(@PathVariable int role_bounty_id) {
 		
 		List<Map<String, Object>> data = new ArrayList<>();
@@ -410,7 +410,7 @@ public class PermissionHelperAPI {
 		return new ResponseEntity<>(data, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "deleterole/{id}", method = RequestMethod.GET,produces = "text/plain; charset=utf-8")
+	@RequestMapping(value = "deleterole/{id}", method = RequestMethod.DELETE,produces = "text/plain; charset=utf-8")
 	public ResponseEntity<String> deleterole(@PathVariable int id) {
 		LOG.info("PermissionHelperController | DeleteRole Begin");
 		try {

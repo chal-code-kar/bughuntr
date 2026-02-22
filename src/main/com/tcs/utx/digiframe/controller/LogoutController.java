@@ -35,7 +35,7 @@ public class LogoutController {
 	 * @param response
 	 * @throws IOException
 	 */
-	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	@RequestMapping(value = "/logout", method = RequestMethod.POST)
 	public void logout(HttpServletRequest request,HttpServletResponse response) {
 		LOG.info("LogoutController | logout action initiated ");
 		HttpSession session=request.getSession(false);

@@ -203,7 +203,7 @@ public class ResourcesAPI {
 		return new ResponseEntity<>(data, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "deleteResources/{id}", method = RequestMethod.GET, produces = "text/plain; charset=utf-8")
+	@RequestMapping(value = "deleteResources/{id}", method = RequestMethod.DELETE, produces = "text/plain; charset=utf-8")
 	public ResponseEntity<String> deleteResources(@PathVariable int id) {
 		LOG.info("PermissionHelperController | DeleteResources Begin");
 		try {

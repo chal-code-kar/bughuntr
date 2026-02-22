@@ -109,7 +109,7 @@ export class HelpEditComponent implements OnInit {
     return array;
   }
   deletehelp(e) {
-      this.http.get(environment.apiURL + 'deletehelp/'+e, { responseType: 'text' }).subscribe(response => {
+      this.http.delete(environment.apiURL + 'deletehelp/'+e, { responseType: 'text' }).subscribe(response => {
           this.getData();
           this.deleteDialog=false;
           this.messageService.add({severity:'success', detail: response.toString()});

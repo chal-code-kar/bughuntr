@@ -205,7 +205,7 @@ export class MenuTableComponent implements OnInit {
 
   remove() {
     this.http
-      .get(environment.apiURL + 'deleteMenu/' + this.data.srno, {
+      .delete(environment.apiURL + 'deleteMenu/' + this.data.srno, {
         responseType: 'text',
       })
       .subscribe(

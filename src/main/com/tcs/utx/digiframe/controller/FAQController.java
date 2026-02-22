@@ -136,7 +136,7 @@ public class FAQController {
 		return new ResponseEntity<>(data, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "deleteFAQ/{id}", method = RequestMethod.GET,produces = "text/plain; charset=utf-8")
+	@RequestMapping(value = "deleteFAQ/{id}", method = RequestMethod.DELETE,produces = "text/plain; charset=utf-8")
 	public ResponseEntity<String> deleteFAQ(@PathVariable int id) {
 		try {
 			LOG.info("FAQController | deleteFAQ Begin");

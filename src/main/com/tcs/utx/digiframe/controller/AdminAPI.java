@@ -122,7 +122,7 @@ public class AdminAPI {
 
 	}
 
-	@RequestMapping(value = "deleteMenu/{srno}", method = RequestMethod.GET, produces = "text/plain; charset=utf-8")
+	@RequestMapping(value = "deleteMenu/{srno}", method = RequestMethod.DELETE, produces = "text/plain; charset=utf-8")
 	public ResponseEntity<String> deleteMenu(@PathVariable int srno) {
 		try {
 			LOG.info("BlogController | DeleteBlog Begin");

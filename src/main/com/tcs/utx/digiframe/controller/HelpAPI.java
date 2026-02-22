@@ -159,7 +159,7 @@ public class HelpAPI {
 		return new ResponseEntity<>(retData, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "deletehelp/{id}", method = RequestMethod.GET,produces = "text/plain; charset=utf-8")
+	@RequestMapping(value = "deletehelp/{id}", method = RequestMethod.DELETE,produces = "text/plain; charset=utf-8")
 	public ResponseEntity<String> deletehelp(@PathVariable int id) {
 		try {
 			LOG.info("HelpController | DeleteHelp Begin");

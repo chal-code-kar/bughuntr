@@ -147,8 +147,8 @@ import { AuthInitService } from './auth-init.service';
     FormsModule,
     HttpClientModule,
     HttpClientXsrfModule.withOptions({
-      cookieName: 'XSRF-TOKEN',
-      headerName: 'X-XSRF-TOKEN'
+      cookieName: 'x-csrf-token',
+      headerName: 'x-csrf-token'
     }),
     AppRoutingModule,
     BrowserAnimationsModule,

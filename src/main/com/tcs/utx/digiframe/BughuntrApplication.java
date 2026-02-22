@@ -5,7 +5,6 @@ import jakarta.servlet.ServletException;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -33,20 +32,14 @@ public class BughuntrApplication {
 	        @Override
 	        public void onStartup(ServletContext servletContext) throws ServletException {
 	            servletContext.getSessionCookieConfig().setHttpOnly(true);
+	            servletContext.getSessionCookieConfig().setSecure(true);
+	            servletContext.getSessionCookieConfig().setAttribute("SameSite", "Strict");
 	        }
 	    };
 	}
 	
 	
 	
-	@Bean
-    public FilterRegistrationBean<EnableCSRFFilter> csrfFilter() {
-        FilterRegistrationBean<EnableCSRFFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(new EnableCSRFFilter());
-        registrationBean.addUrlPatterns("/BugHuntr/api/*");
-        registrationBean.setOrder(1);
-        return registrationBean;
-    }
  
 	
 
