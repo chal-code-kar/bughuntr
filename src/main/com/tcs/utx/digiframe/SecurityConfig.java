@@ -1,19 +1,11 @@
 package com.tcs.utx.digiframe;
 
-import java.util.ResourceBundle;
-
-import javax.servlet.Filter;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.Http403ForbiddenEntryPoint;
-import org.springframework.security.web.authentication.preauth.AbstractPreAuthenticatedProcessingFilter;
-
 
 @Configuration
 public class SecurityConfig {
@@ -33,19 +25,29 @@ public class SecurityConfig {
 	public SecurityFilterChain filterChain(HttpSecurity http, CustomAuthenticationEntryPoint customEntryPoint)
 			throws Exception {
 
-
-		http.csrf().disable() 
-				.authorizeRequests()
-				.antMatchers("/Bughuntr/isAuthUser","/","/Bughuntr/**","/Bughuntr/login","/BugHuntr/api/v1/help", "/index.html", "/**/index.html*", "/**/*.js*",
-						"/**/*.css*","/BugHuntr/api/dologin/**", "/BugHuntr/api/menu", "/Bughuntr/login","/h2-console/**"
+		// Disable Spring's built-in CSRF — custom CSRFValidationFilter handles CSRF protection
+		http.csrf(csrf -> csrf.disable())
+			.authorizeHttpRequests(auth -> auth
+				.requestMatchers(
+						"/Bughuntr/isAuthUser", "/", "/Bughuntr/login",
+						"/index.html", "/favicon.ico",
+						"/**/*.js", "/**/*.css", "/**/*.woff2", "/**/*.woff", "/**/*.ttf", "/**/*.ico", "/**/*.png", "/**/*.jpg", "/**/*.svg",
+						"/BugHuntr/api/dologin", "/BugHuntr/api/menu"
 						)
-				.permitAll().
-				anyRequest().authenticated()
-				.and().exceptionHandling().authenticationEntryPoint(customEntryPoint)
-				.accessDeniedHandler(accessDeniedHandler())
-				.and()
-		        .headers()
-	            .frameOptions().sameOrigin(); 
+				.permitAll()
+				.anyRequest().authenticated())
+			.exceptionHandling(ex -> ex
+				.authenticationEntryPoint(customEntryPoint)
+				.accessDeniedHandler(accessDeniedHandler()))
+		    .headers(headers -> headers
+	            .frameOptions(frame -> frame.deny())
+	            .contentTypeOptions(contentType -> {})
+	            .xssProtection(xss -> xss.headerValue(org.springframework.security.web.header.writers.XXssProtectionHeaderWriter.HeaderValue.ENABLED_MODE_BLOCK))
+	            .cacheControl(cache -> {})
+	            .httpStrictTransportSecurity(hsts -> hsts.maxAgeInSeconds(31536000).includeSubDomains(true))
+	            .contentSecurityPolicy(csp -> csp.policyDirectives("default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'"))
+	            .referrerPolicy(referrer -> referrer.policy(org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
+	            .permissionsPolicy(permissions -> permissions.policy("camera=(), microphone=(), geolocation=(), payment=()")));
 		return http.build();
 	}
 
@@ -54,9 +56,6 @@ public class SecurityConfig {
 	 * js,css,images
 	 *
 	 */
-
-	int a1 = 0;
-
 
 	/**
 	 * This will create bean of Http403ForbiddenEntryPoint

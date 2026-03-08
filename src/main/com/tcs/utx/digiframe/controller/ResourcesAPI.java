@@ -15,6 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import org.springframework.validation.annotation.Validated;
+
 import com.tcs.utx.digiframe.model.Resources;
 import com.tcs.utx.digiframe.service.BrandingDetailsService;
 import com.tcs.utx.digiframe.service.PermissionHelperService;
@@ -24,7 +28,7 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/BugHuntr/api/v1/")
-
+@Validated
 public class ResourcesAPI {
 
 	private static final Logger LOG = LoggerFactory.getLogger(HelpAPI.class);
@@ -68,8 +72,25 @@ public class ResourcesAPI {
 	@RequestMapping(value = "resources", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
 	public ResponseEntity<List<Map<String, Object>>> getResources() {
 		List<Map<String, Object>> data = new ArrayList<>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		LOG.info("PermissionHelperController | GetResources Begin");
 		try {
+			int emp_id = BrandingDetailsController.getUser();
+
+			boolean isGuest = brandingService.isUserGuest();
+			if (isGuest) {
+				map.put(TEXT_ACCESS_DENIED, ACCESS_DENIED_JSON);
+				data.add(map);
+				return new ResponseEntity<>(data, HttpStatus.FORBIDDEN);
+			}
+
+			if (this.service.isOperationPermissible(TEXT_BUGHUNTR, GUEST, "View", emp_id, 0, 0)) {
+				LOG.info("ResourcesAPIController | Access Denied in getResources");
+				map.put(TEXT_ACCESS_DENIED, ACCESS_DENIED_JSON);
+				data.add(map);
+				return new ResponseEntity<>(data, HttpStatus.FORBIDDEN);
+			}
+
 			data = this.resourcesservice.getResources();
 			LOG.info(ACCESS_DENIED_RESOURCES);
 		} catch (DataAccessException e) {
@@ -83,7 +104,7 @@ public class ResourcesAPI {
 	}
 
 	@RequestMapping(value = "getchild/{id}", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
-	public ResponseEntity<List<Map<String, Object>>> getChild(@PathVariable int id) {
+	public ResponseEntity<List<Map<String, Object>>> getChild(@Min(1) @PathVariable int id) {
 		List<Map<String, Object>> data = new ArrayList<>();
 		Map<String, Object> map = new HashMap<String, Object>();
 		LOG.info("PermissionHelperController | GetChild Begin");
@@ -104,6 +125,15 @@ public class ResourcesAPI {
 				return new ResponseEntity<>(data, HttpStatus.FORBIDDEN);
 
 			}
+
+			// IDOR fix: Verify user has admin access or is resource owner before returning child data
+			if (!this.service.isOperationPermissible(TEXT_BUGHUNTR, TEXT_ADMIN, "View", emp_id, 0, 0)) {
+				List<Map<String, Object>> parentResource = this.resourcesservice.getresourcesbyid(id);
+				if (parentResource == null || parentResource.isEmpty()) {
+					return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
+				}
+			}
+
 			data = this.resourcesservice.getChild(id);
 			LOG.info(ACCESS_DENIED_RESOURCES);
 		} catch (DataAccessException e) {
@@ -153,12 +183,32 @@ public class ResourcesAPI {
 	}
 
 	@RequestMapping(value = "getresources/{id}", method = RequestMethod.GET,produces = "application/json; charset=utf-8")
-	public ResponseEntity<List<Map<String, Object>>> getresourcesbyid(@PathVariable int id) {
+	public ResponseEntity<List<Map<String, Object>>> getresourcesbyid(@Min(1) @PathVariable int id) {
 		List<Map<String, Object>> data = new ArrayList<>();
+		Map<String, Object> map = new HashMap<String, Object>();
 		LOG.info("PermissionHelperController | GetResourcesById Begin");
 		try {
+			int emp_id = BrandingDetailsController.getUser();
 
+			boolean isGuest = brandingService.isUserGuest();
+			if (isGuest) {
+				map.put(TEXT_ACCESS_DENIED, ACCESS_DENIED_JSON);
+				data.add(map);
+				return new ResponseEntity<>(data, HttpStatus.FORBIDDEN);
+			}
+
+			if (this.service.isOperationPermissible(TEXT_BUGHUNTR, GUEST, "View", emp_id, 0, 0)) {
+				LOG.info("ResourcesAPIController | Access Denied in getresourcesbyid");
+				map.put(TEXT_ACCESS_DENIED, ACCESS_DENIED_JSON);
+				data.add(map);
+				return new ResponseEntity<>(data, HttpStatus.FORBIDDEN);
+			}
+
+			// IDOR fix: Verify resource exists before returning; non-admins get filtered view
 			data = this.resourcesservice.getresourcesbyid(id);
+			if (data == null || data.isEmpty()) {
+				return new ResponseEntity<>(data, HttpStatus.NOT_FOUND);
+			}
 			LOG.info((ACCESS_DENIED_RESOURCES));
 		} catch (DataAccessException e) {
 			LOG.error("PermissionHelperController | DataAccessexception in getresourcesbyid - ", e);
@@ -170,10 +220,22 @@ public class ResourcesAPI {
 		return new ResponseEntity<>(data, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "deleteResources/{id}", method = RequestMethod.GET, produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> deleteResources(@PathVariable int id) {
+	@RequestMapping(value = "deleteResources/{id}", method = RequestMethod.DELETE, produces = "text/plain; charset=utf-8")
+	public ResponseEntity<String> deleteResources(@Min(1) @PathVariable int id) {
 		LOG.info("PermissionHelperController | DeleteResources Begin");
 		try {
+			int emp_id = BrandingDetailsController.getUser();
+
+			boolean isGuest = brandingService.isUserGuest();
+			if (isGuest) {
+				return new ResponseEntity<>(TEXT_ACCESS_DENIED, HttpStatus.FORBIDDEN);
+			}
+
+			if (!this.service.isOperationPermissible(TEXT_BUGHUNTR, TEXT_ADMIN, "View", emp_id, 0, 0)) {
+				LOG.info("PermissionHelperController | Access Denied in deleteResources");
+				return new ResponseEntity<>(TEXT_NOTADMIN, HttpStatus.FORBIDDEN);
+			}
+
 			this.resourcesservice.deleteResources(id);
 			LOG.info("PermissionHelperController | DeleteResources Exit");
 		} catch (DataAccessException e) {
@@ -187,7 +249,7 @@ public class ResourcesAPI {
 	}
 
 	@RequestMapping(value = "addcategory", method = RequestMethod.POST,produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> addcategory(@RequestBody Resources resource) {
+	public ResponseEntity<String> addcategory(@Valid @RequestBody Resources resource) {
 		try {
 			LOG.info("PermissionHelperController | AddCategory Begin");
 			int emp_id = BrandingDetailsController.getUser();
@@ -221,7 +283,7 @@ public class ResourcesAPI {
 	}
 
 	@RequestMapping(value = "addcategoryitem", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> addcategoryitem(@RequestBody Resources resources) {
+	public ResponseEntity<String> addcategoryitem(@Valid @RequestBody Resources resources) {
 
 		LOG.info("PermissionHelperController | AddCategoryItem Begin");
 		try {
@@ -257,7 +319,7 @@ public class ResourcesAPI {
 	}
 
 	@RequestMapping(value = "updateresources/{id}", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> updateresources(@PathVariable int id, @RequestBody Resources editresources) {
+	public ResponseEntity<String> updateresources(@Min(1) @PathVariable int id, @Valid @RequestBody Resources editresources) {
 
 		LOG.info("PermissionHelperController | updateresources Begin");
 		try {
@@ -268,16 +330,23 @@ public class ResourcesAPI {
 				return new ResponseEntity<>(TEXT_ACCESS_DENIED, HttpStatus.FORBIDDEN);
 			}
 
-			if (!this.resourcesservice.validateResources(editresources)) {	
+			if (!this.service.isOperationPermissible(TEXT_BUGHUNTR, TEXT_ADMIN, "View", emp_id, 0, 0)) {
+				LOG.info("PermissionHelperController | Access Denied in updateresources");
+				return new ResponseEntity<>(TEXT_NOTADMIN, HttpStatus.FORBIDDEN);
+			}
+
+			// IDOR fix: Verify path variable ID matches request body ID to prevent ID tampering
+			if (editresources.getSrno() != 0 && editresources.getSrno() != id) {
+				LOG.info("ResourcesAPIController | ID mismatch in updateresources");
+				return new ResponseEntity<>("ID mismatch", HttpStatus.BAD_REQUEST);
+			}
+
+			if (!this.resourcesservice.validateResources(editresources)) {
 				LOG.info("PermissionHelperController | Validation Failed in addcategoryitem");
 				return new ResponseEntity<>(TEXT_VALIDATION, HttpStatus.BAD_REQUEST);
 			}
 			if (!this.resourcesservice.updateresourcesbyid(editresources)) {
 				return new ResponseEntity<>(TEXT_VALIDATION, HttpStatus.BAD_REQUEST);
-			}
-			if (!this.service.isOperationPermissible(TEXT_BUGHUNTR, TEXT_ADMIN, "View", emp_id, 0, 0)) {
-				LOG.info("PermissionHelperController | Access Denied in updateresources");
-				return new ResponseEntity<>(TEXT_NOTADMIN, HttpStatus.FORBIDDEN);
 			}
 			this.resourcesservice.updateresources(id, editresources);
 			LOG.info("PermissionHelperController | updateresources Exit");

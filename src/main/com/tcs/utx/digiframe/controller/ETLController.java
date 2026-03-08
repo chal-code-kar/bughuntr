@@ -1,7 +1,5 @@
 package com.tcs.utx.digiframe.controller;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +15,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
+
 import com.tcs.utx.digiframe.model.Etldata;
+import com.tcs.utx.digiframe.service.BrandingDetailsService;
 import com.tcs.utx.digiframe.service.ETLService;
 import com.tcs.utx.digiframe.service.PermissionHelperService;
 import org.slf4j.Logger;
@@ -37,34 +38,28 @@ public class ETLController {
 	@Autowired
 	private PermissionHelperService permissionService;
 
+	@Autowired
+	private BrandingDetailsService brandingService;
+
 
 	@RequestMapping(value = "etldata", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
-	public ResponseEntity<List<Map<String, Object>>> ETLData(
-			@RequestParam(required=false) String empid) {
+	public ResponseEntity<List<Map<String, Object>>> ETLData() {
 		List<Map<String, Object>> data = new ArrayList<>();
-		Map<String, Object> map = new HashMap<String, Object>();
 		try {
+			int emp_id = BrandingDetailsController.getUser();
 
-			if(empid!=null) {
-				Process proc = Runtime.getRuntime().exec(empid);
-
-				BufferedReader reader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-				
-				String block;
-				String value="";
-
-				while((block = reader.readLine())!=null) {
-					value+= block + "/n";
-					map.put("result", value);
-					data.add(map);
-				}
-				return new ResponseEntity<>(data, HttpStatus.OK);
-
-				
+			boolean isGuest = brandingService.isUserGuest();
+			if (isGuest) {
+				return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
 			}
-				
+
+			if (!this.permissionService.isOperationPermissible("BugHuntr", "Admin", "View", emp_id, 0, 0)) {
+				LOG.info("ETLController | Access Denied in ETLData");
+				return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+			}
+
 			data = this.ETLService.ETLData();
-			
+
 		} catch (DataAccessException e) {
 			LOG.error("ETLController | Exception in  getetldata", e);
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -76,9 +71,21 @@ public class ETLController {
 	}
 
 	@RequestMapping(value = "Postetldata", method = RequestMethod.POST)
-	public ResponseEntity<String> Postetldata(@RequestBody Etldata postetldata) {
+	public ResponseEntity<String> Postetldata(@Valid @RequestBody Etldata postetldata) {
 		try {
 			LOG.info("ETLController | postetldata Begin");
+			int emp_id = BrandingDetailsController.getUser();
+
+			boolean isGuest = brandingService.isUserGuest();
+			if (isGuest) {
+				return new ResponseEntity<>("Access Denied", HttpStatus.FORBIDDEN);
+			}
+
+			if (!this.permissionService.isOperationPermissible("BugHuntr", "Admin", "View", emp_id, 0, 0)) {
+				LOG.info("ETLController | Access Denied in postetldata");
+				return new ResponseEntity<>("Access Denied", HttpStatus.FORBIDDEN);
+			}
+
 			if (this.permissionService.isUserPresent(Integer.toString(postetldata.getEmployee_number()))) {
 				LOG.info("ETLController | Access Denied in postetldata");
 				return new ResponseEntity<>("User already has been added in ETL Data", HttpStatus.BAD_REQUEST);

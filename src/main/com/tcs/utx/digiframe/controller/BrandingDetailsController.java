@@ -1,6 +1,5 @@
 package com.tcs.utx.digiframe.controller;
 
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -14,8 +13,8 @@ import java.util.Map;
 
 
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -29,13 +28,16 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.netflix.config.DynamicStringProperty;
+import jakarta.validation.Valid;
+
+import com.tcs.utx.digiframe.model.LoginRequest;
+
 import com.tcs.utx.digiframe.dto.UtxMenuItemServiceVo;
 import com.tcs.utx.digiframe.exception.UserDefinedException;
 import com.tcs.utx.digiframe.service.BrandingDetailsService;
@@ -60,6 +62,9 @@ public class BrandingDetailsController {
 	@Value("${spring.session.store-type}")
 	private String sessionStoreType;
 
+	@Value("${JAR_TYPE:SSO}")
+	private String jarType;
+
 	@Autowired
 	private BrandingDetailsService brandingService;
 
@@ -74,32 +79,46 @@ public class BrandingDetailsController {
 
 	
 	
-	@RequestMapping(value = "/dologin/{userId}/{password}", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
-	public void setAuthoization(@PathVariable String userId,@PathVariable String password, HttpServletRequest request) {
+	@RequestMapping(value = "/dologin", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
+	public ResponseEntity<Map<String, Object>> setAuthoization(@Valid @RequestBody LoginRequest loginRequest, HttpServletRequest request) {
 		LOG.info("BrandingDetailsController | setAuthoization | invoked");
-		if (!"".equals(userId) && !(userId == null) && password.equals("Pass@123")) {
-			HttpSession session = request.getSession();
-			session.setAttribute("USER_ID",userId);
-			LOG.info("USER ID SET IN SESSION ----" + session.getAttribute("USER_ID"));
-			if (SecurityContextHolder.getContext().getAuthentication() != null) {
-			    List<String> userRoles = brandingService.getUserRoles(userId);
-			    List<GrantedAuthority> authorities = new ArrayList<>();
-			    if (userRoles != null && !userRoles.isEmpty()) {
-			        userRoles.forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
-			    }
-			    Authentication auth = new UsernamePasswordAuthenticationToken(
-		            userId, 
-		            null,   
-		            authorities 
-			    	);
-		    	SecurityContextHolder.getContext().setAuthentication(auth);
-			}
- 
-		}else {
-	        SecurityContextHolder.clearContext();
-	        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid credentials or missing parameters");
+		Map<String, Object> response = new HashMap<>();
+		
+		String userId = loginRequest.getUserId();
+		String password = loginRequest.getPassword();
+		
+		// Validate input
+		if (userId == null || userId.trim().isEmpty() || password == null || password.trim().isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User ID and password are required");
 		}
-		LOG.info("BrandingDetailsController | setAuthoization | leaving");
+		
+		// Note: In production, implement proper password hashing and verification
+		// This is a demo application - replace with actual authentication mechanism
+		if (brandingService.validateUser(userId, password)) {
+			HttpSession session = request.getSession();
+			session.setAttribute("USER_ID", userId);
+			LOG.info("USER ID SET IN SESSION");
+			
+			List<String> userRoles = brandingService.getUserRoles(userId);
+			List<GrantedAuthority> authorities = new ArrayList<>();
+			if (userRoles != null && !userRoles.isEmpty()) {
+				userRoles.forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
+			}
+			Authentication auth = new UsernamePasswordAuthenticationToken(
+				userId, 
+				null,   
+				authorities 
+			);
+			SecurityContextHolder.getContext().setAuthentication(auth);
+			
+			response.put("success", true);
+			response.put("message", "Login successful");
+			LOG.info("BrandingDetailsController | setAuthoization | leaving");
+			return new ResponseEntity<>(response, HttpStatus.OK);
+		} else {
+			SecurityContextHolder.clearContext();
+			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid credentials");
+		}
 	}
 	/**
 	 * This method returns lastLoginTime of logged in user. Last login time will be
@@ -110,24 +129,26 @@ public class BrandingDetailsController {
 	 * @return
 	 */
 	private String getLastloginTime(HttpServletRequest request) {
+		HttpSession session = request.getSession(false);
 		String previousLoginTime = null;
-		previousLoginTime = request.getHeader("PrevLoginTime");
-		if (previousLoginTime != null && !"".equals(previousLoginTime.trim())) {
 
-			BigDecimal loginTimeSecs = new BigDecimal(previousLoginTime);
-			BigDecimal loginTimeMillis = loginTimeSecs.multiply(new BigDecimal("1000"));
+		if (session != null) {
+			Object storedLoginTime = session.getAttribute("PrevLoginTime");
+			if (storedLoginTime instanceof Long) {
+				long loginTimeLong = (Long) storedLoginTime;
+				Date date = new Date(loginTimeLong);
+				Calendar cal = new GregorianCalendar();
+				cal.setTime(date);
+				SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd,yyyy hh:mm:ss aa z");
+				dateFormat.setCalendar(cal);
+				previousLoginTime = dateFormat.format(date);
+			}
 
-			long loginTimeLong = Long.parseLong(loginTimeMillis.toString());
-			Date date = new Date(loginTimeLong);
+			// Store current time as the previous login time for next request
+			session.setAttribute("PrevLoginTime", System.currentTimeMillis());
+		}
 
-			Calendar cal = new GregorianCalendar();
-			cal.setTime(date);
-
-			SimpleDateFormat dateFormat = new SimpleDateFormat("MMM dd,yyyy hh:mm:ss aa z");
-			dateFormat.setCalendar(cal);
-
-			previousLoginTime = dateFormat.format(date);
-		} else {
+		if (previousLoginTime == null) {
 			Calendar cal = new GregorianCalendar();
 			Date date = new Date();
 			SimpleDateFormat dateFormat = new SimpleDateFormat("EE MMM dd hh:mm:ss z aa yyyy");
@@ -139,7 +160,7 @@ public class BrandingDetailsController {
 	}
 	
 	private void setCustomAttributes(String principal, HttpServletRequest request) {
-		LOG.info("LoginController | setCustomAttributes action initiated - principal -> " + principal);
+		LOG.debug("LoginController | setCustomAttributes action initiated");
 		if (SecurityContextHolder.getContext().getAuthentication() != null) {
 			
 			 Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -198,7 +219,7 @@ public class BrandingDetailsController {
         	return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-		boolean smEnv = ("SSO".equals(new DynamicStringProperty("JAR_TYPE", "SSO").get())) ? true : false;
+		boolean smEnv = "SSO".equals(jarType);
 		if (smEnv == false && "redis".equals(sessionStoreType)) {
 			smEnv = true;
 		}

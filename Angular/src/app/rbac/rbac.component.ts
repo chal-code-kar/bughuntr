@@ -124,7 +124,7 @@ export class RbacComponent implements OnInit {
 
   AddBugBountyRole(){
     if(this.valid_employee_id(this.role_bounty_id)){
-      this.http.get(environment.apiURL + 'bugBountyRole/' + this.role_bounty_id, {responseType: 'text'}).subscribe(response => {
+      this.http.post(environment.apiURL + 'bugBountyRole/' + this.role_bounty_id, null, {responseType: 'text'}).subscribe(response => {
         this.role_bounty_id = '';
         this.messageService.add({ severity: 'success', detail: response });
         this.items = response;
@@ -137,7 +137,7 @@ export class RbacComponent implements OnInit {
 
   AddBughuntrAdminRole(){
     if(this.valid_employee_id(this.admin_role_bounty_id)){
-      this.http.get(environment.apiURL + 'bugBountyAdminRole/' + this.admin_role_bounty_id, {responseType: 'text'}).subscribe(response => {
+      this.http.post(environment.apiURL + 'bugBountyAdminRole/' + this.admin_role_bounty_id, null, {responseType: 'text'}).subscribe(response => {
         this.admin_role_bounty_id = '';
         this.messageService.add({ severity: 'success', detail: response });
         this.items = response;

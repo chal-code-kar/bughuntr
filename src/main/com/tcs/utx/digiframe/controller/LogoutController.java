@@ -2,9 +2,9 @@ package com.tcs.utx.digiframe.controller;
 
 import java.io.IOException;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +35,7 @@ public class LogoutController {
 	 * @param response
 	 * @throws IOException
 	 */
-	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	@RequestMapping(value = "/logout", method = RequestMethod.POST)
 	public void logout(HttpServletRequest request,HttpServletResponse response) {
 		LOG.info("LogoutController | logout action initiated ");
 		HttpSession session=request.getSession(false);
@@ -44,12 +44,9 @@ public class LogoutController {
 			session.invalidate();
 		}
 		LOG.info("LogoutController | logout action terminated ");
-		response.setHeader("pragma", noCacheString);
-		response.setHeader(cacheControlString, noCacheString);
-		response.setHeader(cacheControlString, "no-store");
-		response.addDateHeader(expiresString, 0);
-		response.setDateHeader("max-age", 0);
-		response.setIntHeader(expiresString, -1); 
+		response.setHeader(cacheControlString, "no-cache, no-store, must-revalidate, private, max-age=0");
+		response.setHeader("Pragma", noCacheString);
+		response.setDateHeader(expiresString, 0);
 		}
 
 	/**
@@ -64,12 +61,9 @@ public class LogoutController {
 			SecurityContextHolder.clearContext();
 			session.invalidate();
 		}
-		response.setHeader("pragma", noCacheString);
-		response.setHeader(cacheControlString, noCacheString);
-		response.setHeader(cacheControlString, "no-store");
-		response.addDateHeader(expiresString, 0);
-		response.setDateHeader("max-age", 0);
-		response.setIntHeader(expiresString, -1); 
+		response.setHeader(cacheControlString, "no-cache, no-store, must-revalidate, private, max-age=0");
+		response.setHeader("Pragma", noCacheString);
+		response.setDateHeader(expiresString, 0);
 		LOG.info("LogoutController | logoutAppSession action terminated ");
 	}
 	

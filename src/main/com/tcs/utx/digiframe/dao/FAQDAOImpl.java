@@ -62,7 +62,7 @@ public class FAQDAOImpl implements FAQDAO {
 	@Override
 	public void updateFAQ(int id, Faq editFaq) {
 		try {
-			jdbcTemplate.update("Update b_faq set faqtitle='"+editFaq.getFaqtitle()+"', description='"+editFaq.getDescription()+"' WHERE srno='"+id+"'");
+			jdbcTemplate.update("UPDATE b_faq SET faqtitle = ?, description = ? WHERE srno = ?", editFaq.getFaqtitle(), editFaq.getDescription(), id);
 
 		} catch (DataAccessException e) {
 			LOG.error(ERROR_MSG_4, e);

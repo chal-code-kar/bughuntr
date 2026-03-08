@@ -84,7 +84,7 @@ export class EditresearcherComponent implements OnInit {
     }
     if (this.validationforGeneral()) {
       this.http.post(environment.apiURL + `updateresearchers/` + this.srno, this.data, { responseType: 'text' }).subscribe(response => {
-        this.router.navigate(["/Profile/"+this.srno]);
+        this.router.navigate(['/Profile', this.srno]);
         this.messageService.add({ severity: 'success', detail: response });
         this.upload();
       }, error =>{

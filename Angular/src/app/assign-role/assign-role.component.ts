@@ -49,7 +49,7 @@ export class AssignRoleComponent implements OnInit {
 
   AddBugBountyRole() {
     if (this.valid_employee_id(this.role_bounty_id)) {
-      this.http.get(environment.apiURL + 'bugBountyRole/' + this.role_bounty_id, { responseType: 'text' }).subscribe(response => {
+      this.http.post(environment.apiURL + 'bugBountyRole/' + this.role_bounty_id, null, { responseType: 'text' }).subscribe(response => {
         this.role_bounty_id = '';
         this.messageService.add({ severity: 'success', detail: response });
         this.items = response;
@@ -64,7 +64,7 @@ export class AssignRoleComponent implements OnInit {
 
   AddBughuntrAdminRole() {
     if (this.valid_employee_id(this.admin_role_bounty_id)) {
-      this.http.get(environment.apiURL + 'bugBountyAdminRole/' + this.admin_role_bounty_id, { responseType: 'text' }).subscribe(response => {
+      this.http.post(environment.apiURL + 'bugBountyAdminRole/' + this.admin_role_bounty_id, null, { responseType: 'text' }).subscribe(response => {
         if(response===null){
           this.messageService.add({ severity: 'error', detail: "This Employee ID not exist in ETL Table" });
          }
@@ -167,7 +167,7 @@ export class AssignRoleComponent implements OnInit {
       accept: () => {
 
 
-        this.http.get(environment.apiURL + 'deleterole/' + srno, { responseType: 'text' })
+        this.http.delete(environment.apiURL + 'deleterole/' + srno, { responseType: 'text' })
 
           .subscribe(
 

@@ -81,6 +81,6 @@ export class ResourcesComponent implements OnInit {
     });
   }
   getdata(id){
-    this.router.navigate(["/Resources/" + id ]);
+    this.router.navigate(['/Resources', id]);
   }
 }

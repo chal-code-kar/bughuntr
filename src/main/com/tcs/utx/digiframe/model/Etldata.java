@@ -2,8 +2,13 @@
 package com.tcs.utx.digiframe.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonIgnoreProperties(ignoreUnknown = false)
 	public class Etldata {
 
 		public Etldata() {
@@ -12,18 +17,29 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 		
 
 		private int person_id;
+		@Min(1000) @Max(999999)
 		private int employee_number;
+		@NotBlank @Size(max = 100)
 		private String first_name;
+		@NotBlank @Size(max = 100)
 		private String last_name;
+		@Size(max = 200)
 		private String full_name;
+		@Email @Size(max = 255)
 		private String email_address;
+		@Size(max = 255)
 		private String iou_name;
 		private int assignment_id;
+		@Size(max = 50)
 		private String assignment_status;
+		@Size(max = 255)
 		private String base_branch;
+		@Size(max = 255)
 		private String depute_branch;
+		@Size(max = 100)
 		private String country_of_depute;
 		private int base_dc_id;
+		@Size(max = 50)
 		private String per_system_status;
 		private int last_update_date;
 		private int eai_update_date;

@@ -3,6 +3,6 @@ export const environment = {
   apiURL:  "http://localhost:8080/BugHuntr/api/v1/",
   url: "http://localhost:8080/BugHuntr/api",
   baseUrl:  "http://localhost:8080/BugHuntr",
-  csrf_whitelist: ['GET', 'HEAD', 'TRACE', 'OPTIONS', 'POST']
+  csrf_whitelist: ['GET', 'HEAD', 'TRACE', 'OPTIONS']
 };
 

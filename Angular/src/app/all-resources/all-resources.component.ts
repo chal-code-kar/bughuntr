@@ -53,7 +53,7 @@ export class AllResourcesComponent implements OnInit {
 
       accept: () => {
 
-        this.http.get(environment.apiURL + 'deleteResources/' + id, { responseType: 'text' })
+        this.http.delete(environment.apiURL + 'deleteResources/' + id, { responseType: 'text' })
           .subscribe(
             data => {
 
@@ -86,7 +86,7 @@ export class AllResourcesComponent implements OnInit {
   editFunction(id){
 
 
-    this.router.navigate(['edit-resources/' + id]);
+    this.router.navigate(['edit-resources', id]);
 
   }
 

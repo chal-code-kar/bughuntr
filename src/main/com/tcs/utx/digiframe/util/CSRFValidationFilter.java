@@ -2,35 +2,31 @@ package com.tcs.utx.digiframe.util;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.HexFormat;
 import java.util.List;
 import java.util.Set;
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
-import javax.servlet.http.HttpSession;
-import javax.xml.bind.DatatypeConverter;
+
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.util.matcher.RequestMatcher;
-import com.netflix.config.DynamicStringListProperty;
 
-
-
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponseWrapper;
+import jakarta.servlet.http.HttpSession;
 
 public class CSRFValidationFilter implements Filter {
     public static final String TARGET_ORIGIN_JVM_PARAM_NAME = "TARGET_ORIGIN";
@@ -39,99 +35,144 @@ public class CSRFValidationFilter implements Filter {
     private List<URL> targetOrigins;
     private final SecureRandom secureRandom = new SecureRandom();
     public static final RequestMatcher DEFAULT_CSRF_MATCHER = new DefaultRequiresCsrfMatcher();
-    
-    @Override    
+
+    // Safe HTTP methods that do not require CSRF validation
+    private static final Set<String> SAFE_METHODS = new HashSet<>(Arrays.asList("GET", "HEAD", "OPTIONS", "TRACE"));
+
+    // Exact exempt paths that skip CSRF validation entirely
+    private static final Set<String> EXEMPT_PATHS = new HashSet<>(Arrays.asList(
+        "/BugHuntr/api/dologin",
+        "/BugHuntr/api/logoutApp"
+    ));
+
+    @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
     	HttpServletRequest httpReq = (HttpServletRequest) request;
-    	String url1 = httpReq.getRequestURL().toString();
     	HttpServletResponse httpResp = (HttpServletResponse) response;
+    	String requestURI = httpReq.getRequestURI();
+    	String httpMethod = httpReq.getMethod();
     	String ipAddress = getSourceIP(httpReq);
-    	LOG.info(ipAddress + " " + httpReq.getServerPort()+ " "  + httpReq.getRequestURI() + " " + httpReq.getMethod());
-        String accessDeniedReason;
-        if (url1.contains("/logoutApp")){
+    	LOG.debug("CSRF filter request: {} {} {} {}", ipAddress, httpReq.getServerPort(), requestURI, httpMethod);
+
+        // Check exempt paths using exact match
+        if (isExemptPath(requestURI)) {
             chain.doFilter(request, response);
-            return;
-          }
-        if (url1.contains("/dologin")) {
-            chain.doFilter(request, response);
-            return;
-          }
-        if(url1.contains("/menus")) {
-        	chain.doFilter(request, response);
-            return;
-        }
-        if(url1.contains("/help")) {
-        	chain.doFilter(request, response);
-            return;
-        }
-        if (url1.contains("/isAuthUser")) {
-            chain.doFilter(request, response);
-            return;
-        }
-        if (url1.contains("/menu")) {
-            HttpSession session = httpReq.getSession(false);
-            if(session==null){
-              chain.doFilter(request, response);
-              return;
-            }
-            HttpServletResponseWrapper httpRespWrapper = new HttpServletResponseWrapper(httpResp);
-            LOG.info("token in session is ----- :  " + session.getAttribute(CSRF_TOKEN_NAME));
-            if(session.getAttribute(CSRF_TOKEN_NAME) == null) {
-                String trueToken = this.addTokenCookieAndHeader(httpReq, httpRespWrapper);
-                session.setAttribute(CSRF_TOKEN_NAME, trueToken);
-            }
-            StringBuilder sb  = new StringBuilder(2048);
-            sb.append(this.determineCookieName(httpReq)).append("=").append((String)session.getAttribute(CSRF_TOKEN_NAME)).append("; Path=").append("/").append("; HttpOnly; SameSite=Strict");
-            httpRespWrapper.addHeader("Set-Cookie", sb.toString());
-            httpRespWrapper.setHeader(CSRF_TOKEN_NAME, (String)session.getAttribute(CSRF_TOKEN_NAME));
-            chain.doFilter(request, httpRespWrapper);
-            return;
-          }
-        if(url1.contains("/reports")) {
-        	chain.doFilter(request, response);
             return;
         }
 
-        Cookie tokenCookie = new Cookie(CSRF_TOKEN_NAME,"");
-        tokenCookie.setHttpOnly(true);
-        tokenCookie.setSecure(true);
-        if (httpReq.getCookies() != null) {
-            String csrfCookieExpectedName = this.determineCookieName(httpReq);
-            tokenCookie = Arrays.stream(httpReq.getCookies()).filter(c -> c.getName().equals(csrfCookieExpectedName)).findFirst().orElse(null);
-        }
-        if(url1.contains("/worklists")) {
-        	chain.doFilter(request, response);
+        // For the /menu endpoint, generate and set the CSRF token
+        if (requestURI.equals("/BugHuntr/api/menu")) {
+            HttpSession session = httpReq.getSession(false);
+            if (session == null) {
+                chain.doFilter(request, response);
+                return;
+            }
+            HttpServletResponseWrapper httpRespWrapper = new HttpServletResponseWrapper(httpResp);
+            if (session.getAttribute(CSRF_TOKEN_NAME) == null) {
+                String trueToken = this.generateToken();
+                session.setAttribute(CSRF_TOKEN_NAME, trueToken);
+            }
+            StringBuilder sb = new StringBuilder(2048);
+            sb.append(this.determineCookieName(httpReq)).append("=").append((String) session.getAttribute(CSRF_TOKEN_NAME)).append("; Path=/; HttpOnly; Secure; SameSite=Strict");
+            httpRespWrapper.addHeader("Set-Cookie", sb.toString());
+            chain.doFilter(request, httpRespWrapper);
             return;
         }
-        if (tokenCookie == null || this.isBlank(tokenCookie.getValue())) {
-            LOG.info("CSRFValidationFilter: CSRF cookie absent or value is null/empty so we provide one and return an HTTP NO_CONTENT response !");
+
+        // Safe HTTP methods (GET, HEAD, OPTIONS, TRACE) do not need CSRF validation
+        if (SAFE_METHODS.contains(httpMethod.toUpperCase())) {
+            chain.doFilter(request, response);
+            return;
+        }
+
+        // Validate Origin/Referer header as secondary CSRF defense
+        if (this.targetOrigins != null && !this.targetOrigins.isEmpty()) {
+            String origin = httpReq.getHeader("Origin");
+            String referer = httpReq.getHeader("Referer");
+            if (origin != null && !origin.isEmpty()) {
+                if (!isAllowedOrigin(origin)) {
+                    LOG.warn("CSRFValidationFilter: Rejected request with untrusted Origin: {}", origin);
+                    httpResp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    httpResp.getWriter().write(sendResponseText(httpResp, "ACCESS_DENIED"));
+                    return;
+                }
+            } else if (referer != null && !referer.isEmpty()) {
+                if (!isAllowedOrigin(referer)) {
+                    LOG.warn("CSRFValidationFilter: Rejected request with untrusted Referer: {}", referer);
+                    httpResp.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    httpResp.getWriter().write(sendResponseText(httpResp, "ACCESS_DENIED"));
+                    return;
+                }
+            }
+        }
+
+        // For state-changing methods (POST, PUT, DELETE, PATCH), enforce CSRF token validation
+        // Validate using the request HEADER (set by JavaScript), not the cookie (auto-sent by browser)
+        String tokenFromHeader = httpReq.getHeader(CSRF_TOKEN_NAME);
+
+        if (this.isBlank(tokenFromHeader)) {
+            LOG.info("CSRFValidationFilter: CSRF header absent or empty for state-changing request!");
             httpResp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             httpResp.getWriter().write(sendResponseText(httpResp, "Unauthorized"));
             return;
-        } else {    
-                HttpSession session = httpReq.getSession(false);
-                String tokenFromSession = (String) session.getAttribute(CSRF_TOKEN_NAME);
-                if (tokenFromSession!=null && !tokenFromSession.equals(tokenCookie.getValue())) {
-                    LOG.info("Tokens are not equal");
-                    accessDeniedReason = "CSRFValidationFilter: Token provided via HTTP Header and via Cookie are not equals so we block the request !";
-                    LOG.warn(accessDeniedReason);
-	            httpResp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        }
 
-                    httpResp.getWriter().write(sendResponseText(httpResp, "ACESS_DENIED")); 
-                } else {
-                    HttpServletResponseWrapper httpRespWrapper = new HttpServletResponseWrapper(httpResp);
-                    chain.doFilter(request, httpRespWrapper);
-                }
-            }
+        HttpSession session = httpReq.getSession(false);
+        if (session == null) {
+            LOG.warn("CSRFValidationFilter: No session found for state-changing request");
+            httpResp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            httpResp.getWriter().write(sendResponseText(httpResp, "Unauthorized"));
+            return;
+        }
+
+        String tokenFromSession = (String) session.getAttribute(CSRF_TOKEN_NAME);
+        if (tokenFromSession == null) {
+            LOG.warn("CSRFValidationFilter: No CSRF token in session for state-changing request");
+            httpResp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            httpResp.getWriter().write(sendResponseText(httpResp, "Unauthorized"));
+            return;
+        }
+
+        if (!MessageDigest.isEqual(tokenFromSession.getBytes(), tokenFromHeader.getBytes())) {
+            LOG.warn("CSRFValidationFilter: Token from request header does not match session token!");
+            httpResp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            httpResp.getWriter().write(sendResponseText(httpResp, "ACCESS_DENIED"));
+            return;
+        }
+
+        // Token is valid - rotate it for single-use protection
+        String newToken = this.generateToken();
+        session.setAttribute(CSRF_TOKEN_NAME, newToken);
+
+        HttpServletResponseWrapper httpRespWrapper = new HttpServletResponseWrapper(httpResp);
+        StringBuilder sb = new StringBuilder(2048);
+        sb.append(this.determineCookieName(httpReq)).append("=").append(newToken).append("; Path=/; HttpOnly; Secure; SameSite=Strict");
+        httpRespWrapper.addHeader("Set-Cookie", sb.toString());
+
+        chain.doFilter(request, httpRespWrapper);
     }
+
+    /**
+     * Check if the request path is exempt from CSRF validation using exact path matching.
+     */
+    private boolean isExemptPath(String requestURI) {
+        for (String exemptPath : EXEMPT_PATHS) {
+            if (requestURI.equals(exemptPath)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override    public void init(FilterConfig filterConfig) throws ServletException {
-        List<String> urls= new DynamicStringListProperty(TARGET_ORIGIN_JVM_PARAM_NAME,"",",").get();
+        String originProp = System.getProperty(TARGET_ORIGIN_JVM_PARAM_NAME, "");
+        List<String> urls = originProp.isEmpty() ? List.of() : List.of(originProp.split(","));
             this.targetOrigins =new ArrayList<>();
             urls.forEach(url -> {
                 try {
                     this.targetOrigins.add(new URL(url));
                 } catch (MalformedURLException e) {
-                     LOG.error("Cannot init the filter !", e.getMessage());
+                     LOG.error("Cannot init the filter!", e);
                 }
             });
         LOG.info("CSRFValidationFilter: Filter init, set expected target origin to '{}'.", this.targetOrigins);
@@ -145,7 +186,7 @@ public class CSRFValidationFilter implements Filter {
     /**     * Generate a new CSRF token     *     * @return The token a string     */    private String generateToken() {
         byte[] buffer = new byte[50];
         this.secureRandom.nextBytes(buffer);
-        return DatatypeConverter.printHexBinary(buffer);
+        return HexFormat.of().withUpperCase().formatHex(buffer);
     }
     /**     * Determine the name of the CSRF cookie for the targeted backend service     *     * @param httpRequest Source HTTP request     * @return The name of the cookie as a string     */    private String determineCookieName(HttpServletRequest httpRequest) {
         return CSRF_TOKEN_NAME;
@@ -155,32 +196,37 @@ public class CSRFValidationFilter implements Filter {
         try {
             jsonObj.put("text", message);
         } catch (JSONException e) {
-            LOG.error("JSON exception in "+message,e.getMessage());
+            LOG.error("JSON exception in sendResponseText", e);
         }
         return jsonObj.toString();
     }
-    /**     * Add the CSRF token cookie and header to the provided HTTP response object     *     * @param httpRequest  Source HTTP request     * @param httpResponse HTTP response object to update     */    private String addTokenCookieAndHeader(HttpServletRequest httpRequest, HttpServletResponse httpResponse) {
-        String token = this.generateToken();
-        return token;
-    }
     private static final class DefaultRequiresCsrfMatcher implements RequestMatcher    {
-        private List<String> methods = new DynamicStringListProperty("CSRF_WHITELIST", "", ",").get();
+        private static final String whitelistProp = System.getProperty("CSRF_WHITELIST", "");
+        private List<String> methods = whitelistProp.isEmpty() ? List.of() : List.of(whitelistProp.split(","));
       private final Set<String> allowedMethods = new HashSet<String>(methods);
       public boolean matches(HttpServletRequest request)
       {
         return !this.allowedMethods.contains(request.getMethod());
       }
     }
-    
+
+    private boolean isAllowedOrigin(String originOrReferer) {
+        try {
+            URL url = new URL(originOrReferer);
+            for (URL allowed : this.targetOrigins) {
+                if (allowed.getHost().equalsIgnoreCase(url.getHost())
+                        && allowed.getPort() == url.getPort()
+                        && allowed.getProtocol().equalsIgnoreCase(url.getProtocol())) {
+                    return true;
+                }
+            }
+        } catch (MalformedURLException e) {
+            LOG.warn("CSRFValidationFilter: Malformed origin/referer URL: {}", originOrReferer);
+        }
+        return false;
+    }
+
     private String getSourceIP(HttpServletRequest request) {
-		String sourceIP = "";
-		String xForwardedFor = request.getHeader("X-FORWARDED-FOR");
-		if (xForwardedFor != null) {
-			String[] xforwardedIPs = xForwardedFor.split(",");
-			sourceIP = xforwardedIPs[0].replaceAll("[^0-9.:]", "");
-		} else {
-			sourceIP = request.getServerName();
-		}
-		return sourceIP;
+		return request.getRemoteAddr();
 	}
 }

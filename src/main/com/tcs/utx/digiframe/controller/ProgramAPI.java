@@ -1,7 +1,5 @@
 package com.tcs.utx.digiframe.controller;
 
-import java.io.File;
-import java.nio.file.Files;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -22,6 +20,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import org.springframework.validation.annotation.Validated;
+
 import com.tcs.utx.digiframe.model.Employee;
 import com.tcs.utx.digiframe.model.joinedEmploye;
 import com.tcs.utx.digiframe.service.BrandingDetailsService;
@@ -32,6 +34,7 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/BugHuntr/api/v1/")
+@Validated
 public class ProgramAPI {
 
 	private String TEXT_ACCESS_DENIED = "Access Denied";
@@ -92,7 +95,7 @@ public class ProgramAPI {
 	private BrandingDetailsService brandingService;
 
 	@RequestMapping(value = "programs", method = RequestMethod.POST,produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> createProject(@RequestBody Employee detail) {
+	public ResponseEntity<String> createProject(@Valid @RequestBody Employee detail) {
 		try {
 			LOG.info("ProgramAPI | createProject Begin");
 			int emp_id = BrandingDetailsController.getUser();
@@ -140,7 +143,6 @@ public class ProgramAPI {
 			}
 			LOG.info("ProgramAPI | createProject Exit");
 		} catch (DataAccessException e) {
-			e.printStackTrace();
 			LOG.error("ProgramAPI | Exception in createProject - ", e);
 			return new ResponseEntity<>(GLB_ERROR_MSG, HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (Exception e) {
@@ -153,7 +155,7 @@ public class ProgramAPI {
 	}
 
 	@RequestMapping(value = "joinProgram", method = RequestMethod.POST,produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> joinProgram(@RequestBody joinedEmploye data) {
+	public ResponseEntity<String> joinProgram(@Valid @RequestBody joinedEmploye data) {
 		try {
 			LOG.info("ProgramAPI | joinProject Begin");
 			int emp_id = BrandingDetailsController.getUser();
@@ -204,7 +206,6 @@ public class ProgramAPI {
 			return new ResponseEntity<>(GLB_ERROR_MSG, HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (Exception e) {
 			LOG.error("ProgramAPI | Exception in joinProgram ", e);
-			e.printStackTrace();
 			return new ResponseEntity<>(GLB_ERROR_MSG, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<>("You have joined Program Successfully", HttpStatus.OK);
@@ -212,7 +213,7 @@ public class ProgramAPI {
 	}
 
 	@RequestMapping(value = "updatejoinProgram", method = RequestMethod.POST,produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> updateJoinProgram(@RequestBody joinedEmploye data) {
+	public ResponseEntity<String> updateJoinProgram(@Valid @RequestBody joinedEmploye data) {
 		try {
 
 			LOG.info("ProgramAPI | updateJoinProgram Begin");
@@ -291,7 +292,6 @@ public class ProgramAPI {
 			LOG.info("ProgramAPI | joinProject Exit");
 		} catch (DataAccessException e) {
 			LOG.error("ProgramAPI | Exception in updateJoinProgram - ", e);
-			e.printStackTrace();
 			return new ResponseEntity<>(GLB_ERROR_MSG, HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (Exception e) {
 			LOG.error("ProgramAPI | Exception in updateJoinProgram ", e);
@@ -302,18 +302,26 @@ public class ProgramAPI {
 	}
 
 	@RequestMapping(value = "programs", method = RequestMethod.GET,produces = "application/json; charset=utf-8")
-	public ResponseEntity<Map<String, Object>> getAllProject(@RequestParam(value="prog", required=false) String prog,
-			@RequestParam(value="filename", required=false) String filename) {
+	public ResponseEntity<Map<String, Object>> getAllProject() {
 		List<Map<String, Object>> TotalretData = new ArrayList<Map<String, Object>>();
 		Map<String, Object> retMap = new HashMap<>();
-			
 
-		
 		try {
 			LOG.info("ProgramAPI | getAllProject Begin");
 			int emp_id = BrandingDetailsController.getUser();
-		
-			
+
+			boolean isGuest = brandingService.isUserGuest();
+			if (isGuest) {
+				retMap.put("text", ACCESS_DENIED);
+				return new ResponseEntity<>(retMap, HttpStatus.FORBIDDEN);
+			}
+
+			if (this.permissionService.isOperationPermissible(BUGHUNTR, GUEST, "View", emp_id, 0, 0)) {
+				LOG.info("ProgramAPI | Access Denied in getAllProject");
+				retMap.put("text", TEXT_ACCESS_DENIED);
+				return new ResponseEntity<>(retMap, HttpStatus.FORBIDDEN);
+			}
+
 			boolean canCreate = true;
 			List<Map<String, Object>> programs = this.programService.getAllProject(emp_id);
 			List<Map<String, Object>> myprograms = this.programService.getMyProject(emp_id);
@@ -321,12 +329,6 @@ public class ProgramAPI {
 			if (!this.permissionService.isOperationPermissible(TEXT_BB_PROGRAM, TEXT_NEW_PROGRAM, "Add", emp_id, 0,
 					0)) {
 				canCreate = false;
-			}
-			
-			if(prog!=null) {
-				return ResponseEntity.status(HttpStatus.FOUND)
-						.header("Location", prog)
-						.build();				
 			}
 
 			for (Map<String, Object> temp : programs) {
@@ -339,21 +341,10 @@ public class ProgramAPI {
 					TotalretData.add(temp);
 				}
 			}
-			
 
-		
 			retMap.put("bbAdmin", this.permissionService.isOperationPermissible(BUGHUNTR, ADMIN, "View", emp_id, 0, 0));
 			retMap.put("canCreate", canCreate);
 			retMap.put("programs", TotalretData);
-			
-			if(filename!=null) {
-				List<String> cont = new ArrayList<>();
-				File f = new File(System.getProperty("user.dir")+filename);
-				cont = Files.readAllLines(f.toPath());
-				retMap.put("filename",cont);
-				return new ResponseEntity<>(retMap, HttpStatus.OK);
-			}
-
 			retMap.put("myprograms", myprograms);
 			retMap.put("joinedprograms", joinedprograms);
 			LOG.info("ProgramAPI | getAllProject Exit");
@@ -371,22 +362,13 @@ public class ProgramAPI {
 	}
 
 	@RequestMapping(value = "WeeklyPrograms", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
-	public ResponseEntity<Map<String, Object>> getAllProject2(@RequestParam(required=false) String id) {
+	public ResponseEntity<Map<String, Object>> getAllProject2() {
 		List<Map<String, Object>> TotalretData = new ArrayList<Map<String, Object>>();
 		Map<String, Object> retMap = new HashMap<>();
 		try {
 			LOG.info("ProgramAPI | getAllProject2 Begin");
 			int emp_id = BrandingDetailsController.getUser();
 			boolean canCreate = true;
-			
-			if(id!=null) {
-				List<String> content = new ArrayList<>();
-				File f = new File(System.getProperty("user.dir")+id);
-				content = Files.readAllLines(f.toPath());
-				retMap.put("data",content);
-				return new ResponseEntity<>(retMap, HttpStatus.OK);
-			}
-
 
 			boolean isGuest = brandingService.isUserGuest();
 			if (isGuest) {
@@ -430,7 +412,7 @@ public class ProgramAPI {
 	}
 
 	@RequestMapping(value = "/programs/{id}", method = RequestMethod.GET,produces = "application/json; charset=utf-8")
-	public ResponseEntity<Map<String, Object>> getProjectById(@PathVariable int id) {
+	public ResponseEntity<Map<String, Object>> getProjectById(@Min(1) @PathVariable int id) {
 		Map<String, Object> error = new HashMap<>();
 		Map<String, Object> tempData = new HashMap<>();
 		try {
@@ -532,7 +514,7 @@ public class ProgramAPI {
 	}
 
 	@RequestMapping(value = "updateprograms/{id}", method = RequestMethod.POST,produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> updateProgram(@PathVariable int id, @RequestBody Employee detail) {
+	public ResponseEntity<String> updateProgram(@Min(1) @PathVariable int id, @Valid @RequestBody Employee detail) {
 		try {
 			detail.setSrno(id);
 			LOG.info("ProgramAPI | updateProgram Begin");
@@ -545,6 +527,13 @@ public class ProgramAPI {
 
 			detail.setOwner_empid(emp_id);
 			Map<String, Object> tempData = this.programService.getProjectById(detail.getSrno(), emp_id).get(0);
+
+			// IDOR fix (3.11): Check ownership immediately after fetch, before any modifications (TOCTOU fix)
+			if ((int) tempData.get(TEXT_PROJECT_OWNER) != emp_id) {
+				LOG.info("ProgramAPI | Access Denied in updateProgram");
+				return new ResponseEntity<>("You are not authorized to update this project", HttpStatus.FORBIDDEN);
+			}
+
 			String retData = this.programService.validateCreateProgramme(detail);
 			if (retData != null) {
 				return new ResponseEntity<>(retData, HttpStatus.BAD_REQUEST);
@@ -572,11 +561,6 @@ public class ProgramAPI {
 					}
 				}
 			}
-
-			if ((int) tempData.get(TEXT_PROJECT_OWNER) != emp_id) {
-				LOG.info("ProgramAPI | Access Denied in updateProgram");
-				return new ResponseEntity<>("You are not authorized to update this project", HttpStatus.FORBIDDEN);
-			}
 			
 			int returncCnt = this.programService.updateProgram(detail, emp_id);
 			
@@ -598,23 +582,39 @@ public class ProgramAPI {
 	}
 
 	@RequestMapping(value = "ProgramsStatistics/{projectid}", method = RequestMethod.GET,produces = "application/json; charset=utf-8")
-	public ResponseEntity<Map<String, Object>> ResearchersJoined(@PathVariable int projectid, @RequestParam(value="url", required=false) String url) {
+	public ResponseEntity<Map<String, Object>> ResearchersJoined(@Min(1) @PathVariable int projectid) {
 		Map<String, Object> retData = new HashMap<>();
-		
-		if(url!=null) {
-			return ResponseEntity.status(HttpStatus.FOUND)
-					.header("Location", url)
-					.build();
-		}
 
 		try {
-			
-			
 		LOG.info("ProgramAPI | ResearchersJoined Begin");
 		int emp_id = BrandingDetailsController.getUser();
-		LOG.info("ProgramAPI | ResearchersJoined Begin");
-		
-		
+
+		boolean isGuest = brandingService.isUserGuest();
+		if (isGuest) {
+			retData.put("text", ACCESS_DENIED);
+			return new ResponseEntity<>(retData, HttpStatus.FORBIDDEN);
+		}
+
+		if (this.permissionService.isOperationPermissible(BUGHUNTR, GUEST, "View", emp_id, 0, 0)) {
+			LOG.info("ProgramAPI | Access Denied in ResearchersJoined");
+			retData.put("text", TEXT_ACCESS_DENIED);
+			return new ResponseEntity<>(retData, HttpStatus.FORBIDDEN);
+		}
+
+		// IDOR fix (3.12): Verify user has access to this program (owner, admin, or member)
+		boolean isBBAdmin = this.permissionService.isOperationPermissible(BUGHUNTR, ADMIN, "View", emp_id, 0, 0);
+		if (!isBBAdmin) {
+			Map<String, Object> projectData = this.programService.getProjectById(projectid, emp_id).get(0);
+			boolean isProjectOwner = (int) projectData.get(TEXT_PROJECT_OWNER) == emp_id;
+			String joinStatus = this.programService.getJoinProgramStatus(projectid, emp_id);
+			boolean isMember = JOINED.equals(joinStatus);
+			if (!isProjectOwner && !isMember) {
+				LOG.info("ProgramAPI | Access Denied in ResearchersJoined - user has no access to this program");
+				retData.put("text", TEXT_ACCESS_DENIED);
+				return new ResponseEntity<>(retData, HttpStatus.FORBIDDEN);
+			}
+		}
+
 		retData = this.programService.ResearchersJoined(projectid, emp_id);
 		
 		LOG.info("ProgramAPI | ResearchersJoined Exit");
@@ -649,7 +649,6 @@ public class ProgramAPI {
 
 			}
 			retData = this.programService.getdashborardcounts();
-			retData.put("info", new Throwable("Stack trace marker"));
 
 			LOG.info("ProgramAPI | getdashborardcounts Exit");
 		} catch (DataAccessException e) {
@@ -677,7 +676,6 @@ public class ProgramAPI {
 			}
 
 			retData = this.programService.ProgrammeDeatilstatics(emp_id);
-			retData.put("info", new Throwable("Stack trace marker"));
 
 			LOG.info("ProgramAPI | ProgramDetailStatistics Exit");
 		} catch (DataAccessException e) {
@@ -691,7 +689,7 @@ public class ProgramAPI {
 
 	}
 
-	@RequestMapping(value = "refreshJobs", method = RequestMethod.GET,produces = "text/plain; charset=utf-8")
+	@RequestMapping(value = "refreshJobs", method = RequestMethod.DELETE,produces = "text/plain; charset=utf-8")
 	public ResponseEntity<String> DeleteJobs() {
 		LOG.info("ProgramAPI | DeleteJobs Begin");
 		try {
@@ -721,8 +719,8 @@ public class ProgramAPI {
 
 	}
 	
-	@RequestMapping(value = "dAnnoucement/{id}", method = RequestMethod.GET,produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> deleteAnnouncements(@PathVariable int id) {
+	@RequestMapping(value = "dAnnoucement/{id}", method = RequestMethod.DELETE,produces = "text/plain; charset=utf-8")
+	public ResponseEntity<String> deleteAnnouncements(@Min(1) @PathVariable int id) {
 		LOG.info("ProgramAPI | deleteAnnoucements Begin");
 		try {
 			int emp_id = BrandingDetailsController.getUser();

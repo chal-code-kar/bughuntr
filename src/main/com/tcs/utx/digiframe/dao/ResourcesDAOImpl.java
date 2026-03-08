@@ -123,8 +123,8 @@ public class ResourcesDAOImpl implements ResourcesDAO {
 	@Override
 	public void addcateogoryitem(Resources resources) {
 		try {
-		jdbcTemplate.update("INSERT INTO b_standardguidelines(masterid,paneltitle,paneldescription,entries)"
-				+ " VALUES('"+resources.getMasterid()+"','"+resources.getPaneltitle()+"','"+resources.getPaneldescription()+"','"+resources.getEntries()+"')");
+		jdbcTemplate.update("INSERT INTO b_standardguidelines(masterid, paneltitle, paneldescription, entries) VALUES(?, ?, ?, ?)",
+				resources.getMasterid(), resources.getPaneltitle(), resources.getPaneldescription(), resources.getEntries());
 		}
 		catch(DataAccessException e) {
 			LOG.error(ERROR_MSG_7, e);
@@ -134,9 +134,8 @@ public class ResourcesDAOImpl implements ResourcesDAO {
 	@Override
 	public void updateresources(int id, Resources editresources) {
 		try {
-			this.jdbcTemplate.update("UPDATE b_standardguidelines "
-					+ "SET masterid='"+editresources.getMasterid()+"', paneltitle='"+editresources.getPaneltitle()+"', paneldescription='"+editresources.getPaneldescription()+"'"
-					+ ", entries='"+editresources.getEntries()+"' WHERE id='"+id+"'");
+			this.jdbcTemplate.update("UPDATE b_standardguidelines SET masterid = ?, paneltitle = ?, paneldescription = ?, entries = ? WHERE id = ?",
+					editresources.getMasterid(), editresources.getPaneltitle(), editresources.getPaneldescription(), editresources.getEntries(), id);
 
 		}
 		catch(DataAccessException e) {

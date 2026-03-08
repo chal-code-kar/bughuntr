@@ -240,8 +240,8 @@ public class PermissionHelperDAOImpl implements PermissionHelperDAO {
 	@Override
 	public List<Map<String, Object>> getEmployeeDetail(String employeeid) {
 		try {
-			List<Map<String, Object>> userName=null;    
-			  userName= jdbcTemplate.queryForList("select * from ssa_eai_hr_emp_basic_dtls where employee_number = '"+employeeid+"'");
+			List<Map<String, Object>> userName=null;
+			  userName= jdbcTemplate.queryForList("select * from ssa_eai_hr_emp_basic_dtls where employee_number = ?", employeeid);
 		        
 		        return userName;
 		       

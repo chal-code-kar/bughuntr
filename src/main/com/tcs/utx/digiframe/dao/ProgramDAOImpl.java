@@ -132,7 +132,7 @@ public class ProgramDAOImpl implements ProgramDAO {
 			return null;
 		} catch (DataAccessException e) {
 			LOG.error(ERROR_MSG_1, e);
-			return e.getMessage();
+			return "An error occurred while creating the project";
 		}
 	}
 

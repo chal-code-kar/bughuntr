@@ -28,7 +28,7 @@
     "font-awesome": "^4.7.0",
     "highcharts": "^10.2.0",
     "highcharts-angular": "^3.0.0",
-    "jquery": "^3.6.4",
+    "jquery": "^3.7.1",
     "markdown-it": "^13.0.1",
     "ngx-cookie-service": "^17.1.0",
     "ngx-markdown": "^17.2.1",

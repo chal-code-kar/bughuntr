@@ -52,7 +52,7 @@ export class AdminHistoryComponent implements OnInit {
     this.confirmationService.confirm({
       message: `Are you sure you want to delete ?`,
       accept: () => {
-        this.http.get(environment.apiURL + 'deleteHistory/' + srno, { responseType: 'text' })
+        this.http.delete(environment.apiURL + 'deleteHistory/' + srno, { responseType: 'text' })
           .subscribe(
             data => {
               this.messageService.add({ severity: 'success', summary: 'Success', detail: "Deleted Succcessfully!" });

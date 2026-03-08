@@ -53,7 +53,7 @@ export class ManageGetalldropdownComponent implements OnInit {
     this.confirmationService.confirm({
       message: `Are you sure you want to delete ?`,
       accept: () => {
-        this.http.get(environment.apiURL + 'deleteDropdown/' + id, { responseType: 'text' })
+        this.http.delete(environment.apiURL + 'deleteDropdown/' + id, { responseType: 'text' })
           .subscribe(data => {
               this.messageService.add({ severity: 'success', summary: 'Success', detail: "Deleted Succcessfully!" });
              this.GetAllDropdown();
@@ -80,7 +80,7 @@ export class ManageGetalldropdownComponent implements OnInit {
 
   editOption(id) {
 
-    this.router.navigate(['manage-edit/' + id]);
+    this.router.navigate(['manage-edit', id]);
   }
 
 }

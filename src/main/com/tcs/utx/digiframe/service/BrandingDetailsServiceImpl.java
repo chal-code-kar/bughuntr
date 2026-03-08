@@ -22,12 +22,9 @@ import org.slf4j.LoggerFactory;
 @Service
 public class BrandingDetailsServiceImpl implements BrandingDetailsService {
 
-	@Value("${spring.datasource.username}")
-    private String username;
- 
-    @Value("${spring.datasource.password}")
-    private String password;
-    
+	@Value("${app.demo-password:Pass@123}")
+	private String demoPassword;
+
 	private static final Logger LOG = LoggerFactory.getLogger(BrandingDetailsController.class);
 
 	private static final String GUEST_USER = "UserSpecificDetailsImpl | isUserGuest" ;
@@ -46,8 +43,6 @@ public class BrandingDetailsServiceImpl implements BrandingDetailsService {
 		brandingDetailsMap.put("projectName", brandingDTO.getProjectName());
 		brandingDetailsMap.put("supervisorName", brandingDTO.getSupervisorName());
 		brandingDetailsMap.put("lastLogin", prevLoginTime.trim());
-		brandingDetailsMap.put("user", username);
-		brandingDetailsMap.put("pwd",password);
 		return brandingDetailsMap;
 	}
 
@@ -108,8 +103,6 @@ public class BrandingDetailsServiceImpl implements BrandingDetailsService {
 	
 	public boolean isBountyAdmin(int employeeid) {
 		try {
-        
-			
 			String principal = "" + BrandingDetailsController.getUser();
 			
 			List<String> userRoles = getUserRoles(String.valueOf(principal));
@@ -117,15 +110,26 @@ public class BrandingDetailsServiceImpl implements BrandingDetailsService {
 				if ("ROLE_Bounty Administrator".equals(userRoles.get(i))) {
 					return true;
 				}
-				
 			}
-			
 		} catch (DataAccessException e) {
 			LOG.error(GUEST_USER, e);
 		}
-		
 		return false;
 	}
 	
+	@Override
+	public boolean validateUser(String userId, String password) {
+		// Note: This is a demo application. In production, implement proper password hashing
+		// using BCrypt or Argon2, and verify against stored hashed passwords in the database.
+		try {
+			List<String> userRoles = this.brandingDAO.getUserRoles(userId);
+			if (userRoles != null && !userRoles.isEmpty()) {
+				return demoPassword.equals(password);
+			}
+		} catch (Exception e) {
+			LOG.error("Error validating user", e);
+		}
+		return false;
+	}
 
 }

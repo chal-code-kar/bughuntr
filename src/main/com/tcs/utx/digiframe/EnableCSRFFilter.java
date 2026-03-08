@@ -1,36 +1,20 @@
 package com.tcs.utx.digiframe;
 
-import java.io.IOException;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
-
-import org.springframework.core.annotation.Order;
-
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import com.tcs.utx.digiframe.util.CSRFValidationFilter;
 
-@WebFilter("/api/*")
-@Order(1)
-public class EnableCSRFFilter extends CSRFValidationFilter{
+@Configuration
+public class EnableCSRFFilter {
 
-	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-			throws IOException, ServletException {
-		super.doFilter(request, response, chain);
+	@Bean
+	public FilterRegistrationBean<CSRFValidationFilter> csrfValidationFilter() {
+		FilterRegistrationBean<CSRFValidationFilter> registrationBean = new FilterRegistrationBean<>();
+		registrationBean.setFilter(new CSRFValidationFilter());
+		registrationBean.addUrlPatterns("/BugHuntr/api/*");
+		registrationBean.setOrder(1);
+		return registrationBean;
 	}
-
-	@Override
-	public void init(FilterConfig filterConfig) throws ServletException {
-		super.init(filterConfig);
-	}
-
-	@Override
-	public void destroy() {
-		super.destroy();
-	}
-	
 }

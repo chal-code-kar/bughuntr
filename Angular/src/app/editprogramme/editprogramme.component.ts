@@ -128,7 +128,7 @@ export class EditprogrammeComponent implements OnInit {
 
     this.projectid = this.route.snapshot.params['srno'];
 
-    this.http.get(environment.apiURL + 'refreshJobs', { responseType: 'text' }).subscribe(response => {
+    this.http.delete(environment.apiURL + 'refreshJobs', { responseType: 'text' }).subscribe(response => {
       this.getProjectDetails();
     }, error => {
       if (error.error == "You are not Program Admin!") {
@@ -336,7 +336,7 @@ export class EditprogrammeComponent implements OnInit {
       this.confirmationService.confirm({
         message: `Are you sure you want to delete ?`,
         accept: () => {
-          this.http.get(environment.apiURL + 'dAnnoucement/' + srno, { responseType: 'text' })
+          this.http.delete(environment.apiURL + 'dAnnoucement/' + srno, { responseType: 'text' })
             .subscribe(
               data => {
                 this.messageService.add({ severity: 'success', detail: data });

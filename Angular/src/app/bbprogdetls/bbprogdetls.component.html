@@ -3,12 +3,12 @@
     <div class="font-medium text-3xl text-900">BB{{project.srno}} - {{project.bprogramme_name}}</div>
     <div class="mt-3 md:mt-0">
       <p-button *ngIf="project.iseditable && project.status!='DEACTIVE'" class="px-2" label="Edit"
-        [routerLink]="['/EditProgramme/' + srno]" icon="pi pi-pencil"></p-button>
+        [routerLink]="['/EditProgramme', srno]" icon="pi pi-pencil"></p-button>
       <p-button *ngIf="!project.iseditable && !project.bbAdmin && project.isprogramjoined" class="px-2"
-        label="Report Vulnerability" [routerLink]="['/ReportVulnerability/' + project.srno]" icon="pi pi-plus">
+        label="Report Vulnerability" [routerLink]="['/ReportVulnerability', project.srno]" icon="pi pi-plus">
       </p-button>
       <p-button *ngIf="project.iseditable || project.bbAdmin || project.isprogramjoined" class="px-2"
-        label="View Vulnerabilities" [routerLink]="['/ViewVulnerabilities/' + project.srno]" icon="pi pi-eye"
+        label="View Vulnerabilities" [routerLink]="['/ViewVulnerabilities', project.srno]" icon="pi pi-eye"
         styleClass="p-button-primary">
       </p-button>
     </div>

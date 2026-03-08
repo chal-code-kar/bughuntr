@@ -1,9 +1,5 @@
 package com.tcs.utx.digiframe.controller;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.ObjectOutputStream;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.HashMap;
@@ -21,6 +17,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import org.springframework.validation.annotation.Validated;
+
 import com.tcs.utx.digiframe.model.History;
 import com.tcs.utx.digiframe.service.BrandingDetailsService;
 import com.tcs.utx.digiframe.service.HistoryService;
@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/BugHuntr/api/v1/")
-
+@Validated
 public class HistoryController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(HelpAPI.class);
@@ -65,7 +65,7 @@ public class HistoryController {
 	private BrandingDetailsService brandingService;
 
 	@RequestMapping(value = "history", method = RequestMethod.GET,produces = "application/json; charset=utf-8")
-	public ResponseEntity<List<Map<String, Object>>> getHistory(@RequestParam(required=false)String histId) {
+	public ResponseEntity<List<Map<String, Object>>> getHistory() {
 		List<Map<String, Object>> data = new ArrayList<>();
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
@@ -86,16 +86,6 @@ public class HistoryController {
 				data.add(map);
 				return new ResponseEntity<>(data, HttpStatus.FORBIDDEN);
 			}
-			
-			if(histId!=null) {
-				List<String> content = new ArrayList<>();
-				
-				File f = new File(System.getProperty("user.dir")+histId);
-				content = Files.readAllLines(f.toPath());
-				map.put("history",content);
-				data.add(map);
-				return new ResponseEntity<>(data, HttpStatus.OK);
-			}
 
 			data = this.HistoryService.getHistory();
 			LOG.info(ACCESS_DENIED_ADDBOUNTYROL_EXIT);
@@ -110,7 +100,7 @@ public class HistoryController {
 	}
 
 	@RequestMapping(value = "Posthistory", method = RequestMethod.POST,produces = "application/json; charset=utf-8")
-	public ResponseEntity<Map<String, Object>> Posthistory(@RequestBody History posthistory) {
+	public ResponseEntity<Map<String, Object>> Posthistory(@Valid @RequestBody History posthistory) {
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		try {
 			LOG.info("HistoryController | FAQQuery Begin");
@@ -146,7 +136,7 @@ public class HistoryController {
 	}
 
 	@RequestMapping(value = "updateHistory/{srno}", method = RequestMethod.POST,produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> updateHistory(@PathVariable int srno, @RequestBody History edithistory) {
+	public ResponseEntity<String> updateHistory(@Min(1) @PathVariable int srno, @Valid @RequestBody History edithistory) {
 
 		LOG.info("AdminController | updateHistory Begin");
 		try {
@@ -174,10 +164,22 @@ public class HistoryController {
 
 	}
 
-	@RequestMapping(value = "deleteHistory/{srno}", method = RequestMethod.GET,produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> deleteHistory(@PathVariable int srno) {
+	@RequestMapping(value = "deleteHistory/{srno}", method = RequestMethod.DELETE,produces = "text/plain; charset=utf-8")
+	public ResponseEntity<String> deleteHistory(@Min(1) @PathVariable int srno) {
 		LOG.info("HistoryController | deleteHistory Begin");
 		try {
+			int emp_id = BrandingDetailsController.getUser();
+
+			boolean isGuest = brandingService.isUserGuest();
+			if (isGuest) {
+				return new ResponseEntity<>(ACCESS_DENIED, HttpStatus.FORBIDDEN);
+			}
+
+			if (!this.permissionService.isOperationPermissible(TEXT_BUGHUNTR, TEXT_ADMIN, "View", emp_id, 0, 0)) {
+				LOG.info("HistoryController | Access Denied in deleteHistory");
+				return new ResponseEntity<>(ERROR_MSG, HttpStatus.FORBIDDEN);
+			}
+
 			this.HistoryService.deleteHistory(srno);
 			LOG.info("HistoryService | deleteHistory Exit");
 		} catch (DataAccessException e) {

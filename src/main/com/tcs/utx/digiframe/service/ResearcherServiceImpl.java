@@ -109,6 +109,10 @@ public class ResearcherServiceImpl implements ResearcherService {
 
 	@Override
 	public boolean isAvatarAvailable(String avatarName) {
+		// Path Traversal fix (defense-in-depth): reject invalid avatar names at service layer
+		if (avatarName == null || !avatarName.matches("^[a-zA-Z0-9_-]{1,50}$")) {
+			return false;
+		}
 		return this.researchDAO.isAvatarAvailable(avatarName);
 	}
 

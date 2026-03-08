@@ -15,6 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import org.springframework.validation.annotation.Validated;
+
 import com.tcs.utx.digiframe.model.Faq;
 import com.tcs.utx.digiframe.service.BrandingDetailsService;
 import com.tcs.utx.digiframe.service.FAQService;
@@ -24,7 +28,7 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/BugHuntr/api/v1/")
-
+@Validated
 public class FAQController {
 
 	private static final Logger LOG = LoggerFactory.getLogger(HelpAPI.class);
@@ -71,7 +75,7 @@ public class FAQController {
 	public static final String ACCESS_DENIED_ADDBOUNTYROL_EXCEPTION = "FAQController | Exception in FAQ - ";
 
 	@RequestMapping(value = "FaqPostQuery", method = RequestMethod.POST,produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> FaqPostQuery(@RequestBody Faq faqquery) {
+	public ResponseEntity<String> FaqPostQuery(@Valid @RequestBody Faq faqquery) {
 		try {
 			LOG.info("FAQController | FAQQuery Begin");
 			int emp_id = BrandingDetailsController.getUser();
@@ -136,10 +140,21 @@ public class FAQController {
 		return new ResponseEntity<>(data, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "deleteFAQ/{id}", method = RequestMethod.GET,produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> deleteFAQ(@PathVariable int id) {
+	@RequestMapping(value = "deleteFAQ/{id}", method = RequestMethod.DELETE,produces = "text/plain; charset=utf-8")
+	public ResponseEntity<String> deleteFAQ(@Min(1) @PathVariable int id) {
 		try {
 			LOG.info("FAQController | deleteFAQ Begin");
+			int emp_id = BrandingDetailsController.getUser();
+
+			boolean isGuest = brandingService.isUserGuest();
+			if (isGuest) {
+				return new ResponseEntity<>(ACCESS_DENIED, HttpStatus.FORBIDDEN);
+			}
+
+			if (!this.service.isOperationPermissible(TEXT_BUGHUNTR, TEXT_ADMIN, "View", emp_id, 0, 0)) {
+				LOG.info("FAQController | Access Denied in deleteFAQ");
+				return new ResponseEntity<>(TEXT_NOTADMIN, HttpStatus.FORBIDDEN);
+			}
 
 			this.FAQService.deleteFAQ(id);
 			LOG.info("PermissionHelperController | deleteFAQ Exit");
@@ -154,7 +169,7 @@ public class FAQController {
 	}
 
 	@RequestMapping(value = "updateFAQ/{id}", method = RequestMethod.POST,produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> updateFAQ(@PathVariable int id, @RequestBody Faq editFaq) {
+	public ResponseEntity<String> updateFAQ(@Min(1) @PathVariable int id, @Valid @RequestBody Faq editFaq) {
 		try {
 			LOG.info("FAQController | updateFAQ Begin");
 			int emp_id = BrandingDetailsController.getUser();
@@ -167,9 +182,13 @@ public class FAQController {
 			if (!this.FAQService.validateFAQUpdate(editFaq)) {
 				return new ResponseEntity<>(TEXT_VALIDATION, HttpStatus.BAD_REQUEST);
 			}
-			if (!this.service.isOperationPermissible(TEXT_BUGHUNTR, TEXT_ADMIN, "View", emp_id, 0, 0)) {
-				LOG.info("FAQController | Access Denied in updateFAQ");
-				return new ResponseEntity<>(TEXT_NOTADMIN, HttpStatus.FORBIDDEN);
+			boolean isAdmin = this.service.isOperationPermissible(TEXT_BUGHUNTR, TEXT_ADMIN, "View", emp_id, 0, 0);
+
+			// IDOR fix: If user is NOT admin AND the FAQ was not created by them, deny access
+			if (!isAdmin) {
+				// FAQ table does not track ownership; only admins can update FAQs
+				LOG.info("FAQController | Access Denied in updateFAQ - non-admin user cannot update FAQ");
+				return new ResponseEntity<>(ACCESS_DENIED, HttpStatus.FORBIDDEN);
 			}
 			this.FAQService.updateFAQ(id, editFaq);
 			LOG.info("PermissionHelperController | updateFAQ Exit");

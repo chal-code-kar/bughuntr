@@ -41,7 +41,8 @@ public class BlogDAOImpl implements BlogDAO{
 		try {
 		String emp= Integer.toString(emp_id);
 		jdbcTemplate.update("INSERT INTO b_blog (title, brief, emp_name, createdate, category) "
-				+ "VALUES ('" + blog.getTitle() + "', '" + blog.getBrief() + "', (SELECT full_name FROM ssa_eai_hr_emp_basic_dtls WHERE employee_number = '" + emp + "'), NOW(), '" + blog.getCategory() + "')");
+				+ "VALUES (?, ?, (SELECT full_name FROM ssa_eai_hr_emp_basic_dtls WHERE employee_number = ?), NOW(), ?)",
+				blog.getTitle(), blog.getBrief(), emp, blog.getCategory());
 		}catch(DataAccessException e) {
 	    	LOG.error(ERROR_MSG_2, e);
 		}
@@ -60,7 +61,8 @@ public class BlogDAOImpl implements BlogDAO{
 	@Override
 	public void updateBlog(Blog blog) {
 		try {
-		jdbcTemplate.update("UPDATE b_blog SET title = '" + blog.getTitle() + "', brief = '" + blog.getBrief() + "', category = '" + blog.getCategory() + "' WHERE srno = '" + blog.getSrno() + "'");
+		jdbcTemplate.update("UPDATE b_blog SET title = ?, brief = ?, category = ? WHERE srno = ?",
+				blog.getTitle(), blog.getBrief(), blog.getCategory(), blog.getSrno());
 		}catch(DataAccessException e) {
     	LOG.error(ERROR_MSG_4, e);
 	}

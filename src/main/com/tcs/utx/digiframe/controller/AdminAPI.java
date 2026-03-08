@@ -16,6 +16,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import org.springframework.validation.annotation.Validated;
+
 import com.tcs.utx.digiframe.model.Menu;
 import com.tcs.utx.digiframe.service.AdminService;
 import com.tcs.utx.digiframe.service.BrandingDetailsService;
@@ -25,6 +29,7 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/BugHuntr/api/v1/")
+@Validated
 public class AdminAPI {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ResearcherAPI.class);
@@ -50,10 +55,11 @@ public class AdminAPI {
 
 	
 	@RequestMapping(value = "menus", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
-	public ResponseEntity<Map<String, Object>> getMenus(@RequestParam(value="link", required=false) String link) {
+	public ResponseEntity<Map<String, Object>> getMenus() {
 
 		Map<String, Object> retData = new HashMap<>();
 		try {
+			int emp_id = BrandingDetailsController.getUser();
 
 			boolean isGuest = brandingService.isUserGuest();
 
@@ -62,18 +68,17 @@ public class AdminAPI {
 				return new ResponseEntity<>(retData, HttpStatus.FORBIDDEN);
 			}
 
+			if (!this.permissionService.isOperationPermissible(BUGHUNTR, ADMIN, "View", emp_id, 0, 0)) {
+				LOG.info("AdminController | Access Denied in getMenus");
+				retData.put("text", ACCESS_DENIED);
+				return new ResponseEntity<>(retData, HttpStatus.FORBIDDEN);
+			}
+
 			List<Map<String, Object>> content = new ArrayList<>();
 
 			content = this.service.getMenus();
 			retData.put("content", content);
-			retData.put("info",new Throwable("Stack trace marker"));
 			LOG.info("AdminController | getMenus Exit");
-			
-			if(link!=null) {
-				return ResponseEntity.status(HttpStatus.FOUND)
-						.header("Location", link)
-						.build();
-			}
 
 		} catch (DataAccessException e) {
 			LOG.error("AdminController | Exception in getMenus ", e);
@@ -86,7 +91,7 @@ public class AdminAPI {
 	}
 
 	@RequestMapping(value = "addMenu", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> addMenu(@RequestBody Menu data) {
+	public ResponseEntity<String> addMenu(@Valid @RequestBody Menu data) {
 		LOG.info("AdminController | addMenu Begin");
 
 		try {
@@ -95,12 +100,12 @@ public class AdminAPI {
 			boolean isGuest = brandingService.isUserGuest();
 
 			if (isGuest) {
-				return new ResponseEntity<>(ACCESS_DENIED, HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(ACCESS_DENIED, HttpStatus.FORBIDDEN);
 			}
 
 			if (!this.permissionService.isOperationPermissible(BUGHUNTR, ADMIN, "View", emp_id, 0, 0)) {
 				LOG.info("AdminController | Access Denied in addMenu");
-				return new ResponseEntity<>(ERROR_MSG, HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(ERROR_MSG, HttpStatus.FORBIDDEN);
 			}
 
 			if (!this.service.validateMenu(data)) {
@@ -122,8 +127,8 @@ public class AdminAPI {
 
 	}
 
-	@RequestMapping(value = "deleteMenu/{srno}", method = RequestMethod.GET, produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> deleteMenu(@PathVariable int srno) {
+	@RequestMapping(value = "deleteMenu/{srno}", method = RequestMethod.DELETE, produces = "text/plain; charset=utf-8")
+	public ResponseEntity<String> deleteMenu(@Min(1) @PathVariable int srno) {
 		try {
 			LOG.info("BlogController | DeleteBlog Begin");
 			int emp_id = BrandingDetailsController.getUser();
@@ -135,7 +140,7 @@ public class AdminAPI {
 
 			if (!this.permissionService.isOperationPermissible(BUGHUNTR, ADMIN, "View", emp_id, 0, 0)) {
 				LOG.info("AdminController | Access Denied in DeleteMenu");
-				return new ResponseEntity<>(ERROR_MSG, HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(ERROR_MSG, HttpStatus.FORBIDDEN);
 			}
 			this.service.deleteMenu(srno);
 
@@ -150,7 +155,7 @@ public class AdminAPI {
 	}
 
 	@RequestMapping(value = "updateMenu", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> updateMenu(@RequestBody Menu data) {
+	public ResponseEntity<String> updateMenu(@Valid @RequestBody Menu data) {
 		try {
 			LOG.info("AdminController | UpdateMenu Begin");
 
@@ -162,7 +167,7 @@ public class AdminAPI {
 			int emp_id = BrandingDetailsController.getUser();
 			if (!this.permissionService.isOperationPermissible(BUGHUNTR, ADMIN, "View", emp_id, 0, 0)) {
 				LOG.info("AdminController | Access Denied in UpdateMenu");
-				return new ResponseEntity<>(ERROR_MSG, HttpStatus.BAD_REQUEST);
+				return new ResponseEntity<>(ERROR_MSG, HttpStatus.FORBIDDEN);
 			}
 			if (!this.service.validateMenu(data)) {
 				LOG.info("AdminController | Validation Failed in addMenu");

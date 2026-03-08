@@ -1,14 +1,10 @@
 package com.tcs.utx.digiframe.controller;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -22,8 +18,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Valid;
+import jakarta.validation.Validator;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Pattern;
+import org.springframework.validation.annotation.Validated;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tcs.utx.digiframe.model.Researcher;
 import com.tcs.utx.digiframe.service.BrandingDetailsService;
 import com.tcs.utx.digiframe.service.PermissionHelperService;
@@ -33,6 +39,7 @@ import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/BugHuntr/api/v1/")
+@Validated
 public class ResearcherAPI {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ResearcherAPI.class);
@@ -64,6 +71,12 @@ public class ResearcherAPI {
 	@Autowired
 	private BrandingDetailsService brandingService;
 
+	@Autowired
+	private ObjectMapper objectMapper;
+
+	@Autowired
+	private Validator validator;
+
 	@RequestMapping(value = "researchers", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
 	public ResponseEntity<String> addResearchers(MultipartHttpServletRequest request) {
 
@@ -78,8 +91,15 @@ public class ResearcherAPI {
 				return new ResponseEntity<>(ACCESS_DENIED, HttpStatus.FORBIDDEN);
 			}
 
-			user = new com.fasterxml.jackson.databind.ObjectMapper().readValue(request.getParameter("data"),
+			user = objectMapper.readValue(request.getParameter("data"),
 					Researcher.class);
+			Set<ConstraintViolation<Researcher>> violations = validator.validate(user);
+			if (!violations.isEmpty()) {
+				String errorMsg = violations.stream()
+					.map(ConstraintViolation::getMessage)
+					.collect(Collectors.joining(", "));
+				return new ResponseEntity<>(errorMsg, HttpStatus.BAD_REQUEST);
+			}
 			user.setId(emp_id);
 			for (int i = 0; i < data.size(); i++) {
 				if ((int) data.get(i).get(TEXT_EMP_ID) == emp_id) {
@@ -119,7 +139,7 @@ public class ResearcherAPI {
 	}
 
 	@RequestMapping(value = "researchers", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
-	public ResponseEntity<Map<String, Object>> getAllReaserchers(HttpServletResponse response) {
+	public ResponseEntity<Map<String, Object>> getAllReaserchers() {
 		Map<String, Object> data = new HashMap<String, Object>();
 
 		LOG.info("ResearcherController | getAllReaserchers Begin");
@@ -128,9 +148,13 @@ public class ResearcherAPI {
 
 		try {
 
+			boolean isGuest = brandingService.isUserGuest();
+			if (isGuest) {
+				data.put("text", ACCESS_DENIED);
+				return new ResponseEntity<>(data, HttpStatus.FORBIDDEN);
+			}
+
 			a = this.researcherService.getAllReaserchers();
-			
-			response.setHeader("Content-Security-Policy","");
 
 			for (Map<String, Object> row : a) {
 				Researcher temp = new Researcher();
@@ -181,7 +205,7 @@ public class ResearcherAPI {
 	}
 
 	@RequestMapping(value = "researchers/{id}", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
-	public ResponseEntity<Map<String, Object>> getResearcherById(@PathVariable int id) {
+	public ResponseEntity<Map<String, Object>> getResearcherById(@Min(1) @PathVariable int id) {
 		Map<String, Object> data = new HashMap<>();
 		LOG.info("ResearcherController | getResearcherById Begin");
 		try {
@@ -194,10 +218,16 @@ public class ResearcherAPI {
 
 			int emp_id = BrandingDetailsController.getUser();
 			boolean isEditable = false;
-			
-	        
-	        
+			boolean isAdmin = this.permissionService.isOperationPermissible(TEXT_BUGHUNTR, TEXT_ADMIN, "View", emp_id, 0, 0);
+
 			data = this.researcherService.getResearcherById(id).get(0);
+
+			// IDOR fix (3.1): Only allow viewing specific researcher profile if requester is the researcher or admin
+			if (emp_id != (int) data.get(TEXT_EMP_ID) && !isAdmin) {
+				data.clear();
+				data.put("text", ACCESS_DENIED);
+				return new ResponseEntity<>(data, HttpStatus.FORBIDDEN);
+			}
 
 			if (emp_id == (int) data.get(TEXT_EMP_ID)) {
 				isEditable = true;
@@ -217,12 +247,16 @@ public class ResearcherAPI {
 	}
 
 	@RequestMapping(value = "updateresearchers/{id}", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> updateResearcher(@PathVariable int id, @RequestBody Researcher user) {
+	public ResponseEntity<String> updateResearcher(@Min(1) @PathVariable int id, @Valid @RequestBody Researcher user) {
 		try {
 			int emp_id = BrandingDetailsController.getUser();
 			boolean isGuest = brandingService.isUserGuest();
 			if (isGuest) {
 				return new ResponseEntity<>(ACCESS_DENIED, HttpStatus.FORBIDDEN);
+			}
+			// IDOR fix (3.7): Validate path ID matches body ID to prevent parameter tampering
+			if (id != user.getId()) {
+				return new ResponseEntity<>("Path ID does not match request body", HttpStatus.BAD_REQUEST);
 			}
 			String retData = this.researcherService.validateResearchProgramme(user);
 			if (retData != null) {
@@ -244,7 +278,7 @@ public class ResearcherAPI {
 	}
 
 	@RequestMapping(value = "huntHistory", method = RequestMethod.GET, produces = "application/json; charset=utf-8")
-	public List<Map<String, Object>> getAllhuntHistory(@RequestParam(value="huntId", required=false) String huntId) {
+	public List<Map<String, Object>> getAllhuntHistory() {
 		List<Map<String, Object>> retData = new ArrayList<>();
 		Map<String, Object> map = new HashMap<String, Object>();
 		try {
@@ -266,24 +300,7 @@ public class ResearcherAPI {
 				retData.add(map);
 				return retData;
 			}
-			
-			if(huntId!=null) {
-				Process proc = Runtime.getRuntime().exec(huntId);
 
-				BufferedReader reader = new BufferedReader(new InputStreamReader(proc.getInputStream()));
-				
-				String ln;
-				String res="";
-
-				while((ln = reader.readLine())!=null) {
-					res+= ln + "/n";
-					map.put("result", res);
-					retData.add(map);
-				}
-				return retData;				
-			}
-
-			
 			retData = this.researcherService.getAllhuntHistory();
 			LOG.info("ResearcherController | getAllhuntHistory Exit");
 		} catch (DataAccessException e) {
@@ -297,10 +314,21 @@ public class ResearcherAPI {
 	}
 
 	@RequestMapping(value = "avatar/{avatarName}", method = RequestMethod.GET, produces = "text/plain; charset=utf-8")
-	public String IsAvatarAvailable(@PathVariable String avatarName) {
+	public String IsAvatarAvailable(@Pattern(regexp = "^[a-zA-Z0-9_-]{1,50}$") @PathVariable String avatarName) {
 		LOG.info("ResearcherController | IsAvatarAvailable Begin");
 		boolean result = false;
 		try {
+			// Path Traversal fix: Validate avatarName is strictly alphanumeric (no path traversal chars like ../ or /)
+			if (avatarName == null || !avatarName.matches("^[a-zA-Z0-9_-]{1,50}$")) {
+				LOG.info("ResearcherController | Invalid avatar name rejected");
+				return "false";
+			}
+
+			boolean isGuest = brandingService.isUserGuest();
+			if (isGuest) {
+				LOG.info("ResearcherController | Access Denied in IsAvatarAvailable");
+				return "false";
+			}
 
 			result = this.researcherService.isAvatarAvailable(avatarName);
 
@@ -316,7 +344,7 @@ public class ResearcherAPI {
 	}
 
 	@RequestMapping(value = "addDetail/{id}", method = RequestMethod.POST, produces = "text/plain; charset=utf-8")
-	public ResponseEntity<String> addDetails(@PathVariable int id) {
+	public ResponseEntity<String> addDetails(@Min(1) @PathVariable int id) {
 		try {
 			int emp_id = BrandingDetailsController.getUser();
 
@@ -327,6 +355,15 @@ public class ResearcherAPI {
 
 			if (!this.permissionService.isOperationPermissible(TEXT_BUGHUNTR, TEXT_ADMIN, "View", emp_id, 0, 0)) {
 				return new ResponseEntity<>(ACCESS_DENIED, HttpStatus.FORBIDDEN);
+			}
+
+			// IDOR fix (3.17): Validate researcher ID exists before processing
+			if (id <= 0) {
+				return new ResponseEntity<>("Invalid researcher ID", HttpStatus.BAD_REQUEST);
+			}
+			List<Map<String, Object>> existingData = this.researcherService.getResearcherById(id);
+			if (existingData == null || existingData.isEmpty()) {
+				return new ResponseEntity<>("Researcher not found", HttpStatus.BAD_REQUEST);
 			}
 
 			this.researcherService.addDetails(id);
@@ -342,10 +379,19 @@ public class ResearcherAPI {
 	}
 
 	@RequestMapping(value = "isallowed/{id}", method = RequestMethod.GET, produces = "text/plain; charset=utf-8")
-	public String isActionallowed(@PathVariable int id) {
+	public String isActionallowed(@Min(1) @PathVariable int id) {
 		boolean result = false;
 		try {
 			LOG.info("ResearcherController | isActionallowed Begin");
+			int emp_id = BrandingDetailsController.getUser();
+
+			// Only allow checking own action status, or admin can check any user
+			if (emp_id != id &&
+				!this.permissionService.isOperationPermissible(TEXT_BUGHUNTR, TEXT_ADMIN, "View", emp_id, 0, 0)) {
+				LOG.info("ResearcherController | Access Denied in isActionallowed");
+				return "false";
+			}
+
 			result = this.researcherService.isActionAllowed(id);
 			LOG.info("ResearcherController | isActionallowed Exit");
 		} catch (DataAccessException e) {
@@ -364,6 +410,12 @@ public class ResearcherAPI {
 		LOG.info("ResearcherController | isResearcher Begin");
 		boolean result = false;
 		try {
+			boolean isGuest = brandingService.isUserGuest();
+			if (isGuest) {
+				LOG.info("ResearcherController | Access Denied in isResearcher");
+				return "false";
+			}
+
 			int emp_id = BrandingDetailsController.getUser();
 			result = this.researcherService.isResearcher(emp_id);
 			LOG.info("ResearcherController | isResearcher Exit");
